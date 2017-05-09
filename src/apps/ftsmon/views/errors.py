@@ -79,9 +79,9 @@ def get_errors_for_pair(http_request):
     if reason:
         transfers = transfers.filter(reason__icontains=reason)
 
-    transfers = transfers.values('vo_name', 'reason', 'finish_time')
+    transfers = transfers.values('vo_name', 'reason')
     transfers = transfers.annotate(count=Count('reason'))
-    transfers = transfers.order_by('-count', '-finish_time')
+    transfers = transfers.order_by('-count')
     # Trigger query to fetch all
     transfers = list(transfers)
 
