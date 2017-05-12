@@ -18,16 +18,14 @@
 # limitations under the License.
 
 import json
-import os
 from django.db import connection
-from django.db.models import Q, Count
-from ftsweb.models import ConfigAudit
-from ftsweb.models import LinkConfig, ShareConfig
-from ftsweb.models import DebugConfig, Optimize, OptimizeActive
-from ftsweb.models import ActivityShare, File, OperationLimit
+from django.db.models import Count
+
 from authn import require_certificate
+from ftsweb.models import ActivityShare, File, OperationLimit
+from ftsweb.models import ConfigAudit
+from ftsweb.models import LinkConfig, ShareConfig, Storage
 from jsonify import jsonify, jsonify_paged
-from util import get_order_by, ordered_field
 
 
 @require_certificate
@@ -49,8 +47,7 @@ def get_server_config(http_request):
     config = dict()
     cursor = connection.cursor()
     cursor.execute("""
-        SELECT retry, max_time_queue, global_timeout, sec_per_mb, vo_name,
-            max_per_se, max_per_link, global_tcp_stream
+        SELECT retry, max_time_queue, global_timeout, sec_per_mb, vo_name
         FROM t_server_config
     """)
     server_config = cursor.fetchall()
@@ -61,18 +58,22 @@ def get_server_config(http_request):
             max_time_queue=entry[1],
             global_timeout=entry[2],
             sec_per_mb=entry[3],
-            vo_name=entry[4],
-            max_per_se=entry[5],
-            max_per_link=entry[6],
-            tcp_streams=entry[7]
+            vo_name=entry[4]
         )
         config['per_vo'].append(c)
-
-    cursor.execute("SELECT mode_opt FROM t_optimize_mode")
-    modes = cursor.fetchall()
-    if len(modes) > 0:
-        config['optimizer_mode'] = modes[0][0]
     return config
+
+
+@require_certificate
+@jsonify_paged
+def get_se_config(http_request):
+    return Storage.objects.all()
+
+
+@require_certificate
+@jsonify
+def get_ops_config(http_request):
+    return OperationLimit.objects.all()
 
 
 # Wrap a list of link config, and push the
@@ -87,7 +88,7 @@ class AppendShares:
 
     def __getitem__(self, i):
         for link in self.rs[i]:
-            shares = ShareConfig.objects.filter(source=link.source, destination=link.destination).all()
+            shares = ShareConfig.objects.filter(source=link.source_se, destination=link.dest_se).all()
             link.shares = {}
             for share in shares:
                 link.shares[share.vo] = share.active
@@ -100,64 +101,11 @@ def get_link_config(http_request):
     links = LinkConfig.objects
 
     if http_request.GET.get('source_se'):
-        links = links.filter(source=http_request.GET['source_se'])
+        links = links.filter(source_se=http_request.GET['source_se'])
     if http_request.GET.get('dest_se'):
-        links = links.filter(destination=http_request.GET['dest_se'])
+        links = links.filter(dest_se=http_request.GET['dest_se'])
 
     return AppendShares(links.all())
-
-
-@require_certificate
-@jsonify_paged
-def get_debug_config(http_request):
-    return DebugConfig.objects.order_by('source_se', 'dest_se')
-
-
-@require_certificate
-@jsonify
-def get_limit_config(http_request):
-    max_cfg = Optimize.objects.filter(Q(active__isnull=False) | Q(bandwidth__isnull=False))
-
-    (order_by, order_desc) = get_order_by(http_request)
-    if order_by == 'bandwidth':
-        max_cfg = max_cfg.order_by(ordered_field('bandwidth', order_desc))
-    elif order_by == 'active':
-        max_cfg = max_cfg.order_by(ordered_field('active', order_desc))
-    elif order_by == 'source_se':
-        max_cfg = max_cfg.order_by(ordered_field('source_se', order_desc))
-    elif order_by == 'dest_se':
-        max_cfg = max_cfg.order_by(ordered_field('dest_se', order_desc))
-    else:
-        max_cfg = max_cfg.order_by('-active')
-
-    return {
-        'transfers': max_cfg,
-        'operations': OperationLimit.objects.all()
-    }
-
-
-@require_certificate
-@jsonify_paged
-def get_ranges(http_request):
-    return OptimizeActive.objects.filter(fixed='on').all()
-
-
-@require_certificate
-@jsonify
-def get_gfal2_config(http_request):
-    try:
-        config_files = os.listdir('/etc/gfal2.d')
-    except:
-        config_files = list()
-    config_files = filter(lambda c: c.endswith('.conf'), config_files)
-
-    config = dict()
-    for cfg in config_files:
-        cfg_path = os.path.join('/etc/gfal2.d', cfg)
-        config[cfg_path] = open(cfg_path).read()
-
-    return config
-
 
 @require_certificate
 @jsonify

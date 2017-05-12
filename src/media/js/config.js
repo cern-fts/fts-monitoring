@@ -58,37 +58,19 @@ ConfigAuditCtrl.resolve = {
     }
 }
 
-/// Config status
-function ConfigStatusCtrl($location, $scope, server, debug)
+/// Config server
+function ConfigServerCtrl($location, $scope, server)
 {
     $scope.server = server;
-    $scope.debug = debug;
-
-    // On page change, reload
-    $scope.debugPageChanged = function(newPage) {
-        $location.search('debug_page', newPage);
-    };
 }
 
-ConfigStatusCtrl.resolve = {
+ConfigServerCtrl.resolve = {
     server: function ($rootScope, $location, $route, $q, ConfigServer) {
         loading($rootScope);
 
         var deferred = $q.defer();
 
         ConfigServer.all(
-              genericSuccessMethod(deferred, $rootScope),
-              genericFailureMethod(deferred, $rootScope, $location));
-
-        return deferred.promise;
-    },
-
-    debug: function($rootScope, $location, $route, $q, ConfigDebug) {
-        loading($rootScope);
-
-        var deferred = $q.defer();
-
-        ConfigDebug.query({"page": $location.search().debug_page},
               genericSuccessMethod(deferred, $rootScope),
               genericFailureMethod(deferred, $rootScope, $location));
 
@@ -120,9 +102,10 @@ ConfigLinksCtrl.resolve = {
     },
 }
 
-/// Config limits
-function ConfigLimitsCtrl($location, $scope, limits) {
-    $scope.limits = limits;
+/// Config storages
+function ConfigStoragesCtrl($location, $scope, storages, ops) {
+    $scope.storages = storages;
+    $scope.ops = ops;
 
     // On page change, reload
     $scope.pageChanged = function(newPage) {
@@ -130,41 +113,30 @@ function ConfigLimitsCtrl($location, $scope, limits) {
     };
 }
 
-ConfigLimitsCtrl.resolve = {
-    limits: function($rootScope, $location, $route, $q, ConfigLimits) {
+ConfigStoragesCtrl.resolve = {
+    storages: function($rootScope, $location, $route, $q, ConfigStorages) {
         loading($rootScope);
 
         var deferred = $q.defer();
 
-        ConfigLimits.query($location.search(),
+        ConfigStorages.query($location.search(),
               genericSuccessMethod(deferred, $rootScope),
               genericFailureMethod(deferred, $rootScope, $location));
 
         return deferred.promise;
-    }
-}
+    },
 
-function ConfigRangeCtrl($location, $scope, range) {
-    $scope.range = range;
-
-    // On page change, reload
-    $scope.pageChanged = function(newPage) {
-        $location.search('page', newPage);
-    };
-}
-
-ConfigRangeCtrl.resolve = {
-    range: function($rootScope, $location, $route, $q, ConfigRange) {
+    ops: function($rootScope, $location, $route, $q, ConfigOps) {
         loading($rootScope);
 
         var deferred = $q.defer();
 
-        ConfigRange.query($location.search(),
+        ConfigOps.query($location.search(),
               genericSuccessMethod(deferred, $rootScope),
               genericFailureMethod(deferred, $rootScope, $location));
 
         return deferred.promise;
-    }
+    },
 }
 
 /// Gfal2 configuration
@@ -193,7 +165,7 @@ function ActivitiesCtrl($location, $scope, activities) {
 }
 
 ActivitiesCtrl.resolve = {
-    activities: function($rootScope, $location, $q, ConfigActivities) {
+    activities: function ($rootScope, $location, $q, ConfigActivities) {
         loading($rootScope);
 
         var deferred = $q.defer();
@@ -205,7 +177,6 @@ ActivitiesCtrl.resolve = {
         return deferred.promise;
     }
 }
-
 
 /// Active per vo activities
 function _plotDataFromCount(activeCount, key)

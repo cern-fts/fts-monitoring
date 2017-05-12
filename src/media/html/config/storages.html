@@ -1,0 +1,60 @@
+<h2>Storage configuration</h2>
+
+<pagination rotate="false"
+    page="storages.page" total-items="storages.count" items-per-page="storages.pageSize"
+    max-size="15" class="pagination" boundary-links="true"
+    on-select-page="pageChanged(page)"></pagination>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Storage</th>
+            <th>Site</th>
+            <th>Debug level</th>
+            <th>IPv6</th>
+            <th>UDT</th>
+            <th>Active limit*</th>
+            <th>Throughput limit*</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr data-ng-repeat="s in storages.items" data-ng-class-odd="'odd'">
+            <td>{{ s.storage }}</td>
+            <td>{{ s.site }}</td>
+            <td>{{ s.debug_level }}</td>
+            <td>{{ s.ipv6 }}</td>
+            <td>{{ s.udt }}</td>
+            <td>{{ s.inbound_max_active }} / {{ s.outbound_max_active }}</td>
+            <td>{{ s.inbound_max_throughput }} / {{ s.outbound_max_throughput }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<p>
+    <b>(*)</b> Inbound/Outbound
+</p>
+
+<pagination rotate="false"
+    page="storages.page" total-items="storages.count" items-per-page="storages.pageSize"
+    max-size="15" class="pagination" boundary-links="true"
+    on-select-page="pageChanged(page)"></pagination>
+
+<h2>Operation limits</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Storage</th>
+            <th>VO</th>
+            <th>Operation</th>
+            <th>Limit</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr data-ng-repeat="o in ops" data-ng-class-odd="'odd'">
+            <td>{{ o.host }}</td>
+            <td>{{ o.vo }}</td>
+            <td>{{ o.operation }}</td>
+            <td>{{ o.concurrent_ops }}</td>
+        </tr>
+    </tbody>
+</table>

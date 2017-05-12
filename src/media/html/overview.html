@@ -66,23 +66,11 @@
                 <span class="filter-on-click" data-ng-click="filterBy({source_se: o.source_se})" title="Filter source SE">
                     {{ o.source_se }}
                 </span>
-                <span data-ng-show="o.limits.source">
-                    <i class="icon-upload" title="{{getLimitDescription(o.limits.source)}}"></i>
-                </span>
-                <span data-ng-show="o.udt">
-                    <i class="icon-udt" title="UDT Enabled"></i>
-                </span>
             </td>
 			<td>
 			    <span class="filter-on-click" data-ng-click="filterBy({dest_se: o.dest_se})" title="Filter destination SE">
                     {{ o.dest_se }}
 			    </span>
-                <span data-ng-show="o.limits.destination">
-                    <i class="icon-download" title="{{getLimitDescription(o.limits.destination)}}"></i>
-                </span>
-                <span data-ng-show="o.udt">
-                    <i class="icon-udt" title="UDT Enabled"></i>
-                </span>
 			</td>
 			<td>
                 <span class="filter-on-click" data-ng-click="filterBy({vo: o.vo_name})" title="Filter VO">

@@ -100,23 +100,18 @@ angular.module('ftsmon.resources', ['ngResource'])
 		all: {method: 'GET', isArray: false}
 	})
 })
+.factory('ConfigStorages', function($resource) {
+	return $resource('config/storages', {}, {
+		query: {method: 'GET', isArray: false}
+	})
+})
+.factory('ConfigOps', function($resource) {
+	return $resource('config/ops', {}, {
+		query: {method: 'GET', isArray: true}
+	})
+})
 .factory('ConfigLinks', function($resource) {
 	return $resource('config/links', {}, {
-		query: {method: 'GET', isArray: false}
-	})
-})
-.factory('ConfigDebug', function($resource) {
-	return $resource('config/debug', {}, {
-		query: {method: 'GET', isArray: false}
-	})
-})
-.factory('ConfigLimits', function($resource) {
-	return $resource('config/limits', {}, {
-		query: {method: 'GET', isArray: false}
-	})
-})
-.factory('ConfigRange', function($resource) {
-	return $resource('config/range', {}, {
 		query: {method: 'GET', isArray: false}
 	})
 })

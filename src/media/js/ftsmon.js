@@ -21,9 +21,6 @@ config(function($routeProvider) {
         when('/optimizer/detailed',   {templateUrl: STATIC_ROOT + 'html/optimizer/detailed.html',
                                        controller:  OptimizerDetailedCtrl,
                                        resolve:     OptimizerDetailedCtrl.resolve}).
-        when('/optimizer/streams',    {templateUrl: STATIC_ROOT + 'html/optimizer/streams.html',
-                                       controller:  OptimizerStreamsCtrl,
-                                       resolve:     OptimizerStreamsCtrl.resolve}).
 
         when('/errors/',              {redirectTo:  ErrorsCtrl.redirectTo}).
         when('/errors/pairs',         {templateUrl: STATIC_ROOT + 'html/errors/pairs.html',
@@ -36,18 +33,15 @@ config(function($routeProvider) {
         when('/config/audit',         {templateUrl: STATIC_ROOT + 'html/config/audit.html',
                                        controller:  ConfigAuditCtrl,
                                        resolve:     ConfigAuditCtrl.resolve}).
-        when('/config/status',        {templateUrl: STATIC_ROOT + 'html/config/status.html',
-                                       controller:  ConfigStatusCtrl,
-                                       resolve:     ConfigStatusCtrl.resolve}).
+        when('/config/server',        {templateUrl: STATIC_ROOT + 'html/config/server.html',
+                                       controller:  ConfigServerCtrl,
+                                       resolve:     ConfigServerCtrl.resolve}).
+        when('/config/storages',      {templateUrl: STATIC_ROOT + 'html/config/storages.html',
+                                       controller:  ConfigStoragesCtrl,
+                                       resolve:     ConfigStoragesCtrl.resolve}).
         when('/config/links',         {templateUrl: STATIC_ROOT + 'html/config/links.html',
                                        controller:  ConfigLinksCtrl,
                                        resolve:     ConfigLinksCtrl.resolve}).
-        when('/config/limits',        {templateUrl: STATIC_ROOT + 'html/config/limits.html',
-                                       controller:  ConfigLimitsCtrl,
-                                       resolve:     ConfigLimitsCtrl.resolve}).
-        when('/config/range',         {templateUrl: STATIC_ROOT + 'html/config/range.html',
-                                       controller:  ConfigRangeCtrl,
-                                       resolve:     ConfigRangeCtrl.resolve}).
         when('/config/gfal2',         {templateUrl: STATIC_ROOT + 'html/config/gfal2.html',
                                        controller:  Gfal2Ctrl,
                                        resolve:     Gfal2Ctrl.resolve}).

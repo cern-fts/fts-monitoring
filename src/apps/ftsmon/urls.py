@@ -35,12 +35,11 @@ urlpatterns = patterns('ftsmon.views',
 
     url(r'^transfers$', 'jobs.get_transfer_list'),
 
-    url(r'^config/audit$',  'config.get_audit'),
+    url(r'^config/audit$',    'config.get_audit'),
+    url(r'^config/storages$', 'config.get_se_config'),
+    url(r'^config/ops',     'config.get_ops_config'),
     url(r'^config/links$',  'config.get_link_config'),
     url(r'^config/server$', 'config.get_server_config'),
-    url(r'^config/debug$',  'config.get_debug_config'),
-    url(r'^config/limits$', 'config.get_limit_config'),
-    url(r'^config/range',   'config.get_ranges'),
     url(r'^config/gfal2$',  'config.get_gfal2_config'),
     url(r'^config/activities$', 'config.get_activities'),
     url(r'^config/activities/(?P<vo>(.+))$', 'config.get_actives_per_activity'),
@@ -51,7 +50,6 @@ urlpatterns = patterns('ftsmon.views',
 
     url(r'^optimizer/$',         'optimizer.get_optimizer_pairs'),
     url(r'^optimizer/detailed$', 'optimizer.get_optimizer_details'),
-    url(r'^optimizer/streams',   'optimizer.get_optimizer_streams'),
 
     url(r'^errors/$',     'errors.get_errors'),
     url(r'^errors/list$', 'errors.get_errors_for_pair'),

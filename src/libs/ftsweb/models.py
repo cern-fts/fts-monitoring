@@ -206,14 +206,14 @@ class  ConfigAudit(models.Model):
 
 
 class LinkConfig(models.Model):
-    source            = models.CharField(max_length = 255, primary_key = True)
-    destination       = models.CharField(max_length = 255)
-    state             = models.CharField(max_length = 30)
-    symbolicName      = models.CharField(max_length = 255)
-    nostreams         = models.IntegerField()
+    source_se         = models.CharField(max_length = 255, primary_key = True)
+    dest_se           = models.CharField(max_length = 255)
+    symbolic_name     = models.CharField(max_length = 255, unique=True)
+    min_active        = models.IntegerField()
+    max_active        = models.IntegerField()
+    optimizer_mode    = models.IntegerField()
     tcp_buffer_size   = models.IntegerField()
-    urlcopy_tx_to     = models.IntegerField()
-    auto_tuning       = models.CharField(max_length = 3)
+    nostreams         = models.IntegerField()
 
     def __eq__(self, b):
         return isinstance(b, self.__class__) and \
@@ -222,6 +222,22 @@ class LinkConfig(models.Model):
 
     class Meta:
         db_table = 't_link_config'
+
+
+class Storage(models.Model):
+    storage     = models.CharField(max_length=150, primary_key=True)
+    site        = models.CharField(max_length=45)
+    metadata    = models.TextField()
+    ipv6        = models.BooleanField()
+    udt         = models.BooleanField()
+    debug_level = models.IntegerField()
+    inbound_max_active      = models.IntegerField()
+    inbound_max_throughput  = models.FloatField()
+    outbound_max_active     = models.IntegerField()
+    outbound_max_throughput = models.FloatField()
+
+    class Meta:
+        db_table = 't_se'
 
 
 class ShareConfig(models.Model):
@@ -240,31 +256,13 @@ class ShareConfig(models.Model):
         db_table = 't_share_config'
 
 
-class Optimize(models.Model):
-    source_se = models.CharField(max_length = 255, primary_key = True)
-    dest_se   = models.CharField(max_length = 255, primary_key = True)
-    active    = models.IntegerField()
-    bandwidth = models.FloatField(db_column = 'throughput')
-
-    def __eq__(self, other):
-        if type(self) != type(other):
-            return False
-
-        return self.source_se == other.source_se and \
-               self.dest_se == other.dest_se and \
-               self.active == other.active
-
-    class Meta:
-        db_table = 't_optimize'
-
-
-class OptimizeActive(models.Model):
-    source_se  = models.CharField(max_length = 255)
+class Optimizer(models.Model):
+    source_se  = models.CharField(max_length = 255, primary_key=True)
     dest_se    = models.CharField(max_length = 255)
-    active     = models.IntegerField(primary_key = True)
-    fixed      = models.CharField(max_length=3)
-    max_active = models.IntegerField()
-    min_active = models.IntegerField()
+    datetime   = models.DateTimeField()
+    ema        = models.FloatField()
+    active     = models.IntegerField()
+    nostreams  = models.IntegerField()
 
     def __eq__(self, other):
         if type(self) != type(other):
@@ -274,7 +272,7 @@ class OptimizeActive(models.Model):
                self.dest_se   == other.dest_se
 
     class Meta:
-        db_table = 't_optimize_active'
+        db_table = 't_optimizer'
 
 
 class OptimizerEvolution(models.Model):
@@ -296,24 +294,6 @@ class OptimizerEvolution(models.Model):
         db_table = 't_optimizer_evolution'
 
 
-class OptimizerStreams(models.Model):
-    source_se  = models.CharField(max_length = 255)
-    dest_se    = models.CharField(max_length = 255)
-    nostreams  = models.IntegerField()
-    datetime   = models.DateTimeField(primary_key = True)
-
-    def __eq__(self, other):
-        if type(self) != type(other):
-            return False
-
-        return self.source_se == other.source_se and \
-               self.dest_se   == other.dest_se and \
-               self.nostreams == other.nostreams
-
-    class Meta:
-        db_table = 't_optimize_streams'
-
-
 class Host(models.Model):
     hostname = models.CharField(primary_key = True, max_length = 64)
     beat     = models.DateTimeField()
@@ -322,19 +302,6 @@ class Host(models.Model):
 
     class Meta:
         db_table = 't_hosts'
-
-
-class DebugConfig(models.Model):
-    source_se   = models.CharField(primary_key = True)
-    dest_se     = models.CharField()
-    debug_level = models.IntegerField()
-
-    def __eq__(self, other):
-        # Consider all entries different
-        return False
-
-    class Meta:
-        db_table = 't_debug'
 
 
 class ActivityShare(models.Model):
