@@ -217,8 +217,8 @@ class LinkConfig(models.Model):
 
     def __eq__(self, b):
         return isinstance(b, self.__class__) and \
-               self.source == b.source and \
-               self.destination == b.destination
+               self.source_se == b.source_se and \
+               self.dest_se == b.dest_se
 
     class Meta:
         db_table = 't_link_config'
