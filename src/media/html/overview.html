@@ -86,7 +86,8 @@
                 <span data-ng-show="o.active_fixed">
                     <i class="icon-magnet" title="Number of active fixed"></i>
                 </span>
-                <a href="#/jobs?source_se={{o.source_se|escape}}&dest_se={{o.dest_se|escape}}&vo={{o.vo_name|escape}}&with_file=ACTIVE&time_window={{globalFilter.time_window}}">
+                <a href="#/jobs?source_se={{o.source_se|escape}}&dest_se={{o.dest_se|escape}}&vo={{o.vo_name|escape}}&with_file=ACTIVE&time_window={{globalFilter.time_window}}"
+                    title="{{o.ready}} READY">
                     <span data-optional-number="{{o.active}}" data-decimals="0"></span>
                 </a>
             </td>

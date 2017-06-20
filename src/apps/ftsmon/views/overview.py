@@ -108,7 +108,7 @@ def get_overview(http_request):
     query = """
     SELECT COUNT(file_state) as count, file_state, source_se, dest_se, vo_name
     FROM t_file
-    WHERE file_state in ('SUBMITTED', 'ACTIVE', 'STAGING', 'STARTED') %s
+    WHERE file_state in ('SUBMITTED', 'ACTIVE', 'READY', 'STAGING', 'STARTED') %s
     GROUP BY file_state, source_se, dest_se, vo_name order by NULL
     """ % pairs_filter
     cursor.execute(query, se_params)
@@ -178,6 +178,7 @@ def get_overview(http_request):
     summary = {
         'submitted': sum(map(lambda o: o.get('submitted', 0), objs), 0),
         'active': sum(map(lambda o: o.get('active', 0), objs), 0),
+        'ready': sum(map(lambda o: o.get('ready', 0), objs), 0),
         'finished': sum(map(lambda o: o.get('finished', 0), objs), 0),
         'failed': sum(map(lambda o: o.get('failed', 0), objs), 0),
         'canceled': sum(map(lambda o: o.get('canceled', 0), objs), 0),
