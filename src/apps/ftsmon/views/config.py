@@ -18,6 +18,7 @@
 # limitations under the License.
 
 import json
+import os
 from django.db import connection
 from django.db.models import Count
 
@@ -163,3 +164,20 @@ def get_actives_per_activity(http_request, vo):
                 grouped[activity]['ratio'] = share_config[activity.lower()] / weight_sum
 
     return grouped
+
+
+@require_certificate
+@jsonify
+def get_gfal2_config(http_request):
+    try:
+        config_files = os.listdir('/etc/gfal2.d')
+    except:
+        config_files = list()
+    config_files = filter(lambda c: c.endswith('.conf'), config_files)
+
+    config = dict()
+    for cfg in config_files:
+        cfg_path = os.path.join('/etc/gfal2.d', cfg)
+        config[cfg_path] = open(cfg_path).read()
+
+    return config
