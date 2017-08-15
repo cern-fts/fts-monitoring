@@ -1,12 +1,12 @@
 Summary:    FTS3 Web Application for monitoring
 Name:       fts-monitoring
-Version:    3.7.1
+Version:    3.7.2
 Release:    1%{?dist}
 URL:        http://fts3-service.web.cern.ch
 License:    ASL 2.0
 Group:      Applications/Internet
 BuildArch:  noarch
-# wget https://gitlab.cern.ch/fts/fts-monitoring/repository/archive.tar.gz?ref=v3.7.1 -O fts-monitoring-3.7.1.tar.gz
+# wget https://gitlab.cern.ch/fts/fts-monitoring/repository/archive.tar.gz?ref=v3.7.2 -O fts-monitoring-3.7.2.tar.gz
 Source0: %{name}-%{version}.tar.gz
 
 BuildRequires:  python2-devel
