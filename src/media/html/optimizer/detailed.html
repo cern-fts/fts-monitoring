@@ -70,8 +70,8 @@
                 <td class="numeric">{{ o.actual_active }}</td>
                 <td class="numeric">{{ o.queue_size }}</td>
                 <td class="numeric">{{ o.success|number:2 }}%</td>
-                <td class="numeric">{{ o.throughput/(1024*1024)|number:3 }} MB/s</td>
-                <td class="numeric">{{ o.ema/(1024*1024)|number:3 }} MB/s</td>
+                <td class="numeric">{{ o.throughput|filesize }}/s</td>
+                <td class="numeric">{{ o.ema|filesize }}/s</td>
                 <td class="numeric">{{ o.diff }}</td>
                 <td>{{ o.rationale }}</td>
             </tr>

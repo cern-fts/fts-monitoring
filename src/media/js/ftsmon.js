@@ -202,7 +202,7 @@ config(function($routeProvider) {
     	if (bytes == null)
     		return '-';
     	else if (bytes < 1024)
-            return bytes.toString() + ' bytes';
+            return bytes.toFixed(0).toString() + ' bytes';
         else if (bytes < 1048576)
             return (bytes / 1024.0).toFixed(2).toString() + ' KiB';
         else if (bytes < 1073741824)
