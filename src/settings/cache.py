@@ -15,11 +15,11 @@
 # limitations under the License.
 
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': '/var/tmp/fts3webmon_cache',
-        'TIMEOUT': 120,
-        'MAX_ENTRIES': 100,
-    }
-}
+#CACHES = {
+#    'default': {
+#        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+#        'LOCATION': '/var/tmp/fts3webmon_cache',
+#        'TIMEOUT': 120,
+#        'MAX_ENTRIES': 100,
+#    }
+#}

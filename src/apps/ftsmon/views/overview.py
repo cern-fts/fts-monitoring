@@ -64,13 +64,13 @@ class OverviewExtended(object):
         if len(oe) == 0:
             return 0, 0
 
-        return oe[0]['active'] * oe[0]['filesize_avg'], oe[0]['throughput'] / 1024**2
+        return oe[0]['throughput'] / 1024**2
 
     def __getitem__(self, indexes):
         if isinstance(indexes, types.SliceType):
             return_list = self.objects[indexes]
             for item in return_list:
-                item['transferred'], item['current'] = self._get_throughput(item['source_se'], item['dest_se'], item['vo_name'])
+                item['current'] = self._get_throughput(item['source_se'], item['dest_se'], item['vo_name'])
             return return_list
         else:
             return self.objects[indexes]
