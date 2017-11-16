@@ -38,7 +38,11 @@ class ClassEncoder(json.JSONEncoder):
             return
 
         if isinstance(obj, datetime):
-            return obj.strftime('%Y-%m-%dT%H:%M:%S%z')
+            # All timestamps on the DB are UTC
+            if obj.tzinfo is None or obj.tzinfo.utcoffset(obj) is None:
+                return obj.strftime('%Y-%m-%dT%H:%M:%SZ')
+            else:
+                return obj.strftime('%Y-%m-%dT%H:%M:%S%z')
         elif isinstance(obj, time):
             return obj.strftime('%H:%M:%S')
         elif not isinstance(obj, dict) and hasattr(obj, '__iter__'):
