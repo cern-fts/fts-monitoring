@@ -33,7 +33,7 @@ else:
 
 # Load /etc/fts3/fts3config if exists
 fts3cfg = None
-if os.path.exists('/etc/fts3/fts3config'):
+if os.access("/etc/fts3/fts3config", os.R_OK):
     # FTS3 config file does not have a default header, and ConfigParser does not like that
     content = "[fts3]\n" + open('/etc/fts3/fts3config').read()
     fts3cfg = RawConfigParser()
