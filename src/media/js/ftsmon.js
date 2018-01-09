@@ -214,7 +214,7 @@ config(function($routeProvider) {
 ;
 
 /** Refresh interval in ms */
-var REFRESH_INTERVAL = 60000;
+var REFRESH_INTERVAL = 3600000;
 
 /** First letter uppercase */
 function firstUpper(str)
