@@ -213,9 +213,15 @@ function OptimizerDetailedCtrl($rootScope, $location, $scope, optimizer, Optimiz
                         position: "left",
                         ticks: {
                             beginAtZero: true,
+                            min: 0,
+                            max: 100,
                             callback: function(value, index, values) {
                                 return value.toFixed(2) + ' %'
                             }
+                        },
+                        scaleLabel: {
+                        	display: true,
+                        	labelString: "Percentage"
                         }
                     },
                     {
