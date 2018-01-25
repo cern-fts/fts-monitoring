@@ -14,7 +14,6 @@
         <tr>
             <th style="width: 35%">Source</th>
             <th style="width: 35%">Destination</th>
-            <th style="width: 35%">Monitoring Link</th>
         </tr>
     </thead>
     <tbody>
@@ -26,9 +25,6 @@
                 {{ o.source_se }}
             </td>
 			<td>{{ o.dest_se }}</td>
-			<td><a href="https://monit-grafana.cern.ch/dashboard/db/fts-servers-dashboard?orgId=25&var-group_by=vo&var-vo=All&var-src_country=All&var-dst_country=All&var-src_site=All&var-dst_site=All&var-fts_server=All&var-source_se={{o.source_se}}&var-dest_se={{o.dest_se}}&var-bin=%24__auto_interval&var-dest_se_es=All&var-source_se_es=All&var-fts_server_es=All">
-                    <i class="icon-bar-chart"></i></a>
-             </td>
 			
        </tr>
     </tbody>
