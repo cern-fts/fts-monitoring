@@ -2,7 +2,7 @@
 
 <h3>
     Details for {{filter.source}} → {{filter.destination}} 
-    <a data-ng-if= "SITE_MONIT != none" href="{{SITE_MONIT}}&var-vo=All&var-source_se={{filter.source}}&var-dest_se={{filter.destination}}">
+    <a data-ng-if= "{% getSetting "SITE_MONIT" %} != none" href="{% getSetting "SITE_MONIT" %}&var-vo=All&var-source_se={{filter.source}}&var-dest_se={{filter.destination}}">
     <i class="icon-search"></i></a>
 </h3>
 
