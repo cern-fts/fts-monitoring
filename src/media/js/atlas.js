@@ -59,7 +59,7 @@ function getLimitDescription(limit)
 function OverviewAtlasCtrl($rootScope, $location, $scope, overview, OverviewAtlas)
 {
 	$scope.overview = overview;
-
+    $scope.monit_url = SITE_MONIT;
 	// On page change, reload
 	$scope.pageChanged = function(newPage) {
 		$location.search('page', newPage);
