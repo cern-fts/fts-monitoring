@@ -75,7 +75,8 @@ if not FTS3WEB_CONFIG.has_section('database'):
 
 if not FTS3WEB_CONFIG.get('site', 'name'):
     FTS3WEB_CONFIG.set('site', 'name', fts3cfg.get('fts3', 'SiteName'))
-
+    
+STATIC_MONIT = ''
 ###
 if 'BASE_URL' in os.environ:
     BASE_URL = os.environ['BASE_URL']
