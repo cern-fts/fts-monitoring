@@ -117,7 +117,7 @@
         <script src="//netdna.bootstrapcdn.com/bootstrap/2.3.2/js/bootstrap.min.js"></script>
 
         <script>var STATIC_ROOT="{{STATIC_URL}}";</script>
-        <script>var STATIC_MONIT="{{SITE_MONIT}}";</script>
+        <script>var SITE_MONIT="{% getSetting 'SITE_MONIT' %}";</script>
         <script src="{{STATIC_URL}}js/resources.js"></script>
         <script src="{{STATIC_URL}}js/jobs.js"></script>
         <script src="{{STATIC_URL}}js/transfers.js"></script>

@@ -76,8 +76,10 @@ OptimizerCtrl.resolve = {
 function OptimizerDetailedCtrl($rootScope, $location, $scope, optimizer, OptimizerDetailed)
 {
     $scope.optimizer = optimizer;
+    $scope.monit_url = SITE_MONIT;
+    
     $scope.getRowClass = getRowClass;
-
+   
     // Set timer to trigger autorefresh
     $scope.autoRefresh = setInterval(function() {
         loading($rootScope);

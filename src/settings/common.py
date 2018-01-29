@@ -23,7 +23,6 @@ import re
 import sys
 from ConfigParser import RawConfigParser
 from StringIO import StringIO
-from django import template
 
 # INI Configuration
 FTS3WEB_CONFIG = RawConfigParser()
@@ -77,8 +76,6 @@ if not FTS3WEB_CONFIG.has_section('database'):
 if not FTS3WEB_CONFIG.get('site', 'name'):
     FTS3WEB_CONFIG.set('site', 'name', fts3cfg.get('fts3', 'SiteName'))
 
-MONIT = FTS3WEB_CONFIG.get('site', 'monit')
-SITE_MONIT = "mywebmon"
 
 ###
 if 'BASE_URL' in os.environ:
