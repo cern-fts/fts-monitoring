@@ -37,8 +37,6 @@ ADMINS = (
     (FTS3WEB_CONFIG.get('site', 'admin_name'), FTS3WEB_CONFIG.get('site', 'admin_mail'))
 )
 
-MONIT = FTS3WEB_CONFIG.get('site', 'monit')
-
 MANAGERS = ADMINS
 
 if FTS3WEB_CONFIG.get('logs', 'port'):

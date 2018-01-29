@@ -27,7 +27,6 @@ from authn import require_certificate
 from jsonify import jsonify, jsonify_paged
 from util import paged
 
-
 @require_certificate
 @jsonify_paged
 def get_optimizer_pairs(http_request):
