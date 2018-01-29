@@ -23,7 +23,7 @@ import re
 import sys
 from ConfigParser import RawConfigParser
 from StringIO import StringIO
-
+from app import getSetting
 # INI Configuration
 FTS3WEB_CONFIG = RawConfigParser()
 if 'FTS3WEB_CONFIG' in os.environ:
@@ -75,8 +75,9 @@ if not FTS3WEB_CONFIG.has_section('database'):
 
 if not FTS3WEB_CONFIG.get('site', 'name'):
     FTS3WEB_CONFIG.set('site', 'name', fts3cfg.get('fts3', 'SiteName'))
-    
-STATIC_MONIT = ''
+
+SITE_MONIT = FTS3WEB_CONFIG.get('site', 'monit')
+STATIC_MONIT = getSetting(SITE_MONIT)
 ###
 if 'BASE_URL' in os.environ:
     BASE_URL = os.environ['BASE_URL']
