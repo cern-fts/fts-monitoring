@@ -24,13 +24,8 @@ import sys
 from ConfigParser import RawConfigParser
 from StringIO import StringIO
 from django import template
-import settings
 
-register = template.Library()
 
-@register.simple_tag
-def getSetting(value):
-    return getattr(settings, value)
 
 # INI Configuration
 FTS3WEB_CONFIG = RawConfigParser()
@@ -85,7 +80,8 @@ if not FTS3WEB_CONFIG.get('site', 'name'):
     FTS3WEB_CONFIG.set('site', 'name', fts3cfg.get('fts3', 'SiteName'))
 
 MONIT = FTS3WEB_CONFIG.get('site', 'monit')
-SITE_MONIT = getSetting(MONIT)
+SITE_MONIT = MONIT
+
 ###
 if 'BASE_URL' in os.environ:
     BASE_URL = os.environ['BASE_URL']
