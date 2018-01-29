@@ -78,7 +78,7 @@ if not FTS3WEB_CONFIG.get('site', 'name'):
     FTS3WEB_CONFIG.set('site', 'name', fts3cfg.get('fts3', 'SiteName'))
 
 MONIT = FTS3WEB_CONFIG.get('site', 'monit')
-SITE_MONIT = fts3cfg.get('fts3', 'SiteName')
+SITE_MONIT = "mywebmon"
 
 ###
 if 'BASE_URL' in os.environ:
