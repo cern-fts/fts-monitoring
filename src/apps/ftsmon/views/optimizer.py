@@ -26,6 +26,7 @@ from ftsweb.models import OptimizerEvolution, Optimizer
 from authn import require_certificate
 from jsonify import jsonify, jsonify_paged
 from util import paged
+from settings import SITE_MONIT
 
 @require_certificate
 @jsonify_paged
