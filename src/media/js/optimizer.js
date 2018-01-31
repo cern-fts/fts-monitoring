@@ -77,6 +77,7 @@ function OptimizerDetailedCtrl($rootScope, $location, $scope, optimizer, Optimiz
 {
     $scope.optimizer = optimizer;
     $scope.monit_url = SITE_MONIT;
+    $scope.alias = SITE_ALIAS;
     
     $scope.getRowClass = getRowClass;
    
