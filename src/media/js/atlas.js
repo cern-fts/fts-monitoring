@@ -60,6 +60,7 @@ function OverviewAtlasCtrl($rootScope, $location, $scope, overview, OverviewAtla
 {
 	$scope.overview = overview;
     $scope.monit_url = SITE_MONIT;
+    $scope.alias = SITE_ALIAS;
 	// On page change, reload
 	$scope.pageChanged = function(newPage) {
 		$location.search('page', newPage);
