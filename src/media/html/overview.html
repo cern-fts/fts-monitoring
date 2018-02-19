@@ -135,7 +135,7 @@
                     <i class="icon-search"></i>
                 </a>
                 <br></br>
-                <b data-ng-if= "monit_url != none">Monitoring Link <a href="{{monit_url}}&var-vo=All&var-vo_es=atlas&var-fts_server={{alias}}&var-source_se={{o.source_se}}&var-dest_se={{o.dest_se}}&var-source_se_es={{o.source_se}}&var-dest_se_es={{o.dest_se}}&var-fts_server_es={{alias}}">
+                <b data-ng-if= "monit_url != none || monit_url=''">Monitoring Link <a href="{{monit_url}}&var-vo=All&var-vo_es=All&var-fts_server={{alias}}&var-source_se={{o.source_se}}&var-dest_se={{o.dest_se}}&var-source_se_es={{o.source_se}}&var-dest_se_es={{o.dest_se}}&var-fts_server_es={{alias}}">
                     <i class="icon-search"></i></a>
                 </b>
             </td>
