@@ -36,9 +36,12 @@ SITE_LOGO_SMALL = _urlize(FTS3WEB_CONFIG.get('site', 'logo_small'))
 ADMINS = (
     (FTS3WEB_CONFIG.get('site', 'admin_name'), FTS3WEB_CONFIG.get('site', 'admin_mail'))
 )
-if FTS3WEB_CONFIG.get('site', 'monit'):
-    SITE_MONIT = FTS3WEB_CONFIG.get('site', 'monit')
-else:
+try:
+    if FTS3WEB_CONFIG.get('site', 'monit'):
+        SITE_MONIT = FTS3WEB_CONFIG.get('site', 'monit')
+    else:
+        SITE_MONIT = None
+except:
     SITE_MONIT = None
 MANAGERS = ADMINS
 
