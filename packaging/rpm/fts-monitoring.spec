@@ -1,7 +1,7 @@
 Summary:    FTS3 Web Application for monitoring
 Name:       fts-monitoring
-Version:    3.7.8
-Release:    3%{?dist}
+Version:    3.7.10
+Release:    1%{?dist}
 URL:        http://fts3-service.web.cern.ch
 License:    ASL 2.0
 Group:      Applications/Internet
@@ -81,6 +81,8 @@ install -m 644 conf/httpd.conf.d/ftsmon.conf %{buildroot}%{_sysconfdir}/httpd/co
 %files selinux
 
 %changelog
+* Thu Jun 07 2018 Andrea Manzi amanzi@cern.ch> - 3.7.10-1
+- Update for new upstream release
 * Mon Sep 07 2015 Alejandro Alarez Ayllon <aalvarez@cern.ch> - 3.3.0-1
 - Update for new upstream release
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2.32-2
