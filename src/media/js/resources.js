@@ -21,8 +21,8 @@ angular.module('ftsmon.resources', ['ngResource'])
 		query: {method: 'GET', isArray: false}
 	})
 })
-.factory('OverviewAtlas', function($resource) {
-	return $resource('overview/atlas', {}, {
+.factory('OverviewActivities', function($resource) {
+	return $resource('overview/activities', {}, {
 		query: {method: 'GET', isArray: false},
 	})
 })

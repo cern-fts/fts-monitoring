@@ -56,7 +56,7 @@ function getLimitDescription(limit)
     return descr;
 }
 
-function OverviewAtlasCtrl($rootScope, $location, $scope, overview, OverviewAtlas)
+function OverviewActivitiesCtrl($rootScope, $location, $scope, overview, OverviewActivities)
 {
 	$scope.overview = overview;
     $scope.monit_url = SITE_MONIT;
@@ -82,7 +82,7 @@ function OverviewAtlasCtrl($rootScope, $location, $scope, overview, OverviewAtla
 		var filter = $location.$$search;
 		filter.page = $scope.overview.page;
 		loading($rootScope);
-        OverviewAtlas.query(filter, function(updatedOverview) {
+        OverviewActivities.query(filter, function(updatedOverview) {
             for(var i = 0; i < updatedOverview.overview.items.length; i++) {
                 updatedOverview.overview.items[i].show = $scope.overview.overview.items[i].show;
             }
@@ -96,8 +96,8 @@ function OverviewAtlasCtrl($rootScope, $location, $scope, overview, OverviewAtla
 }
 
 
-OverviewAtlasCtrl.resolve = {
-	overview: function($rootScope, $location, $q, OverviewAtlas) {
+OverviewActivitiesCtrl.resolve = {
+	overview: function($rootScope, $location, $q, OverviewActivities) {
 		loading($rootScope);
 
 		var deferred = $q.defer();
@@ -106,7 +106,7 @@ OverviewAtlasCtrl.resolve = {
 		if (!page || page < 1)
 			page = 1;
 
-		OverviewAtlas.query($location.$$search,
+		OverviewActivities.query($location.$$search,
   			  genericSuccessMethod(deferred, $rootScope),
 			  genericFailureMethod(deferred, $rootScope, $location));
 
