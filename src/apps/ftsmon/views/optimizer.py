@@ -23,12 +23,10 @@ from django.db.models import Sum, Q
 from django.http import Http404
 
 from ftsweb.models import OptimizerEvolution, Optimizer
-from authn import require_certificate
 from jsonify import jsonify, jsonify_paged
 from util import paged
 from settings import SITE_MONIT
 
-@require_certificate
 @jsonify_paged
 def get_optimizer_pairs(http_request):
     # From the optimizer evolution
@@ -51,7 +49,6 @@ def get_optimizer_pairs(http_request):
     return from_optimizer
 
 
-@require_certificate
 @jsonify
 def get_optimizer_details(http_request):
     source_se = str(http_request.GET.get('source', None))

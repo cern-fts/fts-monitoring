@@ -22,14 +22,12 @@ import os
 from django.db import connection
 from django.db.models import Count
 
-from authn import require_certificate
 from ftsweb.models import ActivityShare, File, OperationLimit
 from ftsweb.models import ConfigAudit
 from ftsweb.models import LinkConfig, ShareConfig, Storage
 from jsonify import jsonify, jsonify_paged
 
 
-@require_certificate
 @jsonify_paged
 def get_audit(http_request):
     ca = ConfigAudit.objects
@@ -42,7 +40,6 @@ def get_audit(http_request):
     return ca.order_by('-datetime')
 
 
-@require_certificate
 @jsonify
 def get_server_config(http_request):
     config = dict()
@@ -65,13 +62,11 @@ def get_server_config(http_request):
     return config
 
 
-@require_certificate
 @jsonify_paged
 def get_se_config(http_request):
     return Storage.objects.all()
 
 
-@require_certificate
 @jsonify
 def get_ops_config(http_request):
     return OperationLimit.objects.all()
@@ -96,7 +91,6 @@ class AppendShares:
             yield link
 
 
-@require_certificate
 @jsonify_paged
 def get_link_config(http_request):
     links = LinkConfig.objects
@@ -108,7 +102,6 @@ def get_link_config(http_request):
 
     return AppendShares(links.all())
 
-@require_certificate
 @jsonify
 def get_activities(http_request):
     rows = ActivityShare.objects.all()
@@ -122,7 +115,6 @@ def get_activities(http_request):
     return per_vo
 
 
-@require_certificate
 @jsonify
 def get_actives_per_activity(http_request, vo):
     active = File.objects.filter(vo_name = vo, finish_time__isnull=True)\
@@ -166,7 +158,6 @@ def get_actives_per_activity(http_request, vo):
     return grouped
 
 
-@require_certificate
 @jsonify
 def get_gfal2_config(http_request):
     try:

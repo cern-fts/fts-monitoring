@@ -22,13 +22,11 @@ from django.db.models import Count
 from django.http import Http404
 from django.views.decorators.cache import cache_page
 
-from authn import require_certificate
 from ftsweb.models import File
 from jsonify import jsonify, jsonify_paged
 from util import paged
 
 
-@require_certificate
 @cache_page(300)
 @jsonify_paged
 def get_errors(http_request):
@@ -56,7 +54,6 @@ def get_errors(http_request):
     return list(errors.all())
 
 
-@require_certificate
 @cache_page(300)
 @jsonify
 def get_errors_for_pair(http_request):

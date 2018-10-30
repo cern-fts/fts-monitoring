@@ -22,7 +22,6 @@ from datetime import datetime, timedelta
 from django.db import connection
 from django.views.decorators.cache import cache_page
 
-from authn import require_certificate
 from ftsweb.models import OptimizerEvolution
 from jobs import setup_filters
 from jsonify import jsonify
@@ -76,7 +75,6 @@ class OverviewExtended(object):
             return self.objects[indexes]
 
 
-@require_certificate
 @cache_page(60)
 @jsonify
 def get_overview(http_request):

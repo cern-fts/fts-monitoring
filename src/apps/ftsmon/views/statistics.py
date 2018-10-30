@@ -21,7 +21,6 @@ from datetime import datetime, timedelta
 from django.db.models import Q, Count, Sum
 from django.views.decorators.cache import cache_page
 
-from authn import require_certificate
 from ftsweb.models import Job, File, Host
 from ftsweb.models import STATES, FILE_TERMINAL_STATES
 from jsonify import jsonify, jsonify_paged, as_json
@@ -90,7 +89,6 @@ def _get_retried_stats(timewindow, hostname):
     return retried
 
 
-@require_certificate
 @cache_page(300)
 @jsonify
 def get_overview(http_request):
@@ -218,7 +216,6 @@ def _get_server(time_window):
     return servers
 
 
-# This one does not require certificate, so the Service Level can be still queried
 @cache_page(300)
 def get_servers(http_request):
     try:
@@ -240,7 +237,6 @@ def get_servers(http_request):
             return as_json(dict(exception=str(e)))
 
 
-@require_certificate
 @cache_page(1200)
 @jsonify
 def get_pervo(http_request):
