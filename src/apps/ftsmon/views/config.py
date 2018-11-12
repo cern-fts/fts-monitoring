@@ -90,7 +90,6 @@ class AppendShares:
                 link.shares[share.vo] = share.active
             yield link
 
-
 @jsonify_paged
 def get_link_config(http_request):
     links = LinkConfig.objects
