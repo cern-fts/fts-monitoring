@@ -21,13 +21,11 @@ from datetime import datetime, timedelta
 from django.db import connection
 from django.views.decorators.cache import cache_page
 
-from authn import require_certificate
 from jobs_del import setup_filters
 from jsonify import jsonify
 from overview import OverviewExtendedDel
 from util import get_order_by, paged
 
-@require_certificate
 @jsonify
 def get_deletion(http_request):
     filters = setup_filters(http_request)
