@@ -25,14 +25,19 @@ except:
 
 urlpatterns = patterns('ftsmon.views',
     url(r'^$', 'index.index'),
+    url(r'^$', 'jobs_del.jobs_del'),
 
     url(r'^overview$', 'overview.get_overview'),
     url(r'^overview/activities$', 'activities.get_overview'),
-
+    url(r'^overview/deletion$', 'deletion.get_deletion'),
+    
     url(r'^jobs/?$',                               'jobs.get_job_list'),
+    url(r'^jobs_del/?$',                               'jobs_del.get_job_list'),
     url(r'^jobs/(?P<job_id>[a-fA-F0-9\-]+)$',       'jobs.get_job_details'),
+    url(r'^jobs_del/(?P<job_id>[a-fA-F0-9\-]+)$',       'jobs_del.get_job_details'),
     url(r'^jobs/(?P<job_id>[a-fA-F0-9\-]+)/files$', 'jobs.get_job_transfers'),
-
+    url(r'^jobs_del/(?P<job_id>[a-fA-F0-9\-]+)/files$', 'jobs_del.get_job_transfers'),
+ 
     url(r'^transfers$', 'jobs.get_transfer_list'),
 
     url(r'^config/audit$',    'config.get_audit'),

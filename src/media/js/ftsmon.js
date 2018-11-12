@@ -6,15 +6,23 @@ config(function($routeProvider) {
                                        resolve:     OverviewCtrl.resolve}).
         when('/jobs',                 {templateUrl: STATIC_ROOT + 'html/jobs/index.html',
                                        controller:  JobListCtrl,
-                                           resolve:     JobListCtrl.resolve}).
+                                       resolve:     JobListCtrl.resolve}).
         when('/job/:jobId',           {templateUrl: STATIC_ROOT + 'html/jobs/view.html',
                                        controller:  JobViewCtrl,
                                        resolve:     JobViewCtrl.resolve}).
+//______________________________________________________________________________________      
+        when('/jobs_del',             {templateUrl: STATIC_ROOT + 'html/jobs_del/jobs_del.html',
+                                       controller:  JobListDelCtrl,
+                                       resolve:     JobListDelCtrl.resolve}).
+        when('/job_del/:jobId',       {templateUrl: STATIC_ROOT + 'html/jobs_del/view_del.html',
+                                       controller:  JobDelViewCtrl,
+                                       resolve:     JobDelViewCtrl.resolve}).
+//_______________________________________________________________________________________
 
         when('/transfers',            {templateUrl: STATIC_ROOT + 'html/transfers.html',
                                        controller:  TransfersCtrl,
                                        resolve:     TransfersCtrl.resolve}).
-
+      
         when('/optimizer/',           {templateUrl: STATIC_ROOT + 'html/optimizer/optimizer.html',
                                        controller:  OptimizerCtrl,
                                        resolve:     OptimizerCtrl.resolve}).
@@ -68,6 +76,11 @@ config(function($routeProvider) {
         when('/overview/activities',  {templateUrl: STATIC_ROOT + 'html/overview/activities.html',
                                        controller:  OverviewActivitiesCtrl,
                                        resolve:     OverviewActivitiesCtrl.resolve}).
+//_______________________________________________________________________________________________________________       
+        when('/overview/deletion',  {templateUrl: STATIC_ROOT + 'html/overview/deletion.html',
+                                       controller:  OverviewDeletionCtrl,
+                                       resolve:     OverviewDeletionCtrl.resolve}).
+//_______________________________________________________________________________________________________________
 
         when('/500',                    {templateUrl: STATIC_ROOT + 'html/500.html'}).
 
@@ -190,6 +203,19 @@ config(function($routeProvider) {
         $location.path('/job/' + $rootScope.jobId).search({});
     }
 })
+
+
+//_______________________________________________________________
+.run(function($rootScope, $location) {
+    $rootScope.searchJob_del = function() {
+        $location.path('/job_del/' + $rootScope.jobId).search({});
+    }
+})
+
+//_______________________________________________________________
+
+
+
 .filter('safeFilter', function($filter) {
     return function(list, expr) {
         if (typeof(list) == 'undefined')

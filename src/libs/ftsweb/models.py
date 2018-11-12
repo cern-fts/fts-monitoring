@@ -168,7 +168,6 @@ class DmFile(models.Model):
     class Meta:
         db_table = 't_dm'
 
-
 class RetryError(models.Model):
     attempt  = models.IntegerField()
     datetime = models.DateTimeField()

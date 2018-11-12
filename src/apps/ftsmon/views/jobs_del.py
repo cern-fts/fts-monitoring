@@ -23,9 +23,8 @@ from django.http import Http404
 from datetime import datetime, timedelta
 
 from jsonify import jsonify, jsonify_paged
-from ftsweb.models import Job, File, RetryError, DmFile, ACTIVE_STATES, ON_HOLD_STATES
+from ftsweb.models import Job, File, RetryError, DmFile
 from util import get_order_by, ordered_field, paged, log_link
-from diagnosis import JobDiagnosis
 
 
 def setup_filters(http_request):
@@ -35,17 +34,12 @@ def setup_filters(http_request):
         'time_window': 1,
         'vo': None,
         'source_se': None,
-        'dest_se': None,
         'source_surl': None,
-        'dest_surl': None,
         'metadata': None,
-        'activity': None,
         'hostname': None,
         'reason': None,
         'with_file': None,
-        'diagnosis': False,
-        'with_debug': False,
-        'multireplica': False
+        'dest_se': None,
     }
 
     for key in filters.keys():
@@ -56,12 +50,6 @@ def setup_filters(http_request):
                 elif key == 'state' or key == 'with_file':
                     if http_request.GET[key]:
                         filters[key] = http_request.GET[key].split(',')
-                elif key == 'diagnosis':
-                    filters[key] = http_request.GET[key] not in ('0', 'false')
-                elif key == 'with_debug':
-                    filters[key] = http_request.GET[key] not in ('0', 'false')
-                elif key == 'multireplica':
-                    filters[key] = http_request.GET[key] not in ('0', 'false')
                 else:
                     filters[key] = http_request.GET[key]
         except:
@@ -87,7 +75,7 @@ class JobListDecorator(object):
     def get_job(self, job_id):
         job = {'job_id': job_id}
         self.cursor.execute(
-            "SELECT submit_time, job_state, vo_name, source_se, dest_se, priority, space_token, job_finished "
+            "SELECT submit_time, job_state, vo_name, source_se, dest_se, job_finished "
             "FROM t_job WHERE job_id = %s", [job_id])
         job_desc = self.cursor.fetchall()[0]
         job['submit_time'] = job_desc[0]
@@ -95,28 +83,19 @@ class JobListDecorator(object):
         job['vo_name'] = job_desc[2]
         job['source_se'] = job_desc[3]
         job['dest_se'] = job_desc[4]
-        job['priority'] = job_desc[5]
-        job['space_token'] = job_desc[6]
-        job['job_finished'] = job_desc[7]
+        job['job_finished'] = job_desc[5]
         self.cursor.execute(
-            """SELECT file_state, COUNT(file_id), SUM(log_file_debug), MAX(file_index)
-               FROM t_file WHERE job_id = %s GROUP BY file_state ORDER BY NULL
-            """,
-            [job_id])
+            """SELECT file_state, COUNT(file_id)
+               FROM t_dm WHERE job_id = %s GROUP BY file_state ORDER BY NULL
+            """, [job_id])
         result = self.cursor.fetchall()
         count = dict()
-        with_debug = 0
-        n_replicas = 0
         total = 0
         for r in result:
             count[r[0]] = r[1]
             total += r[1]
-            with_debug += r[2] if r[2] else 0
-            n_replicas = max(n_replicas, r[3])
         job['files'] = count
         job['count'] = total
-        job['with_debug'] = with_debug
-        job['n_replicas'] = n_replicas + 1
         return job
 
     def _decorated(self, index):
@@ -146,43 +125,37 @@ class JobListDecorator(object):
 
         return _Iter(self)
 
-
 @jsonify_paged
 def get_job_list(http_request):
     """
     This view is a little bit trickier than the others.
-    We get the list of job ids from t_job or t_file depending if
+    We get the list of job ids from t_job or t_dm depending if
     filtering by state of with_file is used.
     Luckily, the rest of fields are available in both tables
     """
     filters = setup_filters(http_request)
-
+    # for None destination
     if filters['with_file']:
-        job_ids = File.objects.values('job_id').distinct().filter(file_state__in=filters['with_file'])
+        job_ids = DmFile.objects.values('job_id').distinct().filter(file_state__in=filters['with_file']).filter(dest_se__isnull=True)
     elif filters['state']:
-        job_ids = Job.objects.values('job_id').filter(job_state__in=filters['state']).order_by('-submit_time')
+        job_ids = Job.objects.values('job_id').filter(job_state__in=filters['state']).order_by('-submit_time').filter(dest_se__isnull=True)
     else:
-        job_ids = Job.objects.values('job_id').order_by('-submit_time')
+        job_ids = Job.objects.values('job_id').order_by('-submit_time').filter(dest_se__isnull=True)
 
     if filters['time_window']:
         not_before = datetime.utcnow() - timedelta(hours=filters['time_window'])
         if filters['with_file']:
-            job_ids = job_ids.filter(Q(finish_time__gte=not_before) | Q(finish_time=None))
+            job_ids = job_ids.filter(Q(finish_time__gte=not_before) | Q(finish_time=None)).filter(dest_se__isnull=True)
         else:
-            job_ids = job_ids.filter(Q(job_finished__gte=not_before) | Q(job_finished=None))
+            job_ids = job_ids.filter(Q(job_finished__gte=not_before) | Q(job_finished=None)).filter(dest_se__isnull=True)
 
     if filters['vo']:
-        job_ids = job_ids.filter(vo_name=filters['vo'])
+        job_ids = job_ids.filter(vo_name=filters['vo']).filter(dest_se__isnull=True)
     if filters['source_se']:
-        job_ids = job_ids.filter(source_se=filters['source_se'])
-    if filters['dest_se']:
-        job_ids = job_ids.filter(dest_se=filters['dest_se'])
+        job_ids = job_ids.filter(source_se=filters['source_se']).filter(dest_se__isnull=True)
 
     job_list = JobListDecorator(map(lambda j: j['job_id'], job_ids))
-    if filters['diagnosis'] or filters['with_debug'] or filters['multireplica']:
-        job_list = JobDiagnosis(job_list, filters['diagnosis'], filters['with_debug'], filters['multireplica'])
     return job_list
-
 
 @jsonify
 def get_job_details(http_request, job_id):
@@ -196,18 +169,14 @@ def get_job_details(http_request, job_id):
 
     try:
         job = Job.objects.get(job_id=job_id)
-        count_files = File.objects.filter(job=job_id)
         count_dm = DmFile.objects.filter(job=job_id)
     except Job.DoesNotExist:
         raise Http404
 
     if reason:
-        count_files = count_files.filter(reason=reason)
         count_dm = count_dm.filter(reason=reason)
     if file_id:
-        count_files = count_files.filter(file_id=file_id)
         count_dm = count_dm.filter(file_id=file_id)
-    count_files = count_files.values('file_state').annotate(count=Count('file_state'))
     count_dm = count_dm.values('file_state').annotate(count=Count('file_state'))
 
     # Set job duration
@@ -218,10 +187,8 @@ def get_job_details(http_request, job_id):
 
     # Count as dictionary
     state_count = {}
-    for st in count_files:
-        state_count[st['file_state']] = st['count']
     for st in count_dm:
-        state_count[st['file_state']] = st['count'] + state_count.get(st['file_state'], 0)
+        state_count[st['file_state']] = st['count']
 
     return {'job': job, 'states': state_count}
 
@@ -279,16 +246,8 @@ def get_job_transfers(http_request, job_id):
         files = files.order_by(ordered_field('file_id', order_desc))
     elif order_by == 'size':
         files = files.order_by(ordered_field('filesize', order_desc))
-    elif order_by == 'throughput':
-        files = files.order_by(ordered_field('throughput', order_desc))
-    elif order_by == 'start_time':
-        files = files.order_by(ordered_field('start_time', order_desc))
     elif order_by == 'finish_time':
         files = files.order_by(ordered_field('finish_time', order_desc))
-    elif order_by == 'staging_start':
-        files = files.order_by(ordered_field('staging_start', order_desc))
-    elif order_by == 'staging_finished':
-        files = files.order_by(ordered_field('staging_finished', order_desc))
 
     # Pre-fetch
     files = list(files)
@@ -307,8 +266,6 @@ def get_job_transfers(http_request, job_id):
 
     total_size = sum(map(lambda f: f.filesize if f.filesize else 0, files))
     transferred = sum(map(lambda f: f.transferred if f.transferred else 0, files))
-    with_throughputs = filter(lambda f: f.throughput, files)
-    actives_throughput = filter(lambda f: f.file_state == 'ACTIVE', with_throughputs)
 
     stats = {
         'total_size': total_size,
@@ -323,10 +280,6 @@ def get_job_transfers(http_request, job_id):
 
     if running_time:
         stats['time_transfering'] = running_time
-    if len(actives_throughput):
-        stats['current_throughput'] = sum(map(lambda f: f.throughput, actives_throughput))
-    if len(with_throughputs):
-        stats['avg_throughput'] = sum(map(lambda f: f.throughput, with_throughputs)) / len(with_throughputs)
 
     # Now we got the stats, apply filters
     if http_request.GET.get('state', None):
@@ -346,60 +299,49 @@ def get_job_transfers(http_request, job_id):
     }
 
 
-def _contains_active_state(state_filer):
-    # Consider empty a list with active states (because all are in)
-    if not state_filer:
-        return True
-    return reduce(bool.__or__, map(lambda s: s in state_filer, ACTIVE_STATES+ON_HOLD_STATES))
+#@jsonify_paged
+#def get_transfer_list(http_request):
+#    filters = setup_filters(http_request)
 
-@jsonify_paged
-def get_transfer_list(http_request):
-    filters = setup_filters(http_request)
+#    transfers = File.objects
+#    if filters['state']:
+#        transfers = transfers.filter(file_state__in=filters['state'])
+#    else:
+#        transfers = transfers.exclude(file_state='NOT_USED')
+#    if filters['source_se']:
+#        transfers = transfers.filter(source_se=filters['source_se'])
+#    if filters['dest_se']:
+#        transfers = transfers.filter(dest_se=filters['dest_se'])
+#    if filters['source_surl']:
+#        transfers = transfers.filter(source_surl=filters['source_surl'])
+#    if filters['vo']:
+#        transfers = transfers.filter(vo_name=filters['vo'])
+#    if filters['time_window']:
+#        not_before = datetime.utcnow() - timedelta(hours=filters['time_window'])
+#        if _contains_active_state(filters['state']):
+#            transfers = transfers.filter(Q(finish_time__isnull=True) | (Q(finish_time__gte=not_before)))
+#        else:
+#            transfers = transfers.filter(Q(finish_time__gte=not_before))
+#    if filters['hostname']:
+#        transfers = transfers.filter(transfer_host=filters['hostname'])
+#    if filters['reason']:
+#        transfers = transfers.filter(reason=filters['reason'])
 
-    transfers = File.objects
-    if filters['state']:
-        transfers = transfers.filter(file_state__in=filters['state'])
-    else:
-        transfers = transfers.exclude(file_state='NOT_USED')
-    if filters['source_se']:
-        transfers = transfers.filter(source_se=filters['source_se'])
-    if filters['dest_se']:
-        transfers = transfers.filter(dest_se=filters['dest_se'])
-    if filters['source_surl']:
-        transfers = transfers.filter(source_surl=filters['source_surl'])
-    if filters['dest_surl']:
-        transfers = transfers.filter(dest_surl=filters['dest_surl'])
-    if filters['vo']:
-        transfers = transfers.filter(vo_name=filters['vo'])
-    if filters['time_window']:
-        not_before = datetime.utcnow() - timedelta(hours=filters['time_window'])
-        # Avoid querying for job_finished is NULL if there are no active states
-        if _contains_active_state(filters['state']):
-            transfers = transfers.filter(Q(finish_time__isnull=True) | (Q(finish_time__gte=not_before)))
-        else:
-            transfers = transfers.filter(Q(finish_time__gte=not_before))
-    if filters['activity']:
-        transfers = transfers.filter(activity=filters['activity'])
-    if filters['hostname']:
-        transfers = transfers.filter(transfer_host=filters['hostname'])
-    if filters['reason']:
-        transfers = transfers.filter(reason=filters['reason'])
-
-    transfers = transfers.values(
-        'file_id', 'file_state', 'job_id',
-        'source_se', 'dest_se', 'start_time', 'finish_time',
-        'activity', 'user_filesize', 'filesize'
-    )
+#    transfers = transfers.values(
+#        'file_id', 'file_state', 'job_id',
+#        'source_se', 'dest_se', 'start_time', 'finish_time',
+#        'user_filesize', 'filesize'
+#   )
 
     # Ordering
-    (order_by, order_desc) = get_order_by(http_request)
-    if order_by == 'id':
-        transfers = transfers.order_by(ordered_field('file_id', order_desc))
-    elif order_by == 'start_time':
-        transfers = transfers.order_by(ordered_field('start_time', order_desc))
-    elif order_by == 'finish_time':
-        transfers = transfers.order_by(ordered_field('finish_time', order_desc))
-    else:
-        transfers = transfers.order_by('-finish_time')
-
-    return transfers
+#    (order_by, order_desc) = get_order_by(http_request)
+#    if order_by == 'id':
+#        transfers = transfers.order_by(ordered_field('file_id', order_desc))
+#    elif order_by == 'start_time':
+#        transfers = transfers.order_by(ordered_field('start_time', order_desc))
+#    elif order_by == 'finish_time':
+#        transfers = transfers.order_by(ordered_field('finish_time', order_desc))
+#    else:
+#        transfers = transfers.order_by('-finish_time')
+   
+#    return transfers

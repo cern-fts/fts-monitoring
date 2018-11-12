@@ -14,8 +14,9 @@
                     <input id="global-source" type="text" data-ng-model="globalFilter.source_se" placeholder="Source storage"
                         data-typeahead="source for source in unique.sources | safeFilter:$viewValue"
                         data-typeahead-on-select="applyGlobalFilter()"/>
-                    <i class="icon-arrow-right"></i>
-                    <input id="global-destination"  type="text" data-ng-model="globalFilter.dest_se" placeholder="Destination storage"
+                    <i class="icon-arrow-right" data-ng-show="!attrs.hideIconright"></i>
+                    <input data-ng-show="!attrs.hidePairdest" 
+                           id="global-destination"  type="text" data-ng-model="globalFilter.dest_se" placeholder="Destination storage"
                         typeahead="dest for dest in unique.destinations | safeFilter:$viewValue"
                         data-typeahead-on-select="applyGlobalFilter()"/>
                 </div>
@@ -30,6 +31,7 @@
                         <option value="4">4 hours</option>
                         <option value="5">5 hours</option>
                         <option value="6">6 hours</option>
+                        <option value="24">24 hours</option>
                     </select>
                 </div>
             </div>
