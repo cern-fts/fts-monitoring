@@ -54,7 +54,7 @@ def get_deletion(http_request):
     query = """
     SELECT COUNT(file_state) as count, file_state, source_se, vo_name
     FROM t_dm
-    WHERE file_state in ('SUBMITTED', 'ACTIVE') %s
+    WHERE file_state in ('DELETE', 'STARTED') %s
     GROUP BY file_state, source_se, vo_name order by NULL
     """ % pairs_filter
     cursor.execute(query, se_params)
@@ -99,7 +99,7 @@ def get_deletion(http_request):
     (order_by, order_desc) = get_order_by(http_request)
 
     if order_by == 'active':
-        sorting_method = lambda o: (o.get('active', 0), o.get('submitted', 0))
+        sorting_method = lambda o: (o.get('started', 0), o.get('delete', 0))
     elif order_by == 'finished':
         sorting_method = lambda o: (o.get('finished', 0), o.get('failed', 0))
     elif order_by == 'failed':
@@ -109,12 +109,12 @@ def get_deletion(http_request):
     elif order_by == 'rate':
         sorting_method = lambda o: (o.get('rate', 0), o.get('finished', 0))
     else:
-        sorting_method = lambda o: (o.get('submitted', 0), o.get('active', 0))
+        sorting_method = lambda o: (o.get('delete', 0), o.get('active', 0))
 
     # Generate summary - sum of all values
     summary = {
-        'submitted': sum(map(lambda o: o.get('submitted', 0), objs), 0),
-        'active': sum(map(lambda o: o.get('active', 0), objs), 0),
+        'submitted': sum(map(lambda o: o.get('delete', 0), objs), 0),
+        'active': sum(map(lambda o: o.get('started', 0), objs), 0),
         'finished': sum(map(lambda o: o.get('finished', 0), objs), 0),
         'failed': sum(map(lambda o: o.get('failed', 0), objs), 0),
         'canceled': sum(map(lambda o: o.get('canceled', 0), objs), 0),
