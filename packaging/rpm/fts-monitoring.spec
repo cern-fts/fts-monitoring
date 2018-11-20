@@ -13,7 +13,11 @@ BuildRequires:  python2-devel
 
 #Requires:  cx_Oracle
 Requires:   MySQL-python
-Requires:   Django >= 1.3.7
+%if %{?fedora}%{!?fedora:0} >= 18 || %{?rhel}%{!?rhel:0} >= 7
+Requires: python-django16
+%else
+Requires: Django >= 1.3.7
+%endif
 Requires:   httpd
 Requires:   mod_ssl
 Requires:   mod_wsgi
