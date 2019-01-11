@@ -52,13 +52,16 @@ class OverviewExtended(object):
         """
         Calculate throughput (in MB) over this pair + vo over the last minute
         """
-        now = datetime.utcnow()
-        window_size = 30
-        window_start = now - timedelta(minutes=window_size)
+        try:
+            time_window = timedelta(hours=int(http_request.GET['time_window']))
+            not_before = datetime.utcnow() - time_window
+        except:
+            not_before = datetime.utcnow() - timedelta(minutes=30)
+
 
         oe = OptimizerEvolution.objects.filter(source_se=source, dest_se=destination)\
             .values('throughput', 'filesize_avg', 'active')\
-            .filter(datetime__gte=window_start)\
+            .filter(datetime__gte=not_before)\
             .order_by('-datetime')[0:1]
         if len(oe) == 0:
             return 0, 0
