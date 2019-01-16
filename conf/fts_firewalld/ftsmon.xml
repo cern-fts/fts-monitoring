@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>fts-monitoring</short>
+  <description>The File Transfer Service (FTS) coordinates transfers between SEs.</description>
+  <port protocol="tcp" port="8449"/>
+</service>
