@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # Copyright notice:
 # Copyright (C) CERN, 2015.
 #
