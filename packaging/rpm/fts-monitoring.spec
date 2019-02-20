@@ -39,28 +39,9 @@ Summary:        SELinux support for fts-monitoring
 Group:          Applications/Internet
 Requires:       fts-monitoring = %{version}-%{release}
 
-
-%if %{?rhel}%{!?rhel:0} >= 7
-%package firewalld
-Summary: FTS3 Web Application Firewalld
-Group: Applications/Internet
-
-Requires:  firewalld-filesystem
-
-%description firewalld
-FTS3 Web Application firewalld.
-%endif
-
 %description selinux
 This package labels port 8449, used by fts-monitoring, as http_port_t,
 so Apache can bind to it.
-
-
-%if %{?rhel}%{!?rhel:0} >= 7
-%post firewalld
-%firewalld_reload
-%endif
-
 
 %post selinux
 if [ $1 -gt 0 ] ; then # First install
@@ -81,6 +62,21 @@ if [ $1 -eq 0 ] ; then # Final removal
         execstack -s "$libnzz"
     fi
 fi
+
+
+%if %{?rhel}%{!?rhel:0} >= 7
+%package firewalld
+Summary: FTS3 Web Application Firewalld
+Group: Applications/Internet
+
+Requires:  firewalld-filesystem
+
+%description firewalld
+FTS3 Web Application firewalld.
+%post firewalld
+%firewalld_reload
+%endif
+
 
 %prep
 %setup -q
