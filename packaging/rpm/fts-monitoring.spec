@@ -73,8 +73,7 @@ Requires:  firewalld-filesystem
 
 %description firewalld
 FTS3 Web Application firewalld.
-%post firewalld
-%firewalld_reload
+
 %endif
 
 
