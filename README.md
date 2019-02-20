@@ -9,7 +9,7 @@ It is *not* a tool for historical data, data aggregation, etc... For this sort o
 
 Firewalld is installed by default on some Linux distributions, including many images of CentOS 7. 
 
-In order to install the firwalld support for FTS Web Monitoring you need to install the fts-monitoring-firewalld package.
+In order to add the firwalled support for FTS Web Monitoring you need to install the fts-monitoring-firewalld package.
 
 After the installation  you can enable the firewalld service and reboot your server. Keep in mind that enabling firewalld will cause the service to start up at boot. It is best practice to create your firewall rules and take the opportunity to test them before configuring this behavior in order to avoid potential issues.
 
