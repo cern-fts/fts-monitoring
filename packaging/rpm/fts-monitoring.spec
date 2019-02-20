@@ -108,7 +108,7 @@ install -m 644 conf/fts3firewalld/ftsmon.xml %{buildroot}/%{_prefix}/lib/firewal
 %files selinux
 
 %changelog
-* Wed Feb 20 2018 Andrea Manzi amanzi@cern.ch> - 3.8.3-1
+* Wed Feb 20 2019 Andrea Manzi amanzi@cern.ch> - 3.8.3-1
 - Update for new upstream release
 * Mon Sep 24 2018 Andrea Manzi amanzi@cern.ch> - 3.8.0-1
 - Update for new upstream release
