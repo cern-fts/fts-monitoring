@@ -46,7 +46,6 @@ Summary: FTS3 Web Application Firewalld
 Group: Applications/Internet
 
 Requires:  firewalld-filesystem
-Requires(post): firewalld-filesystem
 
 %description firewalld
 FTS3 Web Application firewalld.
