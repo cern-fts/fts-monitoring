@@ -7,11 +7,11 @@ It is *not* a tool for historical data, data aggregation, etc... For this sort o
 
 ## Firewalld: How to set up a firewall using firewalld on centos7
 
-Firewalld is installed by default on some Linux distributions, including many images of CentOS 7. However, it may be necessary for you to install firewalld yourself:
+Firewalld is installed by default on some Linux distributions, including many images of CentOS 7. 
 
-    sudo yum install firewalld
+In order to install the firwalld support for FTS Web Monitoring you need to install the fts-monitoring-firewalld package.
 
-After you install firewalld, you can enable the service and reboot your server. Keep in mind that enabling firewalld will cause the service to start up at boot. It is best practice to create your firewall rules and take the opportunity to test them before configuring this behavior in order to avoid potential issues.
+After the installation  you can enable the firewalld service and reboot your server. Keep in mind that enabling firewalld will cause the service to start up at boot. It is best practice to create your firewall rules and take the opportunity to test them before configuring this behavior in order to avoid potential issues.
 
     sudo systemctl enable firewalld
     sudo reboot
@@ -27,7 +27,7 @@ running
 
 This indicates that our firewall is up and running with the default configuration.
 
-When running fts-rest, we can allow this traffic for interfaces in our "public" zone for this session by copying first ftsmon.xml in /usr/lib/firewalld/services and then typing:
+When running FTS Web Monitorin, we can allow this traffic for interfaces in our "public" zone for this session by typing:
 
     sudo firewall-cmd --zone=public --add-service=ftsmon
 

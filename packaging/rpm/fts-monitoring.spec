@@ -39,9 +39,29 @@ Summary:        SELinux support for fts-monitoring
 Group:          Applications/Internet
 Requires:       fts-monitoring = %{version}-%{release}
 
+
+%if %{?rhel}%{!?rhel:0} >= 7
+%package firewalld
+Summary: FTS3 Web Application Firewalld
+Group: Applications/Internet
+
+Requires:  firewalld-filesystem
+Requires(post): firewalld-filesystem
+
+%description firewalld
+FTS3 Web Application firewalld.
+%endif
+
 %description selinux
 This package labels port 8449, used by fts-monitoring, as http_port_t,
 so Apache can bind to it.
+
+
+%if %{?rhel}%{!?rhel:0} >= 7
+%post firewalld
+%firewalld_reload
+%endif
+
 
 %post selinux
 if [ $1 -gt 0 ] ; then # First install
@@ -74,6 +94,10 @@ mkdir -p %{buildroot}%{_sysconfdir}/httpd/conf.d/
 cp -r -p src/* %{buildroot}%{_datadir}/fts3web/
 cp -r -p conf/fts3web %{buildroot}%{_sysconfdir}
 install -m 644 conf/httpd.conf.d/ftsmon.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/
+%if %{?rhel}%{!?rhel:0} >=7
+install -m 644 conf/fts3firewalld/ftsmon.xml %{buildroot}/%{_prefix}/lib/firewalld/services/ftsmon.xml
+%endif
+
 
 %files
 %{_datadir}/fts3web
@@ -82,9 +106,16 @@ install -m 644 conf/httpd.conf.d/ftsmon.conf %{buildroot}%{_sysconfdir}/httpd/co
 %config(noreplace) %attr(640, root, apache) %{_sysconfdir}/fts3web/fts3web.ini
 %doc LICENSE
 
+%if %{?rhel}%{!?rhel:0} >= 7
+%files ftsmon
+%config(noreplace) %{_prefix}/lib/firewalld/services/fts3mon.xml
+%endif
+
 %files selinux
 
 %changelog
+* Wed Feb 20 2018 Andrea Manzi amanzi@cern.ch> - 3.8.3-1
+- Update for new upstream release
 * Mon Sep 24 2018 Andrea Manzi amanzi@cern.ch> - 3.8.0-1
 - Update for new upstream release
 * Thu Jun 07 2018 Andrea Manzi amanzi@cern.ch> - 3.7.10-1
