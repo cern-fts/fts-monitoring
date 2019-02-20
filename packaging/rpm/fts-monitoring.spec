@@ -101,7 +101,7 @@ install -m 644 conf/fts3firewalld/ftsmon.xml %{buildroot}/%{_prefix}/lib/firewal
 %doc LICENSE
 
 %if %{?rhel}%{!?rhel:0} >= 7
-%files ftsmon
+%files firewalld
 %config(noreplace) %{_prefix}/lib/firewalld/services/fts3mon.xml
 %endif
 
