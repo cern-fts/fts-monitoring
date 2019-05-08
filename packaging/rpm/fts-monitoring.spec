@@ -1,4 +1,4 @@
- tpSummary:    FTS3 Web Application for monitoring
+Summary:    FTS3 Web Application for monitoring
 Name:       fts-monitoring
 Version:    3.9.0
 Release:    1%{?dist}
