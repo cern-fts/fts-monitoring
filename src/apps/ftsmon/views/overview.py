@@ -120,54 +120,86 @@ def get_overview(http_request):
     # Result
     triplets = dict()
 
-    # Non terminal
-    query = """
-    SELECT COUNT(file_state) as count, file_state, source_se, dest_se, vo_name
-    FROM t_file
-    WHERE file_state in ('SUBMITTED', 'ACTIVE', 'READY', 'STAGING', 'STARTED') %s
-    GROUP BY file_state, source_se, dest_se, vo_name order by NULL
-    """ % pairs_filter
-    cursor.execute(query, se_params)
-    for row in cursor.fetchall():
-        triplet_key = (row[2], row[3], row[4])
-        triplet = triplets.get(triplet_key, dict())
+    
+    if filters['only_summary']:
+        # Non terminal
+        query = """
+        SELECT COUNT(file_state) as count, file_state,  vo_name
+        FROM t_file
+        WHERE file_state in ('SUBMITTED', 'ACTIVE', 'READY', 'STAGING', 'STARTED') %s
+        GROUP BY file_state, vo_name order by NULL
+        """ % pairs_filter
+        cursor.execute(query, se_params)
+        for row in cursor.fetchall():
+            key = row[2]
+            triplet = triplets.get(key, dict())
+            triplet[row[1].lower()] = row[0]
+            triplets[key] = triplet
 
-        triplet[row[1].lower()] = row[0]
-
-        triplets[triplet_key] = triplet
-
-    # Terminal
-    query = """
-    SELECT COUNT(file_state) as count, file_state, source_se, dest_se, vo_name
-    FROM t_file
-    WHERE file_state in ('FINISHED', 'FAILED', 'CANCELED') %s
+    
+        # Terminal
+        query = """
+        SELECT COUNT(file_state) as count, file_state,  vo_name
+        FROM t_file
+        WHERE file_state in ('FINISHED', 'FAILED', 'CANCELED') %s
         AND finish_time > %%s
-    GROUP BY file_state, source_se, dest_se, vo_name  order by NULL
-    """ % pairs_filter
-    cursor.execute(query, se_params + [not_before.strftime('%Y-%m-%d %H:%M:%S')])
-    for row in cursor.fetchall():
-        triplet_key = (row[2], row[3], row[4])
-        triplet = triplets.get(triplet_key, dict())
+        GROUP BY file_state,  vo_name  order by NULL
+        """ % pairs_filter
+        cursor.execute(query, se_params + [not_before.strftime('%Y-%m-%d %H:%M:%S')])
+        for row in cursor.fetchall():
+           key = row[2]
+           triplet = triplets.get(key, dict())
+           triplet[row[1].lower()] = row[0]
+           triplets[key] = triplet
+   
+    else:
+        query = """
+        SELECT COUNT(file_state) as count, file_state, source_se, dest_se, vo_name
+        FROM t_file
+        WHERE file_state in ('SUBMITTED', 'ACTIVE', 'READY', 'STAGING', 'STARTED') %s
+        GROUP BY file_state, source_se, dest_se, vo_name order by NULL
+        """ % pairs_filter
+        cursor.execute(query, se_params)
+        for row in cursor.fetchall():
+            triplet_key = (row[2], row[3], row[4])
+            triplet = triplets.get(triplet_key, dict())
+            triplet[row[1].lower()] = row[0]
+            triplets[triplet_key] = triplet
+      
+        query = """
+        SELECT COUNT(file_state) as count, file_state, source_se, dest_se, vo_name
+        FROM t_file
+        WHERE file_state in ('FINISHED', 'FAILED', 'CANCELED') %s
+        AND finish_time > %%s
+        GROUP BY file_state, source_se, dest_se, vo_name  order by NULL
+        """ % pairs_filter
+        cursor.execute(query, se_params + [not_before.strftime('%Y-%m-%d %H:%M:%S')])
+        for row in cursor.fetchall():
+            triplet_key = (row[2], row[3], row[4])
+            triplet = triplets.get(triplet_key, dict())
 
-        triplet[row[1].lower()] = row[0]
+            triplet[row[1].lower()] = row[0]
 
-        triplets[triplet_key] = triplet
-
+            triplets[triplet_key] = triplet
+    
     # Transform into a list
     objs = []
     for (triplet, obj) in triplets.iteritems():
-        obj['source_se'] = triplet[0]
-        obj['dest_se'] = triplet[1]
-        obj['vo_name'] = triplet[2]
-        if 'current' not in obj and 'active' in obj:
-            obj['current'] = 0
-        failed = obj.get('failed', 0)
-        finished = obj.get('finished', 0)
-        total = failed + finished
-        if total > 0:
-            obj['rate'] = (finished * 100.0) / total
+        if filters['only_summary']:
+            obj['vo_name'] = triplet[0]
         else:
-            obj['rate'] = None
+            obj['source_se'] = triplet[0]
+            obj['dest_se'] = triplet[1]
+            obj['vo_name'] = triplet[2]
+            if 'current' not in obj and 'active' in obj:
+                obj['current'] = 0
+            failed = obj.get('failed', 0)
+            finished = obj.get('finished', 0)
+            total = failed + finished
+            if total > 0:
+                obj['rate'] = (finished * 100.0) / total
+            else:
+                obj['rate'] = None
         objs.append(obj)
 
     # Ordering
@@ -206,10 +238,15 @@ def get_overview(http_request):
         summary['rate'] = (float(summary['finished']) / (summary['finished'] + summary['failed'])) * 100
 
     # Return
-    return {
-        'overview': paged(
-            OverviewExtended(not_before, sorted(objs, key=sorting_method, reverse=order_desc), cursor=cursor),
-            http_request
-        ),
-        'summary': summary
-    }
+    if filters['only_summary']:
+        return {
+            'summary': summary
+        }
+    else:
+        return {
+            'overview': paged(
+                OverviewExtended(not_before, sorted(objs, key=sorting_method, reverse=order_desc), cursor=cursor),
+                http_request
+            ),
+            'summary': summary
+        }

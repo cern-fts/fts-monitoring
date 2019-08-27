@@ -45,7 +45,8 @@ def setup_filters(http_request):
         'with_file': None,
         'diagnosis': False,
         'with_debug': False,
-        'multireplica': False
+        'multireplica': False,
+        'only_summary' : False
     }
 
     for key in filters.keys():
