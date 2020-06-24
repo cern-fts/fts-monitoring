@@ -126,7 +126,7 @@ def get_overview(http_request):
         query = """
         SELECT COUNT(file_state) as count, file_state,  vo_name
         FROM t_file
-        WHERE file_state in ('SUBMITTED', 'ACTIVE', 'READY', 'STAGING', 'STARTED') %s
+        WHERE file_state in ('SUBMITTED', 'ACTIVE', 'READY', 'STAGING', 'STARTED', 'ARCHIVING') %s
         GROUP BY file_state, vo_name order by NULL
         """ % pairs_filter
         cursor.execute(query, se_params)
@@ -156,7 +156,7 @@ def get_overview(http_request):
         query = """
         SELECT COUNT(file_state) as count, file_state, source_se, dest_se, vo_name
         FROM t_file
-        WHERE file_state in ('SUBMITTED', 'ACTIVE', 'READY', 'STAGING', 'STARTED') %s
+        WHERE file_state in ('SUBMITTED', 'ACTIVE', 'READY', 'STAGING', 'STARTED', 'ARCHIVING') %s
         GROUP BY file_state, source_se, dest_se, vo_name order by NULL
         """ % pairs_filter
         cursor.execute(query, se_params)
@@ -217,6 +217,8 @@ def get_overview(http_request):
         sorting_method = lambda o: (o.get('staging', 0), o.get('started', 0))
     elif order_by == 'started':
         sorting_method = lambda o: (o.get('started', 0), o.get('staging', 0))
+    elif order_by == 'archiving':
+        sorting_method = lambda o: (o.get('archiving', 0), o.get('staging', 0))
     elif order_by == 'rate':
         sorting_method = lambda o: (o.get('rate', 0), o.get('finished', 0))
     else:
@@ -233,6 +235,7 @@ def get_overview(http_request):
         'current': sum(map(lambda o: o.get('current', 0), objs), 0),
         'staging': sum(map(lambda o: o.get('staging', 0), objs), 0),
         'started': sum(map(lambda o: o.get('started', 0), objs), 0),
+        'archiving': sum(map(lambda o: o.get('archiving', 0), objs), 0),
     }
     if summary['finished'] > 0 or summary['failed'] > 0:
         summary['rate'] = (float(summary['finished']) / (summary['finished'] + summary['failed'])) * 100
