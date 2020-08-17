@@ -17,6 +17,7 @@
             <i class="icon-time"></i> Job finished: {{job.job.job_finished}}<br/>
             <i class="icon-star"></i> Priority: {{job.job.priority}}<br/>
             <i class="icon-download-alt"></i> Bring online: {{job.job.bring_online}}<br/>
+            <i class="icon-folder-close"></i> Archive timeout: {{job.job.archive_timeout}}<br/>
         </p>
     </div>
     <div class="span6">
@@ -26,6 +27,7 @@
             <i class="icon-refresh"></i> Job type: {{job.job.job_type}}<br/>
             <i class="icon-ban-circle"></i> Cancel flag: {{job.job.cancel_job}}<br/>
             <i class="icon-time"></i> Pin lifetime: {{job.job.copy_pin_lifetime}}<br/>
+            <i class="icon-tasks"></i> Target QoS: {{job.job.target_qos}}<br/>
         </p>
     </div>
 </div>
@@ -120,17 +122,23 @@
                <span data-order-by="throughput">Throughput</span>
             </th>
             <th style="width: 6%">Remaining</th>
-            <th style="width: 10%">
+            <th style="width: 8%">
                <span data-order-by="start_time">Start Time</span>
             </th>
-            <th style="width: 10%">
+            <th style="width: 8%">
                <span data-order-by="finish_time">Finish Time</span>
             </th>
-            <th style="width: 10%">
+            <th style="width: 8%">
                 <span data-order-by="staging_start">Staging Start</span>
             </th>
-            <th style="width: 10%">
+            <th style="width: 8%">
                 <span data-order-by="staging_finished">Staging End</span>
+            </th>
+            <th style="width: 8%">
+                <span data-order-by="archiving_start">Archiving Start</span>
+            </th>
+            <th style="width: 8%">
+                <span data-order-by="archiving_finished">Archiving End</span>
             </th>
             <th style="width: 6%"></th>
         </tr>
@@ -154,6 +162,8 @@
             <td>{{file.finish_time}}</td>
             <td>{{file.staging_start}}</td>
             <td>{{file.staging_finished}}</td>
+            <td>{{file.archive_start_time}}</td>
+            <td>{{file.archive_finish_time}}</td>
             <td>
                 <span data-ng-if="file.log_file">
                    <a href="{{file.log_file}}">
