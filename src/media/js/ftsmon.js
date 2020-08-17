@@ -280,6 +280,8 @@ function joinStates(states)
         str += 'READY,';
     if (states.staging)
         str += 'STAGING,';
+    if (states.archiving)
+        str += 'ARCHIVING,';
     if (states.active)
         str += 'ACTIVE,';
     if (states.canceled)
@@ -315,6 +317,8 @@ function statesFromString(str)
                 st.ready = true;
             if (states[i] == 'STAGING')
                 st.staging = true;
+            if (states[i] == 'ARCHIVING')
+                st.archiving = true;
             if (states[i] == 'ACTIVE')
                 st.active = true;
             if (states[i] == 'CANCELED')

@@ -78,6 +78,9 @@
     <button type="button" class="btn btn-staging btn-small"
             data-ng-model="filter.state.staging" data-btn-checkbox
             data-ng-disabled="!job.states.STAGING">{{job.states.STAGING}} STAGING</button>
+    <button type="button" class="btn btn-archiving btn-small"
+            data-ng-model="filter.state.archiving" data-btn-checkbox
+            data-ng-disabled="!job.states.ARCHIVING">{{job.states.ARCHIVING}} ARCHIVING</button>
     <button type="button" class="btn btn-primary btn-small"
             data-ng-model="filter.state.active" data-btn-checkbox
             data-ng-disabled="!job.states.ACTIVE">{{job.states.ACTIVE}} ACTIVE</button>
