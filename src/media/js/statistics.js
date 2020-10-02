@@ -1,6 +1,6 @@
 
 // Overview
-var queueColors = ["#fae932", "#9ed5ff", "#006dcc", "#990099"];
+var queueColors = ["#fae932", "#9ed5ff", "#006dcc", "#990099", "#2f96b4"];
 var lastHourColors = ["#5bb75b", "#bd362f"];
 
 function _generateOverviewPlots($scope, stats)
@@ -8,9 +8,11 @@ function _generateOverviewPlots($scope, stats)
     $scope.queuePlot = new Chart(document.getElementById("queuePlot"), {
         type: "doughnut",
         data: {
-            labels: ['Submitted', 'Ready', 'Active', 'Staging'],
+            labels: ['Submitted', 'Ready', 'Active', 'Staging', 'Archiving'],
             datasets: [{
-                data: [stats.lasthour.submitted, stats.lasthour.ready, stats.lasthour.active, stats.lasthour.staging],
+                data: [stats.lasthour.submitted, stats.lasthour.ready,
+                       stats.lasthour.active, stats.lasthour.staging,
+                       stats.lasthour.archiving],
                 backgroundColor: queueColors
             }],
         },
@@ -31,7 +33,9 @@ function _generateOverviewPlots($scope, stats)
 function _updateOverviewPlots($scope, stats)
 {
     $scope.queuePlot.data.datasets = [{
-        data: [stats.lasthour.submitted, stats.lasthour.ready, stats.lasthour.active, stats.lasthour.staging],
+        data: [stats.lasthour.submitted, stats.lasthour.ready,
+               stats.lasthour.active, stats.lasthour.staging,
+               stats.lasthour.archiving],
         backgroundColor: queueColors
     }];
     $scope.queuePlot.update();
@@ -206,7 +210,24 @@ function _generateServerPlots($scope, servers)
         options: {
             title: {
                 display: true,
-                text: "Started"
+                text: "Staging Started"
+            }
+        }
+    });
+
+    $scope.archivingPlot = new Chart(document.getElementById("archivingPlot"), {
+        type: "doughnut",
+        data: {
+            labels: labels,
+            datasets: [{
+                data: _dataByState(servers, 'archiving'),
+                backgroundColor: serverColors
+            }],
+        },
+        options: {
+            title: {
+                display: true,
+                text: "Archiving"
             }
         }
     });
@@ -255,6 +276,13 @@ function _updateServerPlots($scope, servers)
         backgroundColor: serverColors
     }];
     $scope.startedPlot.update();
+
+    $scope.archivingPlot.data.labels = labels;
+    $scope.archivingPlot.data.datasets = [{
+        data: _dataByState(servers, 'archiving'),
+        backgroundColor: serverColors
+    }];
+    $scope.archivingPlot.update();
 }
 
 function StatsServersCtrl($rootScope, $location, $scope, servers, Servers)

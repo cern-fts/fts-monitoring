@@ -12,10 +12,11 @@
         <tr>
             <th style="width: 10%">Server</th>
             <th style="width: 10%">Services</th>
-            <th class="numeric" style="width: 12%">Submissions</th>
-            <th class="numeric" style="width: 12%">Executed</th>
-            <th class="numeric" style="width: 12%">Active</th>
-            <th class="numeric" style="width: 12%">Staging started</th>
+            <th class="numeric" style="width: 10%">Submissions</th>
+            <th class="numeric" style="width: 10%">Executed</th>
+            <th class="numeric" style="width: 10%">Active</th>
+            <th class="numeric" style="width: 10%">Staging started</th>
+            <th class="numeric" style="width: 10%">Archiving</th>
         </tr>
     </thead>
     <tbody>
@@ -37,18 +38,19 @@
             <td class="numeric">{{s.transfers}}</td>
             <td class="numeric">{{s.active}}</td>
             <td class="numeric">{{s.started}}</td>
+            <td class="numeric">{{s.archiving}}</td>
         </tr>
     </tbody>
 </table>
 
 <div class="row-fluid">
-    <div class="span4" style="text-align: center">
+    <div class="span4">
         <canvas id="submitPlot"></canvas>
     </div>
-    <div class="span4" style="text-align: center">
+    <div class="span4">
         <canvas id="executedPlot"></canvas>
     </div>
-    <div class="span4" style="text-align: center">
+    <div class="span4">
         <canvas id="activePlot"></canvas>
     </div>
 </div>
@@ -59,5 +61,7 @@
     <div class="span4">
         <canvas id="startedPlot"></canvas>
     </div>
-    <div class="span4"></div>
+    <div class="span4">
+        <canvas id="archivingPlot"></canvas>
+    </div>
 </div>

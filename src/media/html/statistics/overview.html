@@ -28,6 +28,7 @@
                     <th>Ready</th>
                     <th>Active</th>
                     <th>Staging</th>
+                    <th>Archiving</th>
                 </tr>
             </thead>
             <tbody>
@@ -49,6 +50,9 @@
                         <span data-ng-show="{{stats.lasthour.on_hold_staging}}">
                             (<a href="#/transfers?hostname={{host|escape}}&state=ON_HOLD_STAGING" title="On hold">{{stats.lasthour.on_hold_staging}}</a>)
                         </span>
+                    </td>
+                    <td>
+                        <a href="#/transfers?hostname={{host|escape}}&state=ARCHIVING">{{stats.lasthour.archiving}}</a>
                     </td>
                 </tr>
             </tbody>
