@@ -128,7 +128,7 @@ tr.nested td {
 }
 
 .ARCHIVING {
-    background: #990099;
+    background: #2f96b4;
 }
 
 .ON_HOLD_STAGING {
@@ -200,29 +200,29 @@ td.ON_HOLD, .ON_HOLD {
 /* Archiving button */
 .btn-archiving {
     color: #ffffff;
-    background-color: #990099;
-    background-image: linear-gradient(to bottom, #993D99, #990099);
-    border-color: #993D7A;
+    background-color: #2f96b4;
+    background-image: linear-gradient(to bottom, #429bb4, #2f96b4);
+    border-color: #2f96a5;
 }
 
 .btn-archiving:hover {
     color: #ffffff;
-    background-color: #991F99;
+    background-color: #2f96d3;
     background-image: none;
-    border-color: #993D7A;
+    border-color: #2f96a5;
 }
 
 .btn-archiving.active {
     color: #ffffff;
-    background-color: #660066;
+    background-color: #25818b;
     background-image: none;
-    border-color: #993D7A;
+    border-color: #2f96a5;
 }
 
 .btn-archiving[disabled] {
     color: white;
-    background-color: #990099;
-    border-color: #993D7A;
+    background-color: #2f96b4;
+    border-color: #2f96a5;
 }
 
 /* Delete button */
