@@ -1,6 +1,6 @@
 Summary:    FTS3 Web Application for monitoring
 Name:       fts-monitoring
-Version:    3.9.1
+Version:    3.10.0
 Release:    1%{?dist}
 URL:        http://fts3-service.web.cern.ch
 License:    ASL 2.0
@@ -109,15 +109,18 @@ install -m 644 conf/fts3firewalld/ftsmon.xml %{buildroot}/%{_prefix}/lib/firewal
 %files selinux
 
 %changelog
-* Tue Aug 27 2019 Andrea Manzi amanzi@cern.ch> - 3.9.1-1
-- new upstream relase
-* Wed May 8 2019 Andrea Manzi amanzi@cern.ch> - 3.9.0-1
+* Mon Dec 07 2020 Mihai Patrascoiu <mipatras@cern.ch> - 3.10.0-1
+- New upstream release
+- Support for Archive Monitoring
+* Tue Aug 27 2019 Andrea Manzi <amanzi@cern.ch> - 3.9.1-1
+- New upstream release
+* Wed May 8 2019 Andrea Manzi <amanzi@cern.ch> - 3.9.0-1
 - Align package version to fts minor release
-* Wed Feb 20 2019 Andrea Manzi amanzi@cern.ch> - 3.8.3-1
+* Wed Feb 20 2019 Andrea Manzi <amanzi@cern.ch> - 3.8.3-1
 - Update for new upstream release
-* Mon Sep 24 2018 Andrea Manzi amanzi@cern.ch> - 3.8.0-1
+* Mon Sep 24 2018 Andrea Manzi <amanzi@cern.ch> - 3.8.0-1
 - Update for new upstream release
-* Thu Jun 07 2018 Andrea Manzi amanzi@cern.ch> - 3.7.10-1
+* Thu Jun 07 2018 Andrea Manzi <amanzi@cern.ch> - 3.7.10-1
 - Update for new upstream release
 * Mon Sep 07 2015 Alejandro Alarez Ayllon <aalvarez@cern.ch> - 3.3.0-1
 - Update for new upstream release
