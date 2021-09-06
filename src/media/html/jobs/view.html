@@ -23,6 +23,7 @@
     <div class="span6">
         <p>
             <i class="icon-hdd"></i> Received by {{job.job.submit_host}}<br/>
+            <i class="icon-remove-circle"></i> Job expires: {{job.job.max_time_in_queue}}<br/>
             <i class="icon-remove"></i> Overwrite flag: {{job.job.overwrite_flag}}<br/>
             <i class="icon-refresh"></i> Job type: {{job.job.job_type}}<br/>
             <i class="icon-ban-circle"></i> Cancel flag: {{job.job.cancel_job}}<br/>
