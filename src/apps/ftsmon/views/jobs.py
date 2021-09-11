@@ -46,7 +46,7 @@ def setup_filters(http_request):
         'diagnosis': False,
         'with_debug': False,
         'multireplica': False,
-        'only_summary' : False
+        'only_summary': False
     }
 
     for key in filters.keys():
@@ -197,7 +197,9 @@ def get_job_details(http_request, job_id):
 
     try:
         job = Job.objects.get(job_id=job_id)
-        job.expiry_time = datetime.utcfromtimestamp(job.max_time_in_queue).strftime("%Y-%m-%dT%H:%M:%SZ")
+        job.expiry_time = ""
+        if job.max_time_in_queue is not None:
+            job.expiry_time = datetime.utcfromtimestamp(job.max_time_in_queue).strftime("%Y-%m-%dT%H:%M:%SZ")
         count_files = File.objects.filter(job=job_id)
         count_dm = DmFile.objects.filter(job=job_id)
     except Job.DoesNotExist:
