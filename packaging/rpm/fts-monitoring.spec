@@ -1,12 +1,12 @@
 Summary:    FTS3 Web Application for monitoring
 Name:       fts-monitoring
-Version:    3.10.0
+Version:    3.11.0
 Release:    1%{?dist}
-URL:        http://fts3-service.web.cern.ch
+URL:        https://fts.web.cern.ch
 License:    ASL 2.0
 Group:      Applications/Internet
 BuildArch:  noarch
-# wget https://gitlab.cern.ch/fts/fts-monitoring/repository/archive.tar.gz?ref=v3.7.5 -O fts-monitoring-3.7.5.tar.gz
+# wget https://gitlab.cern.ch/fts/fts-monitoring/repository/archive.tar.gz?ref=v3.11.0 -O fts-monitoring-3.11.0.tar.gz
 Source0: %{name}-%{version}.tar.gz
 
 BuildRequires:  python2-devel
@@ -109,6 +109,8 @@ install -m 644 conf/fts3firewalld/ftsmon.xml %{buildroot}/%{_prefix}/lib/firewal
 %files selinux
 
 %changelog
+* Wed Sep 22 2021 Joao Lopes <batistal@cern.ch> - 3.11.0-1
+- New upstream release
 * Mon Dec 07 2020 Mihai Patrascoiu <mipatras@cern.ch> - 3.10.0-1
 - New upstream release
 - Support for Archive Monitoring
