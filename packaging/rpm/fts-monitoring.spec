@@ -1,11 +1,11 @@
-Summary:    FTS3 Web Application for monitoring
 Name:       fts-monitoring
 Version:    3.11.0
 Release:    1%{?dist}
-URL:        https://fts.web.cern.ch
-License:    ASL 2.0
-Group:      Applications/Internet
 BuildArch:  noarch
+Summary:    FTS3 Web Application for monitoring
+Group:      Applications/Internet
+License:    ASL 2.0
+URL:        https://fts.web.cern.ch
 # wget https://gitlab.cern.ch/fts/fts-monitoring/repository/archive.tar.gz?ref=v3.11.0 -O fts-monitoring-3.11.0.tar.gz
 Source0: %{name}-%{version}.tar.gz
 
@@ -129,23 +129,22 @@ install -m 644 conf/fts3firewalld/ftsmon.xml %{buildroot}/%{_prefix}/lib/firewal
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2.32-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 * Fri Mar 06 2015 Alejandro Alarez Ayllon <aalvarez@cern.ch> - 3.2.32-1
-  - Update for new upstream release
+- Update for new upstream release
 * Wed Nov 26 2014 Alejandro Alarez Ayllon <aalvarez@cern.ch> - 3.2.30-1
-  - Update for new upstream release
+- Update for new upstream release
 * Mon May 12 2014 Michal Simon <michal.simon@cern.ch> - 3.2.26.2-2
-  - Update for new upstream release
+- Update for new upstream release
 * Mon May 12 2014 Michal Simon <michal.simon@cern.ch> - 3.2.26-1
-  - Update for new upstream release
+- Update for new upstream release
 * Tue Oct 08 2013 Alejandro Alvarez <aalvarez@cern.ch> - 3.1.27-1
-  - Added selinux rpm
+- Added selinux rpm
 * Mon Sep 02 2013 Michal Simon <michal.simon@cern.ch> - 3.1.1-2
-  - since it is a noarch package removing '%{?_isa}' sufix
+- since it is a noarch package removing '%{?_isa}' sufix
 * Wed Aug 28 2013 Michal Simon <michal.simon@cern.ch> - 3.1.1-1
-  - replacing '--no-preserve=ownership'
-  - python macros have been removed
-  - comments regarding svn have been removed
-  - '%{_builddir}/%{name}-%{version}/' prefix is not used anymore
-  - more detailed description
+- replacing '--no-preserve=ownership'
+- python macros have been removed
+- comments regarding svn have been removed
+- '%{_builddir}/%{name}-%{version}/' prefix is not used anymore
+- more detailed description
 * Tue Apr 30 2013 Michal Simon <michal.simon@cern.ch> - 3.1.0-1
-  - First EPEL release
-
+- First EPEL release
