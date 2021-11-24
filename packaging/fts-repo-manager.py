@@ -127,15 +127,18 @@ class Repository(object):
         if not os.path.isdir(self.base):
             bailout("Not a directory: {0}".format(self.base))
 
-    def store(self, ref, packages):
+    def store(self, ref, packages, arch_dir):
         platforms = set([x.platform for x in packages])
         if len(platforms) != 1:
             raise ValueError("Cannot mix packages of different platforms in the same invocation: {0}".format(list(platforms)))
 
         archs = set([x.arch for x in packages])
+        archs.add(arch_dir)
         archs.discard(None)
-        if len(archs) != 1:
+        if len(archs) > 1:
             raise ValueError("Cannot mix packages of different architectures in the same invocation: {0}".format(list(archs)))
+        elif len(archs) == 0:
+            raise ValueError("Only noarch packages: arch directory must be specified in order to deploy the packages.")
 
         tag = is_tag(ref)
 
@@ -177,12 +180,14 @@ def parseargs():
     group = parser.add_argument_group('add options')
     group.add_argument('--ref', type=str, help="The branch or tag that is being built. Tag names must match 'x.y' or 'x.y.z' (may be prepended by 'v')")
     group.add_argument('--packages', type=str, nargs='+', help="The list of packages to add")
+    group.add_argument('--arch-dir', type=str, help="In case of only noarch packages, specify the target arch directory for deployment.")
 
     group = parser.add_argument_group('cleanup options')
     group.add_argument('--keep-last-days', type=int, help="How many days worth of RPMs to keep. (only affects branches)")
 
     args = parser.parse_args()
 
+    ensure_valid_choice(parser, args.arch_dir, "arch_dir", ["x86_64", "i386"])
     ensure_valid_choice(parser, args.action, "action", ["add", "cleanup"])
     declare_incompatible_options(parser, "--no-create-repo", ["--dry-run"])
 
@@ -214,7 +219,7 @@ def main():
     repository = Repository(args.base)
     packages = [Package(x) for x in args.packages]
 
-    repository.store(args.ref, packages)
+    repository.store(args.ref, packages, args.arch_dir)
 
 if __name__ == '__main__':
     main()
