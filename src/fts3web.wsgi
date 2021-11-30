@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 import os
 import sys
 
@@ -6,10 +6,11 @@ path = os.path.dirname(__file__)
 if path not in sys.path:
   sys.path.append(path)
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
 
-import django.core.handlers.wsgi
-_application = django.core.handlers.wsgi.WSGIHandler()
+from django.core.wsgi import get_wsgi_application
+
+_application = get_wsgi_application()
 
 def application(environ, start_response):
     os.environ['BASE_URL'] = environ['SCRIPT_NAME']
