@@ -9,20 +9,20 @@ URL:        https://fts.web.cern.ch
 # wget https://gitlab.cern.ch/fts/fts-monitoring/repository/archive.tar.gz?ref=v3.11.0 -O fts-monitoring-3.11.0.tar.gz
 Source0: %{name}-%{version}.tar.gz
 
-BuildRequires:  python2-devel
+BuildRequires:  python3-devel
 
 #Requires:  cx_Oracle
-Requires:   MySQL-python
+Requires:   mysqlclient
 %if %{?fedora}%{!?fedora:0} >= 18 || %{?rhel}%{!?rhel:0} >= 7
-Requires: python-django16
+Requires: python36-django
 %else
 Requires: Django >= 1.3.7
 %endif
 Requires:   httpd
 Requires:   mod_ssl
-Requires:   mod_wsgi
-Requires:   python
-Requires:   python-decorator
+Requires:   rh-python36-mod_wsgi
+Requires:   python3
+Requires:   python36-decorator
 
 %description
 FTS v3 web application for monitoring,
