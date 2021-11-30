@@ -18,12 +18,12 @@
 # limitations under the License.
 
 try:
-    from django.conf.urls.defaults import patterns, include, url
+    from django.conf.urls.defaults import include, url
 except:
-    from django.conf.urls import patterns, include, url
+    from django.conf.urls import include, url
 from django.views.generic.base import RedirectView
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'^ftsmon/', include('ftsmon.urls')),
     url(r'^$', RedirectView.as_view(url = 'ftsmon/'))
-)
+]
