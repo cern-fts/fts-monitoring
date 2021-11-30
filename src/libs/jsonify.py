@@ -51,7 +51,7 @@ class ClassEncoder(json.JSONEncoder):
         elif isinstance(obj, Model):
             self.visited.append(obj)
             values = {}
-            for k, v in obj.__dict__.iteritems():
+            for k, v in iter(obj.__dict__.items()):
                 if not k.startswith('_'):
                     values[k] = v
             return values

@@ -110,7 +110,7 @@ def slsfy(servers, id_tail, color_mapper=_color_mapper):
     _add_numeric(e_data, 'fts_server_running',
         sum(
             map(
-                lambda (server, info): _is_running('fts_server', info.get('services', dict())),
+                lambda server_info: _is_running('fts_server', server_info[1].get('services', dict())),
                 servers.iteritems()
             )
         )
@@ -118,7 +118,7 @@ def slsfy(servers, id_tail, color_mapper=_color_mapper):
     _add_numeric(e_data, 'fts_bringonline_running',
         sum(
             map(
-                lambda (server, info): _is_running('fts_bringonline', info.get('services', dict())),
+                lambda server_info: _is_running('fts_bringonline', server_info[1].get('services', dict())),
                 servers.iteritems()
             )
         )
@@ -127,7 +127,7 @@ def slsfy(servers, id_tail, color_mapper=_color_mapper):
     _add_numeric(e_data, 'active',
         sum(
             map(
-                lambda (server, info): info.get('active', 0),
+                lambda server_info: server_info[1].get('active', 0),
                 servers.iteritems()
             )
         )
@@ -135,7 +135,7 @@ def slsfy(servers, id_tail, color_mapper=_color_mapper):
     _add_numeric(e_data, 'staging',
         sum(
             map(
-                lambda (server, info): info.get('started', 0),
+                lambda server_info: server_info[1].get('started', 0),
                 servers.iteritems()
             )
         )
@@ -143,7 +143,7 @@ def slsfy(servers, id_tail, color_mapper=_color_mapper):
     _add_numeric(e_data, 'staging_queued',
         sum(
             map(
-                lambda (server, info): info.get('staging', 0),
+                lambda server_info: server_info[1].get('staging', 0),
                 servers.iteritems()
             )
         )

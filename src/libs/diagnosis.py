@@ -17,8 +17,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ftsweb.models import ACTIVE_STATES, FILE_TERMINAL_STATES
-
+from util import ACTIVE_STATES, FILE_TERMINAL_STATES
 
 def _are_job_and_files_consistent(job):
     """
@@ -29,7 +28,7 @@ def _are_job_and_files_consistent(job):
         job non terminal, at least one file not terminal
     """
     non_terminal_count = sum(
-        map(lambda (state, count): count if state not in FILE_TERMINAL_STATES else 0, job['files'].iteritems())
+        map(lambda state_count: state_count[1] if state_count[0] not in FILE_TERMINAL_STATES else 0,  iter(job['files'].items()))
     )
 
     if job['job_state'] in ACTIVE_STATES and non_terminal_count == 0:
