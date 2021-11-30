@@ -21,11 +21,6 @@
 from django.db import models
 
 
-ACTIVE_STATES        = ['SUBMITTED', 'READY', 'ACTIVE', 'STAGING', 'ARCHIVING']
-FILE_TERMINAL_STATES = ['FINISHED', 'FAILED', 'CANCELED', 'NOT_USED']
-ON_HOLD_STATES       = ['ON_HOLD', 'ON_HOLD_STAGING']
-STATES = ACTIVE_STATES + FILE_TERMINAL_STATES + ON_HOLD_STATES
-
 class JobBase(models.Model):
     job_id          = models.CharField(max_length = 36, primary_key = True)
     job_state       = models.CharField(max_length = 32)
