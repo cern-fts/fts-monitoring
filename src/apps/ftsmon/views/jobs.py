@@ -22,11 +22,13 @@ from django.db.models import Q, Count
 from django.http import Http404
 from datetime import datetime, timedelta
 
-from jsonify import jsonify, jsonify_paged
-from ftsweb.models import Job, File, RetryError, DmFile, ACTIVE_STATES, ON_HOLD_STATES
-from util import get_order_by, ordered_field, paged, log_link
-from diagnosis import JobDiagnosis
+from libs.util import ACTIVE_STATES, ON_HOLD_STATES
+from ftsmon.models import Job, File, RetryError, DmFile
+from libs.util import get_order_by, ordered_field, paged, log_link
+from libs.diagnosis import JobDiagnosis
+from libs.jsonify import jsonify, jsonify_paged
 
+from functools import reduce
 
 def setup_filters(http_request):
     # Default values
@@ -83,7 +85,7 @@ class JobListDecorator(object):
         self.cursor = connection.cursor()
 
     def __len__(self):
-        return len(self.job_ids)
+        return len(list(self.job_ids))
 
     def get_job(self, job_id):
         job = {'job_id': job_id}
@@ -121,7 +123,7 @@ class JobListDecorator(object):
         return job
 
     def _decorated(self, index):
-        for job_id in self.job_ids[index]:
+        for job_id in list(self.job_ids)[index]:
             yield self.get_job(job_id)
 
     def __getitem__(self, index):
@@ -146,7 +148,6 @@ class JobListDecorator(object):
                 return self.container.get_job(job_id)
 
         return _Iter(self)
-
 
 @jsonify_paged
 def get_job_list(http_request):
@@ -183,7 +184,6 @@ def get_job_list(http_request):
     if filters['diagnosis'] or filters['with_debug'] or filters['multireplica']:
         job_list = JobDiagnosis(job_list, filters['diagnosis'], filters['with_debug'], filters['multireplica'])
     return job_list
-
 
 @jsonify
 def get_job_details(http_request, job_id):

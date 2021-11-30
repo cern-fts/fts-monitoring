@@ -21,10 +21,10 @@ from datetime import datetime, timedelta
 from django.db import connection
 from django.views.decorators.cache import cache_page
 
-from jobs import setup_filters
-from jsonify import jsonify
-from overview import OverviewExtended
-from util import get_order_by, paged
+from ftsmon.views.jobs import setup_filters
+from libs.jsonify import jsonify
+from ftsmon.views.overview import OverviewExtended
+from libs.util import get_order_by, paged
 
 
 @cache_page(60)
@@ -92,7 +92,7 @@ def get_overview(http_request):
 
     # Transform into a list
     objs = []
-    for (triplet, obj) in triplets.iteritems():
+    for (triplet, obj) in iter(triplets.items()):
         obj['source_se'] = triplet[0]
         obj['dest_se'] = triplet[1]
         obj['vo_name'] = triplet[2]

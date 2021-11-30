@@ -22,9 +22,9 @@ from django.db.models import Q, Count
 from django.http import Http404
 from datetime import datetime, timedelta
 
-from jsonify import jsonify, jsonify_paged
-from ftsweb.models import Job, File, RetryError, DmFile
-from util import get_order_by, ordered_field, paged, log_link
+from libs.jsonify import jsonify
+from ftsmon.models import Job, File, RetryError, DmFile
+from libs.util import get_order_by, ordered_field, paged, log_link
 
 
 def setup_filters(http_request):
@@ -125,7 +125,7 @@ class JobListDecorator(object):
 
         return _Iter(self)
 
-@jsonify_paged
+@jsonify
 def get_job_list(http_request):
     """
     This view is a little bit trickier than the others.
@@ -297,51 +297,3 @@ def get_job_transfers(http_request, job_id):
         'files': paged(RetriesFetcher(LogLinker(files)), http_request),
         'stats': stats
     }
-
-
-#@jsonify_paged
-#def get_transfer_list(http_request):
-#    filters = setup_filters(http_request)
-
-#    transfers = File.objects
-#    if filters['state']:
-#        transfers = transfers.filter(file_state__in=filters['state'])
-#    else:
-#        transfers = transfers.exclude(file_state='NOT_USED')
-#    if filters['source_se']:
-#        transfers = transfers.filter(source_se=filters['source_se'])
-#    if filters['dest_se']:
-#        transfers = transfers.filter(dest_se=filters['dest_se'])
-#    if filters['source_surl']:
-#        transfers = transfers.filter(source_surl=filters['source_surl'])
-#    if filters['vo']:
-#        transfers = transfers.filter(vo_name=filters['vo'])
-#    if filters['time_window']:
-#        not_before = datetime.utcnow() - timedelta(hours=filters['time_window'])
-#        if _contains_active_state(filters['state']):
-#            transfers = transfers.filter(Q(finish_time__isnull=True) | (Q(finish_time__gte=not_before)))
-#        else:
-#            transfers = transfers.filter(Q(finish_time__gte=not_before))
-#    if filters['hostname']:
-#        transfers = transfers.filter(transfer_host=filters['hostname'])
-#    if filters['reason']:
-#        transfers = transfers.filter(reason=filters['reason'])
-
-#    transfers = transfers.values(
-#        'file_id', 'file_state', 'job_id',
-#        'source_se', 'dest_se', 'start_time', 'finish_time',
-#        'user_filesize', 'filesize'
-#   )
-
-    # Ordering
-#    (order_by, order_desc) = get_order_by(http_request)
-#    if order_by == 'id':
-#        transfers = transfers.order_by(ordered_field('file_id', order_desc))
-#    elif order_by == 'start_time':
-#        transfers = transfers.order_by(ordered_field('start_time', order_desc))
-#    elif order_by == 'finish_time':
-#        transfers = transfers.order_by(ordered_field('finish_time', order_desc))
-#    else:
-#        transfers = transfers.order_by('-finish_time')
-   
-#    return transfers

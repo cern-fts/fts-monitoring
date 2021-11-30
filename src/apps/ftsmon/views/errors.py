@@ -22,9 +22,9 @@ from django.db.models import Count
 from django.http import Http404
 from django.views.decorators.cache import cache_page
 
-from ftsweb.models import File
-from jsonify import jsonify, jsonify_paged
-from util import paged
+from ftsmon.models import File
+from libs.jsonify import jsonify, jsonify_paged
+from libs.util import paged
 
 
 @cache_page(300)

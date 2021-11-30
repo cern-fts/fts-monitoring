@@ -21,10 +21,10 @@ from datetime import datetime, timedelta
 from django.db.models import Q, Count, Sum
 from django.views.decorators.cache import cache_page
 
-from ftsweb.models import Job, File, Host
-from ftsweb.models import STATES, FILE_TERMINAL_STATES
-from jsonify import jsonify, jsonify_paged, as_json
-from slsfy import slsfy, slsfy_error
+from ftsmon.models import Job, File, Host
+from libs.util import STATES, FILE_TERMINAL_STATES
+from libs.jsonify import as_json, jsonify
+from libs.slsfy import slsfy, slsfy_error
 
 
 def _get_count_per_state(age, hostname):
@@ -123,7 +123,7 @@ def _get_host_service_and_segment():
         hosts = Host.objects.filter(service_name=service).values('hostname', 'beat', 'drain').order_by('hostname').all()
         running = map(lambda h: h['hostname'], filter(lambda h: h['beat'] >= last_expected_beat, hosts))
 
-        running_count = len(running)
+        running_count = len(list(running))
 
         if running_count > 0:
             segment_size = 0xFFFF / running_count
@@ -234,11 +234,12 @@ def get_servers(http_request):
             return slsfy(servers, id_tail='Server Info')
         else:
             return as_json(_get_server(time_window))
-    except Exception, e:
+    except Exception as e:
         if format == 'sls':
             return slsfy_error(str(e), id_tail='Server Info')
         else:
-            return as_json(dict(exception=str(e)))
+            #response = dict(exception=str(e))
+            return as_json({"response":"hello"})
 
 
 @cache_page(1200)
