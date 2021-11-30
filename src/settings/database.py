@@ -18,7 +18,7 @@
 # limitations under the License.
 
 
-from common import FTS3WEB_CONFIG
+from .common import FTS3WEB_CONFIG
 
 DATABASES = {
     'default': {

@@ -21,8 +21,8 @@
 import os
 import re
 import sys
-from ConfigParser import RawConfigParser
-from StringIO import StringIO
+from configparser import RawConfigParser
+from io import StringIO
 
 # INI Configuration
 FTS3WEB_CONFIG = RawConfigParser()
@@ -85,7 +85,6 @@ else:
     BASE_URL = ''
 
 DEBUG = FTS3WEB_CONFIG.getboolean('server', 'debug')
-TEMPLATE_DEBUG = DEBUG
 
 TIME_ZONE = None
 LANGUAGE_CODE = 'en-gb'
@@ -110,7 +109,7 @@ STATIC_ROOT = ''
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
-STATIC_URL = '%s/media/' % BASE_URL
+STATIC_URL = '%s/fts3/media/' % BASE_URL
 
 # Additional locations of static files
 STATICFILES_DIRS = (
@@ -127,14 +126,11 @@ STATICFILES_FINDERS = (
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'sysadmins-to-change-this'
 
-# List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-)
-
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.core.context_processors.static',
+INSTALLED_APPS = (
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'ftsmon',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -148,15 +144,23 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'urls'
 
-TEMPLATE_DIRS = (
-)
-
-INSTALLED_APPS = (
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'ftsmon'
-)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(PROJECT_ROOT, '/apps/ftsmon/templates')],
+        #'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.static',
+            ],
+            'debug': DEBUG,
+            'loaders': [
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader',
+            ],
+        },
+    },
+]
 
 # Do not use a DB
 SESSION_ENGINE='django.contrib.sessions.backends.cache'

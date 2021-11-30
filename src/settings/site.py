@@ -18,9 +18,9 @@
 # limitations under the License.
 
 
-from common import BASE_URL, FTS3WEB_CONFIG
+from .common import BASE_URL, FTS3WEB_CONFIG
 import os
-import urlparse
+import urllib.parse as urlparse
 
 def _urlize(path):
     url = urlparse.urlparse(path)
