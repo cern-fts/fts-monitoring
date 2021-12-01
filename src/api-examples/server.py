@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 import json
 from common import get_url
 from optparse import OptionParser
@@ -9,8 +9,8 @@ def get_servers():
 
 if __name__ == '__main__':
     servers = get_servers()
-    for (hostname, values) in servers.iteritems():
-        print  hostname
-        print "\tActive:", values.get('active', 0)
-        print "\tReceived:", values.get('submissions', 0)
-        print "\tExecuted:", values.get('transfers', 0)
+    for (hostname, values) in iter(servers.items()):
+        print(hostname)
+        print("\tActive:", values.get('active', 0))
+        print("\tReceived:", values.get('submissions', 0))
+        print("\tExecuted:", values.get('transfers', 0))
