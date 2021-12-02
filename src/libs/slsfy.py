@@ -20,6 +20,7 @@
 import settings
 from datetime import datetime
 from django.http import HttpResponse
+from django import VERSION as DJANGO_VERSION
 from xml.etree.ElementTree import Element, SubElement, tostring
 
 
@@ -153,7 +154,10 @@ def slsfy(servers, id_tail, color_mapper=_color_mapper):
     e_timestamp = SubElement(e_sls, 'timestamp')
     e_timestamp.text = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
 
-    return HttpResponse(tostring(e_sls), mimetype='application/xml')
+    if DJANGO_VERSION[:2] < (1, 7):
+        return HttpResponse(tostring(e_sls), mimetype='application/xml')
+    else:
+        return HttpResponse(tostring(e_sls), content_type='application/xml')
 
 
 def slsfy_error(message, id_tail):
@@ -171,4 +175,7 @@ def slsfy_error(message, id_tail):
     SubElement(e_sls, 'availability').text = '0'
     SubElement(e_sls, 'status').text = 'unavailable'
 
-    return HttpResponse(tostring(e_sls), mimetype='application/xml')
+    if DJANGO_VERSION[:2] < (1, 7):
+        return HttpResponse(tostring(e_sls), mimetype='application/xml')
+    else:
+        return HttpResponse(tostring(e_sls), content_type='application/xml')
