@@ -84,7 +84,8 @@ if 'BASE_URL' in os.environ:
 else:
     BASE_URL = ''
 
-DEBUG = FTS3WEB_CONFIG.getboolean('server', 'debug')
+#DEBUG = FTS3WEB_CONFIG.getboolean('server', 'debug')
+DEBUG = True
 
 TIME_ZONE = None
 LANGUAGE_CODE = 'en-gb'

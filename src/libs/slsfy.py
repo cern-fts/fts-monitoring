@@ -52,8 +52,8 @@ def _calculate_availability(e_sls, servers):
     draining_count = 0
     down_count = 0
     total_count = 0
-    for server, info in servers.iteritems():
-        for service, service_status in info.get('services', dict()).iteritems():
+    for server, info in iter(servers.items()):
+        for service, service_status in iter(info.get('services', dict()).items()):
             if service == 'fts_backup':
                 continue
             e_subavailability = SubElement(
@@ -111,7 +111,7 @@ def slsfy(servers, id_tail, color_mapper=_color_mapper):
         sum(
             map(
                 lambda server_info: _is_running('fts_server', server_info[1].get('services', dict())),
-                servers.iteritems()
+                iter(servers.items())
             )
         )
     )
@@ -119,7 +119,7 @@ def slsfy(servers, id_tail, color_mapper=_color_mapper):
         sum(
             map(
                 lambda server_info: _is_running('fts_bringonline', server_info[1].get('services', dict())),
-                servers.iteritems()
+                iter(servers.items())
             )
         )
     )
@@ -128,7 +128,7 @@ def slsfy(servers, id_tail, color_mapper=_color_mapper):
         sum(
             map(
                 lambda server_info: server_info[1].get('active', 0),
-                servers.iteritems()
+                iter(servers.items())
             )
         )
     )
@@ -136,7 +136,7 @@ def slsfy(servers, id_tail, color_mapper=_color_mapper):
         sum(
             map(
                 lambda server_info: server_info[1].get('started', 0),
-                servers.iteritems()
+                iter(servers.items())
             )
         )
     )
@@ -144,7 +144,7 @@ def slsfy(servers, id_tail, color_mapper=_color_mapper):
         sum(
             map(
                 lambda server_info: server_info[1].get('staging', 0),
-                servers.iteritems()
+                iter(servers.items())
             )
         )
     )

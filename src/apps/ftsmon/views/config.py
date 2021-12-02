@@ -108,7 +108,7 @@ def get_activities(http_request):
     for row in rows:
         share = per_vo.get(row.vo, dict())
         for entry in json.loads(row.activity_share):
-            for share_name, share_value in entry.iteritems():
+            for share_name, share_value in iter(entry.items()):
                 share[share_name] = share_value
         per_vo[row.vo] = share
     return per_vo
@@ -138,7 +138,7 @@ def get_actives_per_activity(http_request, vo):
     share_db = ActivityShare.objects.get(vo = vo)
     if share_db is not None:
         for entry in json.loads(share_db.activity_share):
-            for share_name, share_value in entry.iteritems():
+            for share_name, share_value in iter(entry.items()):
                 share_config[share_name.lower()] = share_value
 
     weight_sum = 0
