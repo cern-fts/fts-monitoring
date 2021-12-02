@@ -28,7 +28,6 @@ from libs.util import get_order_by, ordered_field, paged, log_link
 from libs.diagnosis import JobDiagnosis
 from libs.jsonify import jsonify, jsonify_paged
 
-from functools import reduce
 
 def setup_filters(http_request):
     # Default values
@@ -180,7 +179,7 @@ def get_job_list(http_request):
     if filters['dest_se']:
         job_ids = job_ids.filter(dest_se=filters['dest_se'])
 
-    job_list = JobListDecorator(map(lambda j: j['job_id'], job_ids))
+    job_list = JobListDecorator([j['job_id'] for j in job_ids])
     if filters['diagnosis'] or filters['with_debug'] or filters['multireplica']:
         job_list = JobDiagnosis(job_list, filters['diagnosis'], filters['with_debug'], filters['multireplica'])
     return job_list
@@ -311,8 +310,8 @@ def get_job_transfers(http_request, job_id):
 
     total_size = sum(map(lambda f: f.filesize if f.filesize else 0, files))
     transferred = sum(map(lambda f: f.transferred if f.transferred else 0, files))
-    with_throughputs = filter(lambda f: f.throughput, files)
-    actives_throughput = filter(lambda f: f.file_state == 'ACTIVE', with_throughputs)
+    with_throughputs = list(filter(lambda f: f.throughput, files))
+    actives_throughput = list(filter(lambda f: f.file_state == 'ACTIVE', with_throughputs))
 
     stats = {
         'total_size': total_size,
@@ -334,13 +333,13 @@ def get_job_transfers(http_request, job_id):
 
     # Now we got the stats, apply filters
     if http_request.GET.get('state', None):
-        files = filter(lambda f: f.file_state in http_request.GET['state'].split(','), files)
+        files = list(filter(lambda f: f.file_state in http_request.GET['state'].split(','), files))
     if http_request.GET.get('reason', None):
-        files = filter(lambda f: f.reason == http_request.GET['reason'], files)
+        files = list(filter(lambda f: f.reason == http_request.GET['reason'], files))
     if http_request.GET.get('file', None):
         try:
             file_id = int(http_request.GET['file'])
-            files = filter(lambda f: f.file_id == file_id, files)
+            files = list(filter(lambda f: f.file_id == file_id, files))
         except:
             pass
 
@@ -354,7 +353,7 @@ def _contains_active_state(state_filer):
     # Consider empty a list with active states (because all are in)
     if not state_filer:
         return True
-    return reduce(bool.__or__, map(lambda s: s in state_filer, ACTIVE_STATES+ON_HOLD_STATES))
+    return [x for x in state_filer if x in ACTIVE_STATES+ON_HOLD_STATES]
 
 @jsonify_paged
 def get_transfer_list(http_request):

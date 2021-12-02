@@ -283,13 +283,13 @@ def get_job_transfers(http_request, job_id):
 
     # Now we got the stats, apply filters
     if http_request.GET.get('state', None):
-        files = filter(lambda f: f.file_state in http_request.GET['state'].split(','), files)
+        files = list(filter(lambda f: f.file_state in http_request.GET['state'].split(','), files))
     if http_request.GET.get('reason', None):
-        files = filter(lambda f: f.reason == http_request.GET['reason'], files)
+        files = list(filter(lambda f: f.reason == http_request.GET['reason'], files))
     if http_request.GET.get('file', None):
         try:
             file_id = int(http_request.GET['file'])
-            files = filter(lambda f: f.file_id == file_id, files)
+            files = list(filter(lambda f: f.file_id == file_id, files))
         except:
             pass
 
