@@ -293,9 +293,9 @@ class OptimizerEvolution(models.Model):
 
 
 class Host(models.Model):
-    hostname = models.CharField(primary_key = True, max_length = 64)
+    hostname = models.CharField(primary_key=True, max_length=64)
     beat     = models.DateTimeField()
-    service_name = models.CharField()
+    service_name = models.CharField(max_length=64)
     drain    = models.IntegerField()
 
     class Meta:
@@ -303,18 +303,18 @@ class Host(models.Model):
 
 
 class ActivityShare(models.Model):
-    vo             = models.CharField(primary_key=True)
+    vo             = models.CharField(primary_key=True, max_length=100)
     activity_share = models.TextField()
-    active         = models.CharField()
+    active         = models.CharField(max_length=3)
 
     class Meta:
         db_table = 't_activity_share_config'
 
 
 class OperationLimit(models.Model):
-    vo             = models.CharField(db_column='vo_name')
-    host           = models.CharField(primary_key=True)
-    operation      = models.CharField()
+    vo             = models.CharField(db_column='vo_name', max_length=100)
+    host           = models.CharField(primary_key=True, max_length=150)
+    operation      = models.CharField(max_length=150)
     concurrent_ops = models.IntegerField()
 
     def __eq__(self, other):
