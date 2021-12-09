@@ -121,12 +121,13 @@ def _get_host_service_and_segment():
     host_map = dict()
     for service in service_names:
         hosts = Host.objects.filter(service_name=service).values('hostname', 'beat', 'drain').order_by('hostname').all()
-        running = map(lambda h: h['hostname'], filter(lambda h: h['beat'] >= last_expected_beat, hosts))
+        running_hosts = [host for host in hosts if host['beat'] >= last_expected_beat]
+        running = [host['hostname'] for host in running_hosts]
 
-        running_count = len(list(running))
+        running_count = len(running)
 
         if running_count > 0:
-            segment_size = 0xFFFF / running_count
+            segment_size = 0xFFFF // running_count
             segment_remaining = 0xFFFF % running_count
 
             index = 0
@@ -238,8 +239,7 @@ def get_servers(http_request):
         if format == 'sls':
             return slsfy_error(str(e), id_tail='Server Info')
         else:
-            #response = dict(exception=str(e))
-            return as_json({"response":"hello"})
+            response = dict(exception=str(e))
 
 
 @cache_page(1200)
