@@ -22,7 +22,7 @@ from django.db.models import Q, Count
 from django.http import Http404
 from datetime import datetime, timedelta
 
-from libs.jsonify import jsonify
+from libs.jsonify import jsonify, jsonify_paged
 from ftsmon.models import Job, File, RetryError, DmFile
 from libs.util import get_order_by, ordered_field, paged, log_link
 
@@ -125,7 +125,7 @@ class JobListDecorator(object):
 
         return _Iter(self)
 
-@jsonify
+@jsonify_paged
 def get_job_list(http_request):
     """
     This view is a little bit trickier than the others.

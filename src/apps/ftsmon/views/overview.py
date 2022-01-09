@@ -50,7 +50,7 @@ class OverviewExtended(object):
 
     def _get_throughput(self, source, destination, vo):
         """
-        Calculate throughput (in MB) over this pair + vo over the last minute
+        Calculate throughput (in MiB) over this pair + vo over the last minute
         """
         try:
             time_window = timedelta(hours=int(http_request.GET['time_window']))
@@ -66,8 +66,7 @@ class OverviewExtended(object):
         if len(oe) == 0:
             return 0, 0
 
-        return 4
-        #return oe[0]['throughput'] / 1024**2
+        return oe[0]['throughput'] / 1024**2
 
     def __getitem__(self, indexes):
         if isinstance(indexes, slice):
