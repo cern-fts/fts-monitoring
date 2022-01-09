@@ -48,7 +48,7 @@ function getLimitDescription(limit)
 
     var descr = 'Limited at ';
     if (limit.bandwidth)
-        descr += limit.bandwidth + 'MB/s';
+        descr += limit.bandwidth + 'MiB/s';
     if (limit.bandwidth && limit.active)
         descr += ' and ';
     if (limit.active)
