@@ -6,6 +6,23 @@
     <i class="icon-search"></i></a>
 </h3>
 
+<table class="table">
+    <thead>
+        <tr>
+            <th>Storage</th>
+            <th>Current active transfers</th>
+            <th>Max. active transfers</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr data-ng-repeat="s in optimizer.storage_info" data-ng-class-odd="'odd'" >
+            <td>{{s.storage}}</td>
+            <td>{{s.active}}</td>
+            <td>{{s.max_active}}</td>
+        </tr>
+    </tbody>
+</table>
+
 <style>
     .line-plot {
         width: 850px;
