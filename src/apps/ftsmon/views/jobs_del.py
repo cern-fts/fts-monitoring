@@ -154,7 +154,7 @@ def get_job_list(http_request):
     if filters['source_se']:
         job_ids = job_ids.filter(source_se=filters['source_se']).filter(dest_se__isnull=True)
 
-    job_list = JobListDecorator(map(lambda j: j['job_id'], job_ids))
+    job_list = JobListDecorator([j['job_id'] for j in job_ids])
     return job_list
 
 @jsonify
