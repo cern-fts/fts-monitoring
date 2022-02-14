@@ -93,6 +93,13 @@ mkdir -p %{buildroot}/%{_prefix}/lib/firewalld/services/
 install -m 644 conf/fts3firewalld/ftsmon.xml %{buildroot}/%{_prefix}/lib/firewalld/services/ftsmon.xml
 %endif
 
+# Create fts3 user and group
+%pre
+getent group fts3 >/dev/null || groupadd -r fts3
+getent passwd fts3 >/dev/null || \
+    useradd -r -m -g fts3 -G apache -d /var/log/fts3 -s /sbin/nologin \
+    -c "File Transfer Service user" fts3
+exit 0
 
 %files
 %{_datadir}/fts3web
