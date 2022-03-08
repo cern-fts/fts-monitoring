@@ -64,7 +64,7 @@ class OverviewExtended(object):
             .filter(datetime__gte=not_before)\
             .order_by('-datetime')[0:1]
         if len(oe) == 0:
-            return 0, 0
+            return 0.0
 
         return oe[0]['throughput'] / 1024**2
 
