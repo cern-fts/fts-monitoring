@@ -168,17 +168,37 @@ SESSION_ENGINE='django.contrib.sessions.backends.cache'
 # A sample logging configuration
 LOGGING = {
     'version': 1,
-# Uncomment this to log the queries
-#    'handlers': {
-#        'console': {
-#            'class': 'logging.StreamHandler',
-#            'level': 'DEBUG'
-#        }
-#    },
-#   'loggers': {
-#        'django.db': {
-#            'handlers': ['console'],
-#            'level': 'DEBUG'
-#        }
-#   }
+    # Uncomment this to enable logging
+    # 'disable_existing_loggers': False,
+    # 'formatters': {
+    #     'verbose': {
+    #         'format': '%(asctime)s,%(msecs)03d %(levelname)-5.5s [%(module)s::%(funcName)s] %(message)s'
+    #     }
+    # },
+    # 'handlers': {
+    #     'console': {
+    #         'class': 'logging.StreamHandler',
+    #         'level': 'DEBUG'
+    #     },
+    #     'file': {
+    #         'class': 'logging.FileHandler',
+    #         'filename': '/var/log/fts3mon/fts3mon.log',
+    #         'formatter': 'verbose',
+    #         'level': 'DEBUG'
+    #     }
+    # },
+    # 'loggers': {
+    #     'django': {
+    #         'handlers': ['console', 'file'],
+    #         'level': 'DEBUG'
+    #     },
+    #     'django.db': {
+    #         'handlers': ['console', 'file'],
+    #         'level': 'DEBUG'
+    #     },
+    #     'ftsmon': {
+    #         'handlers': ['console', 'file'],
+    #         'level': 'DEBUG'
+    #     }
+    # }
 }
