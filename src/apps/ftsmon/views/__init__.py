@@ -26,6 +26,7 @@ __all__ = [
             "index",
             "jobs_del",
             "jobs",
+            "linkinfo",
             "optimizer",
             "overview",
             "statistics",
