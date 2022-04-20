@@ -24,7 +24,6 @@ from django.db import connection
 
 @jsonify
 
-#  https://ej-dev02.cern.ch:8449/fts3/ftsmon/linkinfo?source_se=davs:%2F%2Feosatlas.cern.ch&dest_se=davs:%2F%2Fwebdav.echo.stfc.ac.uk
 def get_linkinfo(http_request):
     source_se = str(http_request.GET.get('source_se', None))
     dest_se = str(http_request.GET.get('dest_se', None))
