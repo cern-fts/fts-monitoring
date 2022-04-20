@@ -19,56 +19,20 @@
 
 from ftsmon.views.jobs import setup_filters
 from libs.jsonify import jsonify
+from django.http import Http404
 from django.db import connection
-import itertools
 
 @jsonify
 
+#  https://ej-dev02.cern.ch:8449/fts3/ftsmon/linkinfo?source_se=davs:%2F%2Feosatlas.cern.ch&dest_se=davs:%2F%2Fwebdav.echo.stfc.ac.uk
 def get_linkinfo(http_request):
+    source_se = str(http_request.GET.get('source_se', None))
+    dest_se = str(http_request.GET.get('dest_se', None))
+   
+    if not source_se or not dest_se:
+        raise Http404
 
-
-    # Default values
-    filters = {
-        'state': None,
-        'time_window': 1,
-        'vo': None,
-        'source_se': "davs://dclxwp2dlds1.gsi.de",
-        # 'source_se': None,
-        'dest_se': "davs://atlas-dpm-01.roma1.infn.it",
-        'source_surl': None,
-        'dest_surl': None,
-        'metadata': None,
-        'activity': None,
-        'hostname': None,
-        'reason': None,
-        'with_file': None,
-        'diagnosis': False,
-        'with_debug': False,
-        'multireplica': False,
-        'only_summary': False
-    }
-    
     cursor = connection.cursor()
-
-    # Get all pairs first
-    # pairs_filter = ""
-    # se_params = []
-    # if filters['source_se']:
-    #     pairs_filter += " AND source_se = %s "
-    #     se_params.append(filters['source_se'])
-    # if filters['dest_se']:
-    #     pairs_filter += " AND dest_se = %s "
-    #     se_params.append(filters['dest_se'])
-
-    source_se = ""
-    dest_se = ""
-
-    if filters['source_se']:
-        source_se = filters['source_se']
-    if filters['dest_se']:
-        dest_se  = filters['dest_se']
-        
-
 
     #Result
     result = {}
@@ -189,9 +153,6 @@ def get_linkinfo(http_request):
 
     cursor.execute(query)
     result['link_all_to_all'] =  cursor.fetchall()
-
-    # cursor.execute(query)
-    # result=cursor.fetchall()
 
 
     return [result]
