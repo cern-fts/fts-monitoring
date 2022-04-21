@@ -56,7 +56,7 @@ function getLimitDescription(limit)
     return descr;
 }
 
-function OverviewCtrl($rootScope, $location, $scope, overview, Overview)
+function OverviewCtrl($rootScope, $location, $scope, $http,  overview, Overview)
 {
 	$scope.overview = overview;
     $scope.monit_url = SITE_MONIT;
@@ -76,6 +76,25 @@ function OverviewCtrl($rootScope, $location, $scope, overview, Overview)
 	$scope.filterBy = function(filter) {
 		$location.search($.extend({}, $location.$$search, filter));
 	}
+	
+	$scope.Openlink = function(source_se,dest_se) {
+		siteurl = window.location.href.slice(0, -2);
+
+		$http.get(siteurl+"linkinfo?source_se="+source_se+"&dest_se="+dest_se).
+			then(function(data){
+			linkinfodata = angular.fromJson(data).data;
+			$scope.Link_all_to_dest = linkinfodata[0].Link_all_to_dest[0] ?? 'N/A';
+			$scope.Link_source_to_all = linkinfodata[0].Link_source_to_all[0] ?? 'N/A';
+			$scope.link_all_to_all = linkinfodata[0].link_all_to_all[0];
+			$scope.active_transfers_dest = linkinfodata[0].active_transfers_dest[0][0] ?? 'N/A';
+			$scope.active_transfers_source = linkinfodata[0].active_transfers_source[0][0] ?? 'N/A';
+			$scope.optimizer_evolution = linkinfodata[0].optimizer_evolution[0];
+			$scope.outbound_max_active_all = linkinfodata[0].outbound_max_active_all[0] ?? 'N/A';
+			$scope.outbound_max_active_source = linkinfodata[0].outbound_max_active_source[0] ?? 'N/A';
+			
+
+		})
+		};
 
 	// Set timer to trigger autorefresh
 	$scope.autoRefresh = setInterval(function() {
