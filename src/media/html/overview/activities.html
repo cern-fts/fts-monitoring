@@ -1,5 +1,5 @@
 <global-filter></global-filter>
-
+    
 <h2>Overview Activity Shares</h2>
 <h3>
     Showing {{overview.overview.startIndex}} to {{overview.overview.endIndex}}
@@ -143,6 +143,58 @@
                     <i class="icon-signal"></i>
                 </a>
             </td>
+            <td>
+                <i class="icon-eye-open" data-toggle="modal" data-target="#myModal" data-backdrop="false" ng-click="Openlink(o.source_se,o.dest_se)">
+                </i>
+
+                   <div id="myModal" class="modal fade" role="dialog">
+                       <div class="modal-dialog modal-sm">
+                           <div class="modal-content">
+                               <div class="modal-header">
+                                   <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                                   <h4 class="modal-title" >Link Info</h4>
+                               </div>
+                               <div class="modal-body">
+                       <div id="mydiv" style="background-color:aliceblue;padding:25px;border: 2px solid powderblue;">
+                           <div style="background-color:#ddd;" >
+                                <b> Link All to (Destination)</b>
+                                <p> <b>Limit:</b> {{Link_all_to_dest}} </p>
+                           </div>
+                             <b> Link (Source) to All</b>
+                             <p>  <b>Limit:</b> {{Link_source_to_all}} </p>
+                           <div style="background-color:#ddd;" >
+                             <p><b> Link All to All</b></p>
+                             <b>Min:</b> {{link_all_to_all[0]}}
+                             <b>Max:</b> {{link_all_to_all[1]}}
+                           </div>
+                             <b> Active transfers (Destination)</b>
+                             <p>  <b>Limit:</b> {{active_transfers_dest}} </p>
+                           <div style="background-color:#ddd;" >       
+                             <b> Active transfers (Source)</b>
+                             <p>  <b>Limit:</b> {{active_transfers_source}} </p>
+                           </div>
+                             <b> Optimizer Evolution</b>
+                             <p> <b>Optimizer decision:</b> {{optimizer_evolution[0]}}
+                             <b>Actual active:</b> {{optimizer_evolution[1]}}
+                             <p> <b>Reason:</b> {{optimizer_evolution[2]}}</p>
+                           </p>
+                           <div style="background-color:#ddd;" >
+                           <b> Outbound Max active All</b>
+                           <p>  <b>Limit:</b> {{outbound_max_active_all[0]}} </p>
+                            </div>
+                           <b> Outbound Max active Source</b>
+                           <p>  <b>Limit:</b> {{outbound_max_active_source}} </p>
+                       </div>
+                                                                      
+                               </div>
+                               <div class="modal-footer">
+                                   <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                               </div>
+                           </div>
+                       </div>
+                   </div> 
+
+           </td>
         </tr>
         <tr>
             <td colspan="15" style="background: #CCC" data-ng-show="o.show">
