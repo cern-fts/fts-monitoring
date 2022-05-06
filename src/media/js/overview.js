@@ -76,7 +76,7 @@ function OverviewCtrl($rootScope, $location, $scope, $http,  overview, Overview)
 	$scope.filterBy = function(filter) {
 		$location.search($.extend({}, $location.$$search, filter));
 	}
-	
+	// Link info modal pop up
 	$scope.Openlink = function(source_se,dest_se) {
 		siteurl = window.location.href.slice(0, -2);
 
@@ -91,7 +91,9 @@ function OverviewCtrl($rootScope, $location, $scope, $http,  overview, Overview)
 			$scope.optimizer_evolution = linkinfodata[0].optimizer_evolution[0];
 			$scope.outbound_max_active_all = linkinfodata[0].outbound_max_active_all[0] ?? 'N/A';
 			$scope.outbound_max_active_source = linkinfodata[0].outbound_max_active_source[0] ?? 'N/A';
-			
+			// Preventing background scrolling
+			$('body').css('overflow','hidden');
+			$('body').css('position','fixed');
 
 		})
 		};
