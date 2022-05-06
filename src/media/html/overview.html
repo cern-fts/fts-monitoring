@@ -136,7 +136,7 @@
                 </a>
             </td>
             <td>
-                 <i class="icon-eye-open" data-toggle="modal" data-target="#myModal" data-backdrop="false" ng-click="Openlink(o.source_se,o.dest_se)">
+                 <i class="icon-eye-open" data-toggle="modal" data-target="#myModal" data-backdrop="static" ng-click="Openlink(o.source_se,o.dest_se)" style="cursor: hand;cursor: pointer;">
                  </i>
 
                     <div id="myModal" class="modal fade" role="dialog">
@@ -149,35 +149,25 @@
                                 <div class="modal-body">
                         <div id="mydiv" style="background-color:aliceblue;padding:25px;border: 2px solid powderblue;">
                             <div style="background-color:#ddd;" >
-                                 <b> Link All to (Destination)</b>
-                                 <p> <b>Limit:</b> {{Link_all_to_dest}} </p>
+                                 <b> Link All to (Destination):</b>{{Link_all_to_dest}}
                             </div>
-                              <b> Link (Source) to All</b>
-                              <p>  <b>Limit:</b> {{Link_source_to_all}} </p>
+                              <b> Link (Source) to All:</b>{{Link_source_to_all}}
                             <div style="background-color:#ddd;" >
-                              <p><b> Link All to All</b></p>
-                              <b>Min:</b> {{link_all_to_all[0]}}
-                              <b>Max:</b> {{link_all_to_all[1]}}
+                              <b> Link All to All: </b>  <b>Min:</b>{{link_all_to_all[0]}} <b>Max:</b>{{link_all_to_all[1]}}
                             </div>
-                              <b> Active transfers (Destination)</b>
-                              <p>  <b>Limit:</b> {{active_transfers_dest}} </p>
+                              <b> Active transfers (Destination):</b> {{active_transfers_dest}}
                             <div style="background-color:#ddd;" >       
-                              <b> Active transfers (Source)</b>
-                              <p>  <b>Limit:</b> {{active_transfers_source}} </p>
+                              <b> Active transfers (Source): </b>{{active_transfers_source}}
                             </div>
-                              <b> Optimizer Evolution</b>
-                              <p> <b>Optimizer decision:</b> {{optimizer_evolution[0]}}
-                              <b>Actual active:</b> {{optimizer_evolution[1]}}
-                              <p> <b>Reason:</b> {{optimizer_evolution[2]}}</p>
-                            </p>
+                              <b> Optimizer Evolution decision:</b>{{optimizer_evolution[0]}}
+                              <b>Actual active:</b>{{optimizer_evolution[1]}}
+                              <br> 
+                              <b>Reason:</b>{{optimizer_evolution[2]}}
                             <div style="background-color:#ddd;" >
-                            <b> Outbound Max active All</b>
-                            <p>  <b>Limit:</b> {{outbound_max_active_all[0]}} </p>
+                            <b> Outbound Max Active All:</b>{{outbound_max_active_all[0]}}
                              </div>
-                            <b> Outbound Max active Source</b>
-                            <p>  <b>Limit:</b> {{outbound_max_active_source}} </p>
-                        </div>
-                                                                       
+                            <b> Outbound Max Active Source:</b>{{outbound_max_active_source}}
+                        </div>                        
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
