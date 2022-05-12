@@ -91,10 +91,16 @@ function OverviewCtrl($rootScope, $location, $scope, $http,  overview, Overview)
 			$scope.optimizer_evolution = linkinfodata[0].optimizer_evolution[0];
 			$scope.outbound_max_active_all = linkinfodata[0].outbound_max_active_all[0] ?? 'N/A';
 			$scope.outbound_max_active_source = linkinfodata[0].outbound_max_active_source[0] ?? 'N/A';
-			// Preventing background scrolling
-			$('body').css('overflow','hidden');
-			$('body').css('position','fixed');
-
+			// Prevent background scrolling when modal popup is open
+			$('#LinkInfoModal').modal().on('shown', function(){
+				$('html, body').css({
+					overflow: 'hidden',
+				});
+			}).on('hidden', function(){
+				$('html, body').css({
+					overflow: 'auto'
+				});
+			})
 		})
 		};
 
