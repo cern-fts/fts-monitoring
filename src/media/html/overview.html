@@ -136,45 +136,48 @@
                 </a>
             </td>
             <td>
-                 <i class="icon-eye-open" data-toggle="modal" data-target="#LinkInfoModal" data-backdrop="static" ng-click="Openlink(o.source_se,o.dest_se)" style="cursor: hand;cursor: pointer;">
-                 </i>
-
-                    <div id="LinkInfoModal" class="modal fade" role="dialog" tabindex="-1">
-                        <div class="modal-dialog modal-sm">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
-                                    <h4 class="modal-title" >Link Info</h4>
-                                </div>
-                                <div class="modal-body">
-                        <div id="mydiv" style="background-color:aliceblue;padding:25px;border: 2px solid powderblue;">
-                            <div style="background-color:#ddd;" >
-                                 <b> Link All to (Destination):</b>{{Link_all_to_dest}}
+                <i id="ClickModal" class="icon-eye-open" data-toggle="modal" data-target="#LinkInfoModal" data-backdrop="static"
+                    ng-click="Openlink(o.source_se,o.dest_se)" style="cursor: hand;cursor: pointer;">
+                </i>
+                <div id="LinkInfoModal" class="modal fade" role="dialog" tabindex="-1">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                                <h4 class="modal-title">Link Info</h4>
                             </div>
-                              <b> Link (Source) to All:</b>{{Link_source_to_all}}
-                            <div style="background-color:#ddd;" >
-                              <b> Link All to All: </b>  <b>Min:</b>{{link_all_to_all[0]}} <b>Max:</b>{{link_all_to_all[1]}}
-                            </div>
-                              <b> Active transfers (Destination):</b> {{active_transfers_dest}}
-                            <div style="background-color:#ddd;" >       
-                              <b> Active transfers (Source): </b>{{active_transfers_source}}
-                            </div>
-                              <b> Optimizer Evolution decision:</b>{{optimizer_evolution[0]}}
-                              <b>Actual active:</b>{{optimizer_evolution[1]}}
-                              <br> 
-                              <b>Reason:</b>{{optimizer_evolution[2]}}
-                            <div style="background-color:#ddd;" >
-                            <b> Outbound Max Active All:</b>{{outbound_max_active_all[0]}}
-                             </div>
-                            <b> Outbound Max Active Source:</b>{{outbound_max_active_source}}
-                        </div>                        
+                            <div class="modal-body">
+                                <div id="LinkInfo"
+                                    style="background-color:aliceblue;padding:25px;border: 2px solid powderblue;">
+                                    <div style="background-color:#ddd;">
+                                        <b> Link All to (Destination): </b>{{Link_all_to_dest}}
+                                    </div>
+                                    <b> Link (Source) to All: </b>{{Link_source_to_all}}
+                                    <div style="background-color:#ddd;">
+                                        <b> Link All to All: </b> <b>Min: </b>{{link_all_to_all[0]}}
+                                        <b>Max: </b>{{link_all_to_all[1]}}
+                                    </div>
+                                    <b> Active transfers (Destination): </b>{{active_transfers_dest}}
+                                    <div style="background-color:#ddd;">
+                                        <b> Active transfers (Source): </b>{{active_transfers_source}}
+                                    </div>
+                                    <b> Optimizer Evolution decision: </b>{{optimizer_evolution[0]}}
+                                    <b>Actual active: </b>{{optimizer_evolution[1]}}
+                                    <br>
+                                    <b>Reason: </b>{{optimizer_evolution[2]}}
+                                    <div style="background-color:#ddd;">
+                                        <b>Outbound Max Active All: </b>{{outbound_max_active_all[0]}}
+                                    </div>
+                                    <b>Outbound Max Active Source: </b>{{outbound_max_active_source}}
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button id="LinkInfoModal-Close" type="button" class="btn btn-primary"
+                                    data-dismiss="modal">Close</button>
                             </div>
                         </div>
-                    </div> 
+                    </div>
+                </div>
 
             </td>
         </tr>
@@ -186,7 +189,7 @@
                 </a>
                 <br></br>
                 <b data-ng-if= "monit_url != 'None' && monit_url!=''">Monitoring Link <a href="{{monit_url}}&var-vo=All&var-vo_es=All&var-fts_server={{alias}}&var-source_se={{o.source_se}}&var-dest_se={{o.dest_se}}&var-source_se_es={{o.source_se}}&var-dest_se_es={{o.dest_se}}&var-fts_server_es={{alias}}">
-                    <i class="icon-search"></i></a>
+                        <i class="icon-search"></i></a>
                 </b>
             </td>
         </tr>
@@ -215,19 +218,19 @@
     </tfoot>
 </table>
 
-<pagination rotate="false"
-    page="overview.overview.page" total-items="overview.overview.count" items-per-page="overview.overview.pageSize"
-    max-size="15" class="pagination" boundary-links="true"
+<pagination rotate="false" page="overview.overview.page" total-items="overview.overview.count"
+    items-per-page="overview.overview.pageSize" max-size="15" class="pagination" boundary-links="true"
     on-select-page="pageChanged(page)"></pagination>
 
 <div>
     <p>
         <span class="label label-important">Bad shape</span>
-        There are submitted but no active, less than 3 active with more than 3 submitted, or a failure rate &gt;= 20%<br/>
+        There are submitted but no active, less than 3 active with more than 3 submitted, or a failure rate &gt;=
+        20%<br />
         <span class="label label-warning">Underused</span>
-        Less than three actives, but no submitted waiting.<br/>
+        Less than three actives, but no submitted waiting.<br />
         <span class="label label-success">Good shape</span>
-        Success rate &gt;= 90%, or more than three actives with a failure rate &lt; 20%.<br/>
+        Success rate &gt;= 90%, or more than three actives with a failure rate &lt; 20%.<br />
         <span class="label">Nothing special</span>
         No active, no submitted, success rate between 80% and 90%.
     </p>
