@@ -21,6 +21,7 @@ from ftsmon.views.jobs import setup_filters
 from libs.jsonify import jsonify
 from django.http import Http404
 from django.db import connection
+import os
 
 @jsonify
 
@@ -153,5 +154,18 @@ def get_linkinfo(http_request):
     cursor.execute(query)
     result['link_all_to_all'] =  cursor.fetchall()
 
+    # Get user DN and format 
+    user_dn = os.environ['SSL_CLIENT_S_DN'].split(',');
+    user_dn = '/' + '/'.join(reversed(user_dn));
+    
+    #Check if USER_DN is authorized
+    query = """
+        SELECT distinct 1 dn
+        FROM t_authz_dn
+        WHERE dn = '%s'; 
+        """ % user_dn
+
+    cursor.execute(query)
+    result['user_dn_result']  = cursor.fetchall()[0][0]
 
     return [result]

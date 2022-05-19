@@ -91,6 +91,24 @@ function OverviewCtrl($rootScope, $location, $scope, $http,  overview, Overview)
 			$scope.optimizer_evolution = linkinfodata[0].optimizer_evolution[0];
 			$scope.outbound_max_active_all = linkinfodata[0].outbound_max_active_all[0] ?? 'N/A';
 			$scope.outbound_max_active_source = linkinfodata[0].outbound_max_active_source[0] ?? 'N/A';
+			user_dn_result = linkinfodata[0].user_dn_result;
+			
+			// If have rights display config links for Storage and Link
+			if (user_dn_result == 1) {
+				document.getElementById("config_link").innerHTML =
+				'<HR><center>  <a id="StorageConfig" href ="#/config/storages"> Storage Config </a> | <a id="ConfigureLink" href ="#/config/links"> Configure Link </a></center>';
+			}
+			// Close modal before open link
+			document.getElementById("StorageConfig").onclick = function() {OpenlinkCloseModal()};
+			document.getElementById("ConfigureLink").onclick = function() {OpenlinkCloseModal()};
+
+			function OpenlinkCloseModal(TextId) {
+				$('html, body').css({
+					overflow: 'auto'
+				});
+				$('#LinkInfoModal').modal('toggle');
+			}
+
 			// Prevent background scrolling when modal popup is open
 			$('#LinkInfoModal').modal().on('shown', function(){
 				$('html, body').css({
