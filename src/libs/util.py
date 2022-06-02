@@ -20,8 +20,12 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 import sys
 import settings
-import urlparse
+import urllib.parse as urlparse
 
+ACTIVE_STATES        = ['SUBMITTED', 'READY', 'ACTIVE', 'STAGING', 'ARCHIVING']
+FILE_TERMINAL_STATES = ['FINISHED', 'FAILED', 'CANCELED', 'NOT_USED']
+ON_HOLD_STATES       = ['ON_HOLD', 'ON_HOLD_STAGING']
+STATES = ACTIVE_STATES + FILE_TERMINAL_STATES + ON_HOLD_STATES
 
 def get_order_by(request):
     order_by = request.GET.get('orderby', None)

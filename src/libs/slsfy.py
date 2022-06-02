@@ -20,6 +20,7 @@
 import settings
 from datetime import datetime
 from django.http import HttpResponse
+from django import VERSION as DJANGO_VERSION
 from xml.etree.ElementTree import Element, SubElement, tostring
 
 
@@ -52,8 +53,8 @@ def _calculate_availability(e_sls, servers):
     draining_count = 0
     down_count = 0
     total_count = 0
-    for server, info in servers.iteritems():
-        for service, service_status in info.get('services', dict()).iteritems():
+    for server, info in iter(servers.items()):
+        for service, service_status in iter(info.get('services', dict()).items()):
             if service == 'fts_backup':
                 continue
             e_subavailability = SubElement(
@@ -110,16 +111,16 @@ def slsfy(servers, id_tail, color_mapper=_color_mapper):
     _add_numeric(e_data, 'fts_server_running',
         sum(
             map(
-                lambda (server, info): _is_running('fts_server', info.get('services', dict())),
-                servers.iteritems()
+                lambda server_info: _is_running('fts_server', server_info[1].get('services', dict())),
+                iter(servers.items())
             )
         )
     )
     _add_numeric(e_data, 'fts_bringonline_running',
         sum(
             map(
-                lambda (server, info): _is_running('fts_bringonline', info.get('services', dict())),
-                servers.iteritems()
+                lambda server_info: _is_running('fts_bringonline', server_info[1].get('services', dict())),
+                iter(servers.items())
             )
         )
     )
@@ -127,24 +128,24 @@ def slsfy(servers, id_tail, color_mapper=_color_mapper):
     _add_numeric(e_data, 'active',
         sum(
             map(
-                lambda (server, info): info.get('active', 0),
-                servers.iteritems()
+                lambda server_info: server_info[1].get('active', 0),
+                iter(servers.items())
             )
         )
     )
     _add_numeric(e_data, 'staging',
         sum(
             map(
-                lambda (server, info): info.get('started', 0),
-                servers.iteritems()
+                lambda server_info: server_info[1].get('started', 0),
+                iter(servers.items())
             )
         )
     )
     _add_numeric(e_data, 'staging_queued',
         sum(
             map(
-                lambda (server, info): info.get('staging', 0),
-                servers.iteritems()
+                lambda server_info: server_info[1].get('staging', 0),
+                iter(servers.items())
             )
         )
     )
@@ -153,7 +154,10 @@ def slsfy(servers, id_tail, color_mapper=_color_mapper):
     e_timestamp = SubElement(e_sls, 'timestamp')
     e_timestamp.text = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
 
-    return HttpResponse(tostring(e_sls), mimetype='application/xml')
+    if DJANGO_VERSION[:2] < (1, 7):
+        return HttpResponse(tostring(e_sls), mimetype='application/xml')
+    else:
+        return HttpResponse(tostring(e_sls), content_type='application/xml')
 
 
 def slsfy_error(message, id_tail):
@@ -171,4 +175,7 @@ def slsfy_error(message, id_tail):
     SubElement(e_sls, 'availability').text = '0'
     SubElement(e_sls, 'status').text = 'unavailable'
 
-    return HttpResponse(tostring(e_sls), mimetype='application/xml')
+    if DJANGO_VERSION[:2] < (1, 7):
+        return HttpResponse(tostring(e_sls), mimetype='application/xml')
+    else:
+        return HttpResponse(tostring(e_sls), content_type='application/xml')

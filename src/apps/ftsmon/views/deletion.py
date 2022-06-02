@@ -21,10 +21,10 @@ from datetime import datetime, timedelta
 from django.db import connection
 from django.views.decorators.cache import cache_page
 
-from jobs_del import setup_filters
-from jsonify import jsonify
-from overview import OverviewExtendedDel
-from util import get_order_by, paged
+from ftsmon.views.jobs_del import setup_filters
+from libs.jsonify import jsonify
+from ftsmon.views.overview import OverviewExtendedDel
+from libs.util import get_order_by, paged
 
 @jsonify
 def get_deletion(http_request):
@@ -84,7 +84,7 @@ def get_deletion(http_request):
 
     # Transform into a list
     objs = [] 
-    for (triplet, obj) in triplets.iteritems():
+    for (triplet, obj) in iter(triplets.items()):
         obj['source_se'] = triplet[0]
         obj['vo_name'] = triplet[1]
         failed = obj.get('failed', 0)

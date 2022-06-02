@@ -9,20 +9,20 @@ URL:        https://fts.web.cern.ch
 # wget https://gitlab.cern.ch/fts/fts-monitoring/repository/archive.tar.gz?ref=v3.11.0 -O fts-monitoring-3.11.0.tar.gz
 Source0: %{name}-%{version}.tar.gz
 
-BuildRequires:  python2-devel
+BuildRequires:  python3-devel
 
 #Requires:  cx_Oracle
-Requires:   MySQL-python
+Requires:   mysqlclient
 %if %{?fedora}%{!?fedora:0} >= 18 || %{?rhel}%{!?rhel:0} >= 7
-Requires: python-django16
+Requires: python36-django
 %else
 Requires: Django >= 1.3.7
 %endif
 Requires:   httpd
 Requires:   mod_ssl
-Requires:   mod_wsgi
-Requires:   python
-Requires:   python-decorator
+Requires:   rh-python36-mod_wsgi
+Requires:   python3
+Requires:   python36-decorator
 
 %description
 FTS v3 web application for monitoring,
@@ -93,6 +93,14 @@ mkdir -p %{buildroot}/%{_prefix}/lib/firewalld/services/
 install -m 644 conf/fts3firewalld/ftsmon.xml %{buildroot}/%{_prefix}/lib/firewalld/services/ftsmon.xml
 %endif
 
+# Create fts3 user and group
+%pre
+getent group fts3 >/dev/null || groupadd -r fts3
+getent passwd fts3 >/dev/null && usermod -a -G apache fts3
+getent passwd fts3 >/dev/null || \
+    useradd -r -m -g fts3 -G apache -d /var/log/fts3 -s /sbin/nologin \
+    -c "File Transfer Service user" fts3
+exit 0
 
 %files
 %{_datadir}/fts3web

@@ -20,8 +20,8 @@
 from datetime import datetime, timedelta
 from django.views.decorators.cache import cache_page
 
-from ftsweb.models import Job, File, Host
-from jsonify import jsonify
+from ftsmon.models import Job, File, Host
+from libs.jsonify import jsonify
 
 
 @cache_page(1200)

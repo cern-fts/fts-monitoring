@@ -22,9 +22,9 @@ from django.db import connection
 from django.db.models import Sum, Q
 from django.http import Http404
 
-from ftsweb.models import OptimizerEvolution, Optimizer
-from jsonify import jsonify, jsonify_paged
-from util import paged
+from ftsmon.models import OptimizerEvolution
+from libs.jsonify import jsonify, jsonify_paged
+from libs.util import paged
 from settings import SITE_MONIT
 
 @jsonify_paged

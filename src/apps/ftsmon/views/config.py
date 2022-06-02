@@ -22,10 +22,10 @@ import os
 from django.db import connection
 from django.db.models import Count
 
-from ftsweb.models import ActivityShare, File, OperationLimit
-from ftsweb.models import ConfigAudit
-from ftsweb.models import LinkConfig, ShareConfig, Storage
-from jsonify import jsonify, jsonify_paged
+from ftsmon.models import ActivityShare, File, OperationLimit
+from ftsmon.models import ConfigAudit
+from ftsmon.models import LinkConfig, ShareConfig, Storage
+from libs.jsonify import jsonify, jsonify_paged
 
 
 @jsonify_paged
@@ -108,7 +108,7 @@ def get_activities(http_request):
     for row in rows:
         share = per_vo.get(row.vo, dict())
         for entry in json.loads(row.activity_share):
-            for share_name, share_value in entry.iteritems():
+            for share_name, share_value in iter(entry.items()):
                 share[share_name] = share_value
         per_vo[row.vo] = share
     return per_vo
@@ -138,7 +138,7 @@ def get_actives_per_activity(http_request, vo):
     share_db = ActivityShare.objects.get(vo = vo)
     if share_db is not None:
         for entry in json.loads(share_db.activity_share):
-            for share_name, share_value in entry.iteritems():
+            for share_name, share_value in iter(entry.items()):
                 share_config[share_name.lower()] = share_value
 
     weight_sum = 0
@@ -163,7 +163,7 @@ def get_gfal2_config(http_request):
         config_files = os.listdir('/etc/gfal2.d')
     except:
         config_files = list()
-    config_files = filter(lambda c: c.endswith('.conf'), config_files)
+    config_files = list(filter(lambda c: c.endswith('.conf'), config_files))
 
     config = dict()
     for cfg in config_files:

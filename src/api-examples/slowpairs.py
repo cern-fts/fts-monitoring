@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 import json
 from common import get_url
 from optparse import OptionParser
@@ -8,9 +8,12 @@ def get_slow_pairs(threshold = 1, vo = None):
     pairs = json.loads(content)
     
     slow = []
-    for pair in pairs['items']:
-        if 'current' in pair and pair['current'] < threshold:
-            slow.append(pair)
+    for pair in pairs['overview']['items']:
+        if 'current' in pair:
+            if isinstance(pair['current'], list):
+                pair['current'] = 0.0
+            if pair['current'] < threshold:
+                slow.append(pair)
         
     return slow
     
@@ -24,4 +27,4 @@ if __name__ == '__main__':
     
     slow = get_slow_pairs(options.threshold, options.vo)
     for pair in slow:
-        print "%(source_se)s => %(dest_se)s with throughput %(current).2f" % pair
+        print("%(source_se)s => %(dest_se)s with throughput %(current).2f" % pair)

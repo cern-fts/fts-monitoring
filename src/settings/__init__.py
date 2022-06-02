@@ -17,8 +17,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from cache import *
-from common import *
-from database import *
-from format import *
-from site import *
+from .cache import *
+from .common import *
+from .database import *
+from .format import *
+from .site import *

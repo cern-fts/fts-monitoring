@@ -22,10 +22,10 @@ from datetime import datetime, timedelta
 from django.db import connection
 from django.views.decorators.cache import cache_page
 
-from ftsweb.models import OptimizerEvolution
-from jobs import setup_filters
-from jsonify import jsonify
-from util import get_order_by, paged
+from ftsmon.models import OptimizerEvolution
+from ftsmon.views.jobs import setup_filters
+from libs.jsonify import jsonify
+from libs.util import get_order_by, paged
 
 
 def _seconds(td):
@@ -50,7 +50,7 @@ class OverviewExtended(object):
 
     def _get_throughput(self, source, destination, vo):
         """
-        Calculate throughput (in MB) over this pair + vo over the last minute
+        Calculate throughput (in MiB) over this pair + vo over the last minute
         """
         try:
             time_window = timedelta(hours=int(http_request.GET['time_window']))
@@ -64,12 +64,12 @@ class OverviewExtended(object):
             .filter(datetime__gte=not_before)\
             .order_by('-datetime')[0:1]
         if len(oe) == 0:
-            return 0, 0
+            return 0.0
 
         return oe[0]['throughput'] / 1024**2
 
     def __getitem__(self, indexes):
-        if isinstance(indexes, types.SliceType):
+        if isinstance(indexes, slice):
             return_list = self.objects[indexes]
             for item in return_list:
                 item['current'] = self._get_throughput(item['source_se'], item['dest_se'], item['vo_name'])
@@ -90,7 +90,7 @@ class OverviewExtendedDel(object):
         return len(self.objects)
      
     def __getitem__(self, indexes):
-        if isinstance(indexes, types.SliceType):
+        if isinstance(indexes, slice):
             return self.objects[indexes]
 
 @cache_page(60)
@@ -184,7 +184,7 @@ def get_overview(http_request):
     
     # Transform into a list
     objs = []
-    for (triplet, obj) in triplets.iteritems():
+    for (triplet, obj) in iter(triplets.items()):
         if filters['only_summary']:
             obj['vo_name'] = triplet[0]
         else:
