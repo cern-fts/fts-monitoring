@@ -28,6 +28,10 @@ ARG dmcrepo=https://dmc-repo.web.cern.ch/dmc-repo/dmc-ci-el7.repo
 ADD $dmcrepo /etc/yum.repos.d/dmc.repo
 RUN yum clean metadata
 
+# Enable Centos Software Collections repository
+RUN yum install -y centos-release-scl
+RUN yum clean metadata
+
 # Install FTS-Monitoring packages
 RUN yum install -y fts-monitoring fts-monitoring-selinux gridsite
 
