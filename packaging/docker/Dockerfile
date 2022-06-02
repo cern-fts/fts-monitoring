@@ -31,10 +31,6 @@ RUN yum install -y fts-monitoring fts-monitoring-selinux gridsite
 # Install VOMS packages
 RUN yum install -y voms-config-wlcg voms-config-vo-dteam
 
-# Add fts3 user
-RUN useradd fts3
-RUN usermod -a -G fts3 apache
-
 # Expose ports
 EXPOSE 8449
 
