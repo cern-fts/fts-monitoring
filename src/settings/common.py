@@ -76,7 +76,7 @@ if not FTS3WEB_CONFIG.has_section('database'):
 if not FTS3WEB_CONFIG.get('site', 'name'):
     FTS3WEB_CONFIG.set('site', 'name', fts3cfg.get('fts3', 'SiteName'))
 
-ALIAS = fts3cfg.get('fts3', 'Alias')
+ALIAS = FTS3WEB_CONFIG.get('fts3', 'Alias')
 
 ###
 if 'BASE_URL' in os.environ:
