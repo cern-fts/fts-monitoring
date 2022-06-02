@@ -13,16 +13,16 @@ RUN yum localinstall /tmp/epel-release-7.noarch.rpm -y \
         && rm -rf /var/cache/yum
 
 # Add FTS repo
-ARG ftsrepo=http://fts-repo.web.cern.ch/fts-repo/fts3-continuous-el7.repo
+ARG ftsrepo=https://fts-repo.web.cern.ch/fts-repo/fts3-continuous-el7.repo
 ADD $ftsrepo /etc/yum.repos.d/fts.repo
 
 # Add DMC repo
-ARG dmcrepo=http://dmc-repo.web.cern.ch/dmc-repo/dmc-ci-el7.repo
+ARG dmcrepo=https://dmc-repo.web.cern.ch/dmc-repo/dmc-ci-el7.repo
 ADD $dmcrepo /etc/yum.repos.d/dmc.repo
 RUN yum clean all
 
 # Install FTS-Monitoring packages
-RUN yum install -y fts-monitoring fts-monitoring-selinux mod_ssl gridsite
+RUN yum install -y fts-monitoring fts-monitoring-selinux gridsite
 
 # Install VOMS packages
 RUN yum install -y voms-config-wlcg voms-config-vo-dteam

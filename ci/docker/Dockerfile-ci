@@ -15,6 +15,9 @@ RUN yum localinstall /tmp/epel-release-7.noarch.rpm -y \
 # Build repo prerequisites
 RUN yum install -y createrepo
 
+# Add FTS-testing repo for Python3 dependencies
+RUN echo -e "[fts-testing-depend]\nname=FTS3 Testing Dependencies\nbaseurl=https://fts-repo.web.cern.ch/fts-repo/testing/el7/x86_64/\ngpgcheck=0\nenabled=1\npriority=2\nincludepkgs=mysqlclient" > /etc/yum.repos.d/fts-testing-depend.repo
+
 # Add FTS repo from build artifacts
 ADD cc7 /repo/fts
 RUN createrepo /repo/fts
@@ -26,7 +29,7 @@ ADD $dmcrepo /etc/yum.repos.d/dmc.repo
 RUN yum clean metadata
 
 # Install FTS-Monitoring packages
-RUN yum install -y fts-monitoring fts-monitoring-selinux mod_ssl gridsite
+RUN yum install -y fts-monitoring fts-monitoring-selinux gridsite
 
 # Install VOMS packages
 RUN yum install -y voms-config-wlcg voms-config-vo-dteam
