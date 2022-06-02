@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import os
-#from pycurl import FAILONERROR
 import requests
 import urllib
 import urllib.parse as urlparse
@@ -48,9 +47,7 @@ def get_url(url, **kwargs):
     
     buffer = StringIO()
     handle.stream = True
-    #handle.setopt(pycurl.WRITEFUNCTION, buffer.write)
-    
-    #handle.setopt(pycurl.FOLLOWLOCATION, True)
+
     buffer = handle.get(url=_build_full_url(url, kwargs), allow_redirects=True)
     
     return buffer.content
