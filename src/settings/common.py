@@ -72,10 +72,10 @@ if not FTS3WEB_CONFIG.has_section('database'):
     if FTS3WEB_CONFIG.get('database', 'engine') == 'sqlite':
         FTS3WEB_CONFIG.set('database', 'engine', 'sqlite3')
 
-if not FTS3WEB_CONFIG.get('site', 'name'):
+if not FTS3WEB_CONFIG.has_option('site', 'name') or not FTS3WEB_CONFIG.get('site', 'name'):
     FTS3WEB_CONFIG.set('site', 'name', fts3cfg.get('fts3', 'SiteName'))
 
-if not FTS3WEB_CONFIG.get('site', 'alias'):
+if not FTS3WEB_CONFIG.has_option('site', 'alias') or not FTS3WEB_CONFIG.get('site', 'alias'):
     FTS3WEB_CONFIG.set('site', 'alias', fts3cfg.get('fts3', 'Alias'))
 
 ###
