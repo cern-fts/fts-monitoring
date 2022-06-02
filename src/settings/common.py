@@ -60,7 +60,6 @@ if not FTS3WEB_CONFIG.has_section('database'):
             raise ValueError('Could not parse %s' % dbName)
         (dbHost, dbPort, dbName) = match.group(1, 3, 4)
 
-
     # Copy to configuration
     FTS3WEB_CONFIG.add_section('database')
     FTS3WEB_CONFIG.set('database', 'engine',   dbType)
@@ -76,7 +75,8 @@ if not FTS3WEB_CONFIG.has_section('database'):
 if not FTS3WEB_CONFIG.get('site', 'name'):
     FTS3WEB_CONFIG.set('site', 'name', fts3cfg.get('fts3', 'SiteName'))
 
-ALIAS = FTS3WEB_CONFIG.get('fts3', 'Alias')
+if not FTS3WEB_CONFIG.get('site', 'alias'):
+    FTS3WEB_CONFIG.set('site', 'alias', fts3cfg.get('fts3', 'Alias'))
 
 ###
 if 'BASE_URL' in os.environ:
