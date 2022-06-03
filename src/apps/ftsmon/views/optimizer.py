@@ -19,13 +19,11 @@
 
 from datetime import datetime, timedelta
 from django.db import connection
-from django.db.models import Sum, Q
 from django.http import Http404
 
 from ftsmon.models import OptimizerEvolution, Storage
 from libs.jsonify import jsonify, jsonify_paged
 from libs.util import paged
-from settings import SITE_MONIT
 
 @jsonify_paged
 def get_optimizer_pairs(http_request):
@@ -108,11 +106,11 @@ def get_storage_info(source_se, dest_se):
         source_info['max_active'] = row[0].outbound_max_active
         dest_info['max_active'] = row[0].inbound_max_active
 
-    row = storages.filter(storage=source_se).all()
+    row = storages.filter(storage=source_se, outbound_max_active__gt=0).all()
     if row.count() > 0:
         source_info['max_active'] = row[0].outbound_max_active
 
-    row = storages.filter(storage=dest_se).all()
+    row = storages.filter(storage=dest_se, inbound_max_active__gt=0).all()
     if row.count() > 0:
         dest_info['max_active'] = row[0].inbound_max_active
 
