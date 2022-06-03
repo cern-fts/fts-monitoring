@@ -56,8 +56,8 @@
             <td>{{job.job.submit_time}}</td>
             <td>{{files.stats.first_start}} (<span style="color:red">+{{files.stats.queued_first}}s</span>)
             <td><span data-optional-number="{{files.stats.time_transfering}}" data-decimals="0" data-suffix="s"></span></td>
-            <td><span data-optional-number="{{files.stats.avg_throughput}}" data-decimals="2" data-suffix="MB/s"></span></td>
-            <td><span data-optional-number="{{files.stats.current_throughput}}" data-decimals="2" data-suffix="MB/s"></span></td>
+            <td><span data-optional-number="{{files.stats.avg_throughput}}" data-decimals="2" data-suffix="MiB/s"></span></td>
+            <td><span data-optional-number="{{files.stats.current_throughput}}" data-decimals="2" data-suffix="MiB/s"></span></td>
         </tr>
         <tr>
             <td colspan="7" class="progress">
@@ -157,7 +157,7 @@
                 <span data-ng-show="file."></span>
             </td>
             <td>{{file.filesize|filesize}}</td>
-            <td>{{file.throughput|number:2}} MB/s</td>
+            <td>{{file.throughput|number:2}} MiB/s</td>
             <td>{{getRemainingTime(file)}}</td>
             <td>{{file.start_time}}</td>
             <td>{{file.finish_time}}</td>

@@ -19,13 +19,11 @@
 
 from datetime import datetime, timedelta
 from django.db import connection
-from django.db.models import Sum, Q
 from django.http import Http404
 
-from ftsmon.models import OptimizerEvolution
+from ftsmon.models import OptimizerEvolution, Storage
 from libs.jsonify import jsonify, jsonify_paged
 from libs.util import paged
-from settings import SITE_MONIT
 
 @jsonify_paged
 def get_optimizer_pairs(http_request):
@@ -72,6 +70,48 @@ def get_optimizer_details(http_request):
     )
     optimizer = optimizer.order_by('-datetime')
 
+    storage_info = get_storage_info(source_se, dest_se)
+
     return {
         'evolution': paged(optimizer, http_request),
+        'storage_info': storage_info
     }
+
+def get_storage_info(source_se, dest_se):
+    source_info = {'storage': source_se}
+    dest_info = {'storage': dest_se}
+    cursor = connection.cursor()
+
+    cursor.execute( """
+    SELECT COUNT(*)
+    FROM t_file
+    WHERE source_se = %s AND file_state = 'ACTIVE'
+    """,
+    [source_se])
+    row = cursor.fetchall()[0]
+    source_info['active'] = row[0]
+
+    cursor.execute( """
+    SELECT COUNT(*)
+    FROM t_file
+    WHERE dest_se = %s AND file_state = 'ACTIVE'
+    """,
+    [dest_se])
+    row = cursor.fetchall()[0]
+    dest_info['active'] = row[0]
+
+    storages = Storage.objects
+    row = storages.filter(storage='*').all()
+    if row.count() > 0:
+        source_info['max_active'] = row[0].outbound_max_active
+        dest_info['max_active'] = row[0].inbound_max_active
+
+    row = storages.filter(storage=source_se, outbound_max_active__gt=0).all()
+    if row.count() > 0:
+        source_info['max_active'] = row[0].outbound_max_active
+
+    row = storages.filter(storage=dest_se, inbound_max_active__gt=0).all()
+    if row.count() > 0:
+        dest_info['max_active'] = row[0].inbound_max_active
+
+    return [source_info, dest_info]
