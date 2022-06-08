@@ -73,9 +73,15 @@ if not FTS3WEB_CONFIG.has_section('database'):
         FTS3WEB_CONFIG.set('database', 'engine', 'sqlite3')
 
 if not FTS3WEB_CONFIG.has_option('site', 'name') or not FTS3WEB_CONFIG.get('site', 'name'):
+    if not fts3cfg:
+        raise Exception('"[site] name" not present in /etc/fts3web/fts3web.ini, and could not load /etc/fts3/fts3config')
+
     FTS3WEB_CONFIG.set('site', 'name', fts3cfg.get('fts3', 'SiteName'))
 
 if not FTS3WEB_CONFIG.has_option('site', 'alias') or not FTS3WEB_CONFIG.get('site', 'alias'):
+    if not fts3cfg:
+        raise Exception('"[site] alias" not present in /etc/fts3web/fts3web.ini, and could not load /etc/fts3/fts3config')
+
     FTS3WEB_CONFIG.set('site', 'alias', fts3cfg.get('fts3', 'Alias'))
 
 ###
