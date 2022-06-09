@@ -34,45 +34,41 @@ def get_linkinfo(http_request):
 
     cursor = connection.cursor()
 
-    #Result
     result = {}
+    source = {}
+    destination = {}
+    link_limits = {}
+    optimizer = {}
 
-    # Run queries for source SE outbound settings
-    #
     # t_se -> Storage config limits
     # t_link -> Link config limits
     # t_file -> Where all the transfers are (including active ones)
-    #
+    
+    # Check the default outbound limit for all SEs
+    query = """
+        SELECT outbound_max_active 
+        FROM t_se 
+        WHERE storage = '*' ;
+        """    
+    cursor.execute(query)
+    outbound_max_active =  cursor.fetchall()[0][0]
+
     # Check if there is limit specifc for the SE (outbound)
     query = """
         SELECT outbound_max_active 
         FROM t_se 
         WHERE storage = '%s' ;
         """ % source_se
-
     cursor.execute(query)
-    result['outbound_max_active_source'] = cursor.fetchall()
-
-
-    # Check the default outbound limit for all SEs
-    query = """
-        SELECT outbound_max_active 
-        FROM t_se 
-        WHERE storage = '*' ;
-        """
-
-    cursor.execute(query)
-    result['outbound_max_active_all'] =  cursor.fetchall()
-
-    # Active transfers for the destination
-    query = """
-        SELECT count(*) 
-        FROM t_file 
-        WHERE file_state in ("READY", "ACTIVE") AND dest_se = '%s' ;
-        """ % dest_se
-
-    cursor.execute(query)
-    result['active_transfers_dest'] =  cursor.fetchall()
+    source["outbound_limit"] = cursor.fetchall()[0][0]
+    
+    # If the limit is not set conf_type = generic
+    if not source["outbound_limit"]:
+        source["config_type"] = "generic"
+    elif outbound_max_active > source["outbound_limit"]:
+        source["config_type"] = "generic"
+    else:
+        source["config_type"] = "specific"
 
     # Active transfers for the source
     query = """
@@ -80,19 +76,49 @@ def get_linkinfo(http_request):
         FROM t_file 
         WHERE file_state in ("READY", "ACTIVE") AND source_se = '%s' ;
         """ % source_se
-
     cursor.execute(query)
-    result['active_transfers_source'] =  cursor.fetchall()
+    source["active_transfers"] = cursor.fetchall()[0][0]
+    result["source"] = source
+
+    # Check if there is limit specifc for the dest_se (inbound)
+    query = """
+        SELECT inbound_max_active 
+        FROM t_se 
+        WHERE storage = '%s' ;
+        """ % dest_se
+    cursor.execute(query)
+    destination["inbound_limit"] = cursor.fetchall()[0][0]
+
+    # If the limit is not set conf_type = generic
+    if not destination["inbound_limit"]:
+        destination["config_type"] = "generic"
+    else:
+        destination["config_type"] = "specific"
 
     # Active transfers for the destination
     query = """
         SELECT count(*) 
         FROM t_file 
-        WHERE file_state in ("READY", "ACTIVE") AND dest_se ="%s";
+        WHERE file_state in ("READY", "ACTIVE") AND dest_se = '%s' ;
         """ % dest_se
+    cursor.execute(query)
+    destination['active_transfers'] =  cursor.fetchall()[0][0]
+    result["destination"] = destination
+
+    # Only add link limit info if is not empty 
+    def add_link_limit(key_link, value_link):
+        if value_link:
+            link_limits.update({key_link: value_link[0]})
+
+    # Check Link config from the source_se -> dest_se
+    query = """
+        SELECT min_active, max_active
+        FROM t_link_config 
+        WHERE source_se = '%s' AND dest_se ='%s' ;
+        """ % (source_se, dest_se)
 
     cursor.execute(query)
-    result['active_transfers_dest'] =  cursor.fetchall()
+    add_link_limit("link_source_to_dest", cursor.fetchall())
 
     # Check Optimizer_evolution values
     # active -> optimizer decision (int)
@@ -107,22 +133,18 @@ def get_linkinfo(http_request):
         """ % (dest_se, source_se)
 
     cursor.execute(query)
-    result['optimizer_evolution'] =  cursor.fetchall()
+    optimizer_output = cursor.fetchall()[0]
+    optimizer['decision'] =   optimizer_output[0]
+    optimizer['active_transfers'] =  optimizer_output[1]
+    optimizer['description'] =  optimizer_output[2]
+    
+    result["optimizer"] = optimizer
 
-    # Check Link config from the source_se -> dest_se
-    # 
-    # WHERE source_se = "davs://dcgftp.usatlas.bnl.gov" AND dest_se="gclouds://atlas-google-cloud.cern.ch";
-    query = """
-        SELECT min_active, max_active
-        FROM t_link_config 
-        WHERE source_se = '%s' AND dest_se ='%s' ;
-        """ % (source_se, dest_se)
-
-    cursor.execute(query)
-    result['Link_source_to_dest'] =  cursor.fetchall()
-
+    # Get user DN and format 
+    user_dn = os.environ['SSL_CLIENT_S_DN'].split(',');
+    user_dn = '/' + '/'.join(reversed(user_dn));
+    
     # Check Link config from the source_se -> *
-    #
     query = """
         SELECT min_active, max_active
         FROM t_link_config 
@@ -130,10 +152,9 @@ def get_linkinfo(http_request):
         """ % source_se
 
     cursor.execute(query)
-    result['Link_source_to_all'] =  cursor.fetchall()
+    add_link_limit("link_source_to_all", cursor.fetchall())
 
     # Check Link config from the * -> dest_se
-    # 
     query = """
         SELECT min_active, max_active
         FROM t_link_config 
@@ -141,10 +162,9 @@ def get_linkinfo(http_request):
         """ % dest_se
 
     cursor.execute(query)
-    result['Link_all_to_dest'] =  cursor.fetchall()
+    add_link_limit("link_all_to_dest", cursor.fetchall())
 
-    #Check Link config from the * -> *
-    #
+    #Check Link config from the * -> *   
     query = """
         SELECT min_active, max_active
         FROM t_link_config 
@@ -152,12 +172,18 @@ def get_linkinfo(http_request):
         """
 
     cursor.execute(query)
-    result['link_all_to_all'] =  cursor.fetchall()
-
-    # Get user DN and format 
-    user_dn = os.environ['SSL_CLIENT_S_DN'].split(',');
-    user_dn = '/' + '/'.join(reversed(user_dn));
+    add_link_limit("link_all_to_all", cursor.fetchall())
     
+    high_limit = (min(link_limits, key=lambda k: link_limits[k][1]))
+    if high_limit == "link_source_to_dest":
+        result["link"] = {"active_transfers": optimizer_output[1], "limits": link_limits["link_source_to_dest"], "config_type": "specific_link"}
+    elif high_limit == "link_source_to_all":
+        result["link"] = {"active_transfers": optimizer_output[1], "limits": link_limits["link_source_to_all"], "config_type": "specific_source"}
+    elif high_limit == "link_all_to_dest":
+        result["link"] = {"active_transfers": optimizer_output[1], "limits": link_limits["link_all_to_dest"], "config_type": "specific_dest"}
+    elif high_limit == "link_all_to_all":
+        result["link"] = {"active_transfers": optimizer_output[1], "limits": link_limits["link_all_to_all"], "config_type": "generic"}
+
     #Check if USER_DN is authorized
     query = """
         SELECT distinct 1 dn
