@@ -139,36 +139,58 @@
                 <i id="ClickModal" class="icon-eye-open" data-toggle="modal" data-target="#LinkInfoModal" data-backdrop="static"
                     ng-click="Openlink(o.source_se,o.dest_se)" style="cursor: hand;cursor: pointer;">
                 </i>
-                <div id="LinkInfoModal" class="modal fade" role="dialog" tabindex="-1">
-                    <div class="modal-dialog modal-sm">
+                <div id="LinkInfoModal" class="modal fade" role="document" style="width: 600px" tabindex="-1">
+                    <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
-                                <h4 class="modal-title">Link Info</h4>
+                                <!-- <h4 class="modal-title">Link Info</h4> -->
                             </div>
                             <div class="modal-body">
-                                <div id="LinkInfo" style="background-color:aliceblue;padding:25px;border: 2px solid powderblue;">
-                                    <div style="background-color:#ddd;">
-                                        <b> Link All to (Destination): </b>{{Link_all_to_dest}}
-                                    </div>
-                                    <b> Link (Source) to All: </b>{{Link_source_to_all}}
-                                    <div style="background-color:#ddd;">
-                                        <b> Link All to All: </b> <b>Min: </b>{{link_all_to_all[0]}}
-                                        <b>Max: </b>{{link_all_to_all[1]}}
-                                    </div>
-                                    <b> Active transfers (Destination): </b>{{active_transfers_dest}}
-                                    <div style="background-color:#ddd;">
-                                        <b> Active transfers (Source): </b>{{active_transfers_source}}
-                                    </div>
-                                    <b> Optimizer Evolution decision: </b>{{optimizer_evolution[0]}}
-                                    <b>Actual active: </b>{{optimizer_evolution[1]}}
-                                    <br>
-                                    <b>Reason: </b>{{optimizer_evolution[2]}}
-                                    <div style="background-color:#ddd;">
-                                        <b>Outbound Max Active All: </b>{{outbound_max_active_all[0]}}
-                                    </div>
-                                    <b>Outbound Max Active Source: </b>{{outbound_max_active_source}}
-                                    <div id="config_link"></div>
+                                <div id="LinkInfo" style="background-color:aliceblue;padding:10px;border: 2px solid powderblue;">
+                                    <table style="margin-left:auto;margin-right:auto;border: 1px">
+                                        <tbody >
+                                        <tr>
+                                            <th style="border: 1px solid white;text-align: center;"><b>Source</b></th>
+                                            <th style="border: 1px solid white;text-align: center;"><b>Destination</b></th>
+                                            <th style="border: 1px solid white;text-align: center;"><b>Link</b></th>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align:middle; background-color:#ddd;border: 2px solid powderblue;">
+                                            <b>Active transfers: </b>{{link_source_act_trans}}
+                                            <br>
+                                            <b>Outbound limit: </b>{{link_source_outbound_limit}}
+                                            <br>
+                                            <b>Config type: </b><font style="text-transform:capitalize;">{{link_source_conf_type}}</font>
+                                            </td>
+                                            <td style="vertical-align:middle; background-color:#ddd;border: 2px solid powderblue;">
+                                            <b>Active transfers: </b>{{link_dest_act_trans}}
+                                            <br>
+                                            <b>Inbound limit: </b>{{link_dest_inbound_limit}}
+                                            <br>
+                                            <b>Config type: </b><font style="text-transform:capitalize;">{{link_dest_conf_type}}</font>
+                                            </td>
+                                            <td style="vertical-align:middle; background-color:#ddd;border: 2px solid powderblue;">
+                                            <b>Active transfers: </b>{{link_act_trans}}
+                                            <br>
+                                            <b>Min limit: </b>{{link_min_lim}}
+                                            <br>
+                                            <b>Max limit: </b>{{link_max_lim}}
+                                            <br>
+                                            <b>Config type: </b><font style="text-transform:capitalize;">{{link_conf_type}}</font>
+                                            </td>
+                                        </tr>   
+                                        </tbody>
+                                    </table> 
+                                    <b><center>Optimizer</center></b>
+                                        <div style="background-color:#ddd;border: 2px solid powderblue;">
+                                        <b>Active transfers: </b>{{opt_act_trans}}
+                                        <br>
+                                        <b>Decision: </b>{{opt_decision}}
+                                        <br>
+                                        <b >Description: </b> <font style="text-transform:capitalize;">{{opt_desc}}</font>
+                                     </div>
+                                        <div id="config_link"></div>
                                 </div>
                             </div>
                             <div class="modal-footer">

@@ -83,14 +83,19 @@ function OverviewCtrl($rootScope, $location, $scope, $http,  overview, Overview)
 		$http.get(siteurl+"linkinfo?source_se="+source_se+"&dest_se="+dest_se).
 			then(function(data){
 			linkinfodata = angular.fromJson(data).data;
-			$scope.Link_all_to_dest = linkinfodata[0].Link_all_to_dest[0] ?? 'N/A';
-			$scope.Link_source_to_all = linkinfodata[0].Link_source_to_all[0] ?? 'N/A';
-			$scope.link_all_to_all = linkinfodata[0].link_all_to_all[0];
-			$scope.active_transfers_dest = linkinfodata[0].active_transfers_dest[0][0] ?? 'N/A';
-			$scope.active_transfers_source = linkinfodata[0].active_transfers_source[0][0] ?? 'N/A';
-			$scope.optimizer_evolution = linkinfodata[0].optimizer_evolution[0];
-			$scope.outbound_max_active_all = linkinfodata[0].outbound_max_active_all[0] ?? 'N/A';
-			$scope.outbound_max_active_source = linkinfodata[0].outbound_max_active_source[0] ?? 'N/A';
+			$scope.link_source_act_trans = linkinfodata[0].source["active_transfers"];
+			$scope.link_source_outbound_limit = linkinfodata[0].source["outbound_limit"];
+			$scope.link_source_conf_type = linkinfodata[0].source["config_type"];
+			$scope.link_dest_act_trans = linkinfodata[0].destination["active_transfers"];
+			$scope.link_dest_inbound_limit = linkinfodata[0].destination["inbound_limit"];
+			$scope.link_dest_conf_type = linkinfodata[0].destination["config_type"];
+			$scope.link_act_trans = linkinfodata[0].link["active_transfers"];
+			$scope.link_min_lim = linkinfodata[0].link["limits"][0];
+			$scope.link_max_lim = linkinfodata[0].link["limits"][1];
+			$scope.link_conf_type = linkinfodata[0].link["config_type"];
+			$scope.opt_act_trans = linkinfodata[0].optimizer["active_transfers"];
+			$scope.opt_decision = linkinfodata[0].optimizer["decision"];
+			$scope.opt_desc = linkinfodata[0].optimizer["description"];
 			user_dn_result = linkinfodata[0].user_dn_result;
 			
 			// If have rights display config links for Storage and Link
@@ -112,7 +117,7 @@ function OverviewCtrl($rootScope, $location, $scope, $http,  overview, Overview)
 			// Prevent background scrolling when modal popup is open
 			$('#LinkInfoModal').modal().on('shown', function(){
 				$('html, body').css({
-					overflow: 'hidden',
+					overflow: 'hidden'
 				});
 			}).on('hidden', function(){
 				$('html, body').css({
