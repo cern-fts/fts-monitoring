@@ -51,7 +51,7 @@ def get_linkinfo(http_request):
         WHERE storage = '*' ;
         """    
     cursor.execute(query)
-    outbound_max_active =  cursor.fetchall()[0][0]
+    outbound_max_active =  cursor.fetchall()
 
     # Check if there is limit specifc for the SE (outbound)
     query = """
@@ -60,14 +60,14 @@ def get_linkinfo(http_request):
         WHERE storage = '%s' ;
         """ % source_se
     cursor.execute(query)
-    source["outbound_limit"] = cursor.fetchall()[0][0]
+    source["outbound_limit"] = cursor.fetchall()
     
     # If the limit is not set conf_type = generic
     if not source["outbound_limit"]:
-        source["config_type"] = "generic"
-    elif outbound_max_active > source["outbound_limit"]:
+        source["outbound_limit"] = "N/A"
         source["config_type"] = "generic"
     else:
+        source["outbound_limit"] = source["outbound_limit"][0][0]
         source["config_type"] = "specific"
 
     # Active transfers for the source
@@ -87,13 +87,15 @@ def get_linkinfo(http_request):
         WHERE storage = '%s' ;
         """ % dest_se
     cursor.execute(query)
-    destination["inbound_limit"] = cursor.fetchall()[0][0]
+    destination["inbound_limit"] = cursor.fetchall()
 
     # If the limit is not set conf_type = generic
     if not destination["inbound_limit"]:
+        destination["inbound_limit"] = "N/A"
         destination["config_type"] = "generic"
     else:
         destination["config_type"] = "specific"
+        destination["inbound_limit"] = destination["inbound_limit"][0][0]
 
     # Active transfers for the destination
     query = """
@@ -104,21 +106,6 @@ def get_linkinfo(http_request):
     cursor.execute(query)
     destination['active_transfers'] =  cursor.fetchall()[0][0]
     result["destination"] = destination
-
-    # Only add link limit info if is not empty 
-    def add_link_limit(key_link, value_link):
-        if value_link:
-            link_limits.update({key_link: value_link[0]})
-
-    # Check Link config from the source_se -> dest_se
-    query = """
-        SELECT min_active, max_active
-        FROM t_link_config 
-        WHERE source_se = '%s' AND dest_se ='%s' ;
-        """ % (source_se, dest_se)
-
-    cursor.execute(query)
-    add_link_limit("link_source_to_dest", cursor.fetchall())
 
     # Check Optimizer_evolution values
     # active -> optimizer decision (int)
@@ -139,11 +126,22 @@ def get_linkinfo(http_request):
     optimizer['description'] =  optimizer_output[2]
     
     result["optimizer"] = optimizer
-
-    # Get user DN and format 
-    user_dn = os.environ['SSL_CLIENT_S_DN'].split(',');
-    user_dn = '/' + '/'.join(reversed(user_dn));
     
+    # Only add link limit info if is not empty 
+    def add_link_limit(key_link, value_link):
+        if value_link:
+            link_limits.update({key_link: value_link[0]})
+
+    # Check Link config from the source_se -> dest_se
+    query = """
+        SELECT min_active, max_active
+        FROM t_link_config 
+        WHERE source_se = '%s' AND dest_se ='%s' ;
+        """ % (source_se, dest_se)
+
+    cursor.execute(query)
+    add_link_limit("link_source_to_dest", cursor.fetchall())
+
     # Check Link config from the source_se -> *
     query = """
         SELECT min_active, max_active
@@ -183,6 +181,10 @@ def get_linkinfo(http_request):
         result["link"] = {"active_transfers": optimizer_output[1], "limits": link_limits["link_all_to_dest"], "config_type": "specific_dest"}
     elif high_limit == "link_all_to_all":
         result["link"] = {"active_transfers": optimizer_output[1], "limits": link_limits["link_all_to_all"], "config_type": "generic"}
+
+    # Get user DN and format 
+    user_dn = os.environ['SSL_CLIENT_S_DN'].split(',');
+    user_dn = '/' + '/'.join(reversed(user_dn));
 
     #Check if USER_DN is authorized
     query = """
