@@ -61,6 +61,7 @@ function OverviewCtrl($rootScope, $location, $scope, $http,  overview, Overview)
 	$scope.overview = overview;
     $scope.monit_url = SITE_MONIT;
     $scope.alias = SITE_ALIAS;
+	$scope.fts3_alias = FTS3_ALIAS;
 	// On page change, reload
 	$scope.pageChanged = function(newPage) {
 		$location.search('page', newPage);
@@ -101,18 +102,21 @@ function OverviewCtrl($rootScope, $location, $scope, $http,  overview, Overview)
 			// If have rights display config links for Storage and Link
 			if (user_dn_result == 1) {
 				document.getElementById("config_link").innerHTML =
-				'<HR><center>  <a id="StorageConfig" href ="#/config/storages"> Storage Config </a> | <a id="ConfigureLink" href ="#/config/links"> Configure Link </a></center>';
+				'<HR width="70%"><center>  <button id="StorageConfig" type="button" class="btn btn-primary" > Storage Config </button> | <button id="ConfigureLink"  type="button" class="btn btn-primary" > Configure Link </button></center>';
 			}
-			// Close modal before open link
-			document.getElementById("StorageConfig").onclick = function() {OpenlinkCloseModal()};
-			document.getElementById("ConfigureLink").onclick = function() {OpenlinkCloseModal()};
+			
+			document.getElementById("StorageConfig").onclick = function() {OpenStorageConfig()};
+			document.getElementById("ConfigureLink").onclick = function() {OpenLinkConfig()};
 
-			function OpenlinkCloseModal(TextId) {
-				$('html, body').css({
-					overflow: 'auto'
-				});
-				$('#LinkInfoModal').modal('toggle');
-			}
+			function OpenStorageConfig() {
+				$scope.fts3_alias = FTS3_ALIAS;
+				window.open($scope.fts3_alias+"/config/se")
+				}
+			
+			function OpenLinkConfig() {
+				$scope.fts3_alias = FTS3_ALIAS;
+				window.open($scope.fts3_alias+"/config/links")
+				}
 
 			// Prevent background scrolling when modal popup is open
 			$('#LinkInfoModal').modal().on('shown', function(){
