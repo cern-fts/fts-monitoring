@@ -106,11 +106,11 @@ function OverviewCtrl($rootScope, $location, $scope, $http,  overview, Overview)
 			// If have rights display config links for Storage and Link
 			if (user_dn_result == 1) {
 				document.getElementById("config_link").innerHTML =
-				'<HR width="70%"><center>  <button id="StorageConfig" type="button" class="btn btn-primary"> Storage Config </button> | <button id="ConfigureLink"  type="button" class="btn btn-primary" > Configure Link </button></center>';
+				'<HR width="70%"><center>  <button id="StorageConfig" type="button" class="btn btn-primary"> Storage Config </button> | <button id="LinkConfig"  type="button" class="btn btn-primary" > Link Config </button></center>';
 			}
 			
 			document.getElementById("StorageConfig").onclick = function() {OpenStorageConfig()};
-			document.getElementById("ConfigureLink").onclick = function() {OpenLinkConfig()};
+			document.getElementById("LinkConfig").onclick = function() {OpenLinkConfig()};
 
 			function OpenStorageConfig() {
 				$scope.fts3_alias = FTS3_ALIAS;
