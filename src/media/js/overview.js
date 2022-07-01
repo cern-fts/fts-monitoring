@@ -99,10 +99,14 @@ function OverviewCtrl($rootScope, $location, $scope, $http,  overview, Overview)
 			$scope.opt_desc = linkinfodata[0].optimizer["description"];
 			user_dn_result = linkinfodata[0].user_dn_result;
 			
+			// Show source and dest 
+				document.getElementById("source_pop").innerHTML = '<b>Source:</b><br>'+source_se;
+				document.getElementById("dest_pop").innerHTML = '<b>Destination:</b><br>'+dest_se;
+
 			// If have rights display config links for Storage and Link
 			if (user_dn_result == 1) {
 				document.getElementById("config_link").innerHTML =
-				'<HR width="70%"><center>  <button id="StorageConfig" type="button" class="btn btn-primary" > Storage Config </button> | <button id="ConfigureLink"  type="button" class="btn btn-primary" > Configure Link </button></center>';
+				'<HR width="70%"><center>  <button id="StorageConfig" type="button" class="btn btn-primary"> Storage Config </button> | <button id="ConfigureLink"  type="button" class="btn btn-primary" > Configure Link </button></center>';
 			}
 			
 			document.getElementById("StorageConfig").onclick = function() {OpenStorageConfig()};
