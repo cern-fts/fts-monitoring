@@ -301,11 +301,15 @@ def get_job_transfers(http_request, job_id):
 
     # Build up stats
     now = datetime.utcnow()
-    first_start_time = min(map(lambda f: f.get_start_time() if f.get_start_time() else now, files))
-    if files[0].finish_time:
-        running_time = files[0].finish_time - first_start_time
-    else:
-        running_time = now - first_start_time
+    first_start_time = min(map(lambda f: f.get_start_time(), filter(lambda f: f.get_start_time(), files)), default=None)
+    running_time = timedelta(0)
+
+    if first_start_time:
+        if files[0].finish_time:
+            running_time = files[0].finish_time - first_start_time
+        else:
+            running_time = now - first_start_time
+
     running_time = (running_time.seconds + running_time.days * 24 * 3600)
 
     total_size = sum(map(lambda f: f.filesize if f.filesize else 0, files))
