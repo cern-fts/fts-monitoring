@@ -105,8 +105,7 @@ JobListCtrl.resolve = {
 
 /** Job view
  */
-function JobViewCtrl($rootScope, $location, $scope, job, files, Job, Files)
-{
+function JobViewCtrl($rootScope, $location, $scope, job, files, Job, Files) {
     var page = $location.$$search.page;
     if (!page)
         page = 1;
@@ -115,6 +114,16 @@ function JobViewCtrl($rootScope, $location, $scope, job, files, Job, Files)
 
     $scope.job = job;
     $scope.files = files;
+
+    // Show time if it exists
+    $scope.displayTimeVariables = function(time) {
+        if (time) {
+            return time;
+        }
+        else {
+            return '-';
+        }
+    }
 
     // Calculate remaining time
     $scope.getRemainingTime = function(file) {
