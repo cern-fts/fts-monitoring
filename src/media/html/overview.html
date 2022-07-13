@@ -211,7 +211,7 @@
                 </a>
                 <br></br>
                 <b data-ng-if= "monit_url != 'None' && monit_url!=''">Monitoring Link <a href="{{monit_url}}&var-vo=All&var-vo_es=All&var-fts_server={{alias}}&var-source_se={{o.source_se}}&var-dest_se={{o.dest_se}}&var-source_se_es={{o.source_se}}&var-dest_se_es={{o.dest_se}}&var-fts_server_es={{alias}}">
-                        <i class="icon-search"></i></a>
+                    <i class="icon-search"></i></a>
                 </b>
             </td>
         </tr>
@@ -240,19 +240,19 @@
     </tfoot>
 </table>
 
-<pagination rotate="false" page="overview.overview.page" total-items="overview.overview.count"
-    items-per-page="overview.overview.pageSize" max-size="15" class="pagination" boundary-links="true"
+<pagination rotate="false"
+    page="overview.overview.page" total-items="overview.overview.count" items-per-page="overview.overview.pageSize"
+    max-size="15" class="pagination" boundary-links="true"
     on-select-page="pageChanged(page)"></pagination>
 
 <div>
     <p>
         <span class="label label-important">Bad shape</span>
-        There are submitted but no active, less than 3 active with more than 3 submitted, or a failure rate &gt;=
-        20%<br />
+        There are submitted but no active, less than 3 active with more than 3 submitted, or a failure rate &gt;= 20%<br/>
         <span class="label label-warning">Underused</span>
-        Less than three actives, but no submitted waiting.<br />
+        Less than three actives, but no submitted waiting.<br/>
         <span class="label label-success">Good shape</span>
-        Success rate &gt;= 90%, or more than three actives with a failure rate &lt; 20%.<br />
+        Success rate &gt;= 90%, or more than three actives with a failure rate &lt; 20%.<br/>
         <span class="label">Nothing special</span>
         No active, no submitted, success rate between 80% and 90%.
     </p>

@@ -56,7 +56,7 @@ function getLimitDescription(limit)
     return descr;
 }
 
-function OverviewCtrl($rootScope, $location, $scope, $http,  overview, Overview)
+function OverviewCtrl($rootScope, $location, $scope, $http, overview, Overview)
 {
 	$scope.overview = overview;
     $scope.monit_url = SITE_MONIT;
@@ -77,8 +77,9 @@ function OverviewCtrl($rootScope, $location, $scope, $http,  overview, Overview)
 	$scope.filterBy = function(filter) {
 		$location.search($.extend({}, $location.$$search, filter));
 	}
+
 	// Link info modal pop up
-	$scope.Openlink = function(source_se,dest_se) {
+	$scope.Openlink = function(source_se, dest_se) {
 		siteurl = window.location.href.slice(0, -2);
 
 		$http.get(siteurl+"linkinfo?source_se="+source_se+"&dest_se="+dest_se).
@@ -103,7 +104,7 @@ function OverviewCtrl($rootScope, $location, $scope, $http,  overview, Overview)
 				document.getElementById("source_pop").innerHTML = '<b>Source:</b><br>'+source_se;
 				document.getElementById("dest_pop").innerHTML = '<b>Destination:</b><br>'+dest_se;
 
-			// If have rights display config links for Storage and Link
+			// If the user has rights, display config links for Storage and Link
 			if (user_dn_result == 1) {
 				document.getElementById("config_link").innerHTML =
 				'<HR width="70%"><center>  <button id="StorageConfig" type="button" class="btn btn-primary"> Storage Config </button> | <button id="LinkConfig"  type="button" class="btn btn-primary" > Link Config </button></center>';
