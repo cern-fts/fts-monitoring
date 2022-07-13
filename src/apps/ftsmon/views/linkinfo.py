@@ -124,72 +124,42 @@ def get_linkinfo(http_request):
     optimizer['active_transfers'] = optimizer_output[1]
     optimizer['description'] = optimizer_output[2]
     result["optimizer"] = optimizer
-    
-    # Check Link config from the source_se -> dest_se
-    query = """
-        SELECT min_active, max_active
-        FROM t_link_config 
-        WHERE source_se = '%s' AND dest_se ='%s'
-        """ % (source_se, dest_se)
 
-    cursor.execute(query)
-    link_source_to_dest = cursor.fetchall()
-    
-    if len(link_source_to_dest):
-        result["link"] = {
-            "active_transfers": optimizer['active_transfers'],
-            "limits": link_source_to_dest[0],
-            "config_type": "specific_link"
-        }
-    else:
-        # Check Link config from the source_se -> *
+    def query_link_info(source='*', destination='*'):
         query = """
             SELECT min_active, max_active
-            FROM t_link_config 
-            WHERE source_se = '%s' AND dest_se = '*'
-            """ % source_se
+            FROM t_link_config
+            WHERE source_se = '%s' AND dest_se = '%s'
+            """ % (source, destination)
         cursor.execute(query)
-        link_source_to_all = cursor.fetchall()
+        return cursor.fetchall()
 
-        if len(link_source_to_all):
-            result["link"] = {
-                "active_transfers": optimizer['active_transfers'],
-                "limits": link_source_to_all[0],
-                "config_type": "specific_source"
-            }
-        else:
-            # Check Link config from the * -> dest_se
-            query = """
-            SELECT min_active, max_active
-            FROM t_link_config 
-            WHERE source_se = '*' AND dest_se = '%s'
-            """ % dest_se
-            cursor.execute(query)
-            link_all_to_dest = cursor.fetchall()
+    link = {
+        "active_transfers": optimizer['active_transfers'],
+        "config_type": "specific_link"
+    }
 
-            if len(link_source_to_all):
-                result["link"] = {
-                    "active_transfers": optimizer['active_transfers'],
-                    "limits": link_all_to_dest[0],
-                    "config_type": "specific_dest"
-                }
-            else:
+    # Check Link config from the source_se -> dest_se
+    query_results = query_link_info(source=source_se, destination=dest_se)
+    if len(query_results):
+        link["limits"] = query_results[0]
+    else:
+        # Check Link config from the source_se -> *
+        query_results = query_link_info(source=source_se, destination="*")
+        if len(query_results):
+            link["limits"] = query_results[0]
+            query_results = query_link_info(source="*", destination=dest_se)
+            if len(query_results):
+                link["limits"] = query_results[0]
                 # Check Link config from the * -> *
-                query = """
-                SELECT min_active, max_active
-                FROM t_link_config 
-                WHERE source_se = '*' AND dest_se = '*'
-                """
-                cursor.execute(query)
-                link_all_to_all = cursor.fetchall()
-                if len(link_all_to_all):
-                    result["link"] = {
-                        "active_transfers": optimizer['active_transfers'],
-                        "limits": link_all_to_all[0],
-                        "config_type": "generic"
-                    }
-    
-    # Get user DN and format 
+                query_results = query_link_info(source="*", destination="*")
+                if len(query_results):
+                    link["limits"] = query_results[0]
+                    link["config_type"] = "generic"
+
+    result["link"] = link
+
+    # Get user DN and format
     user_dn = os.environ['SSL_CLIENT_S_DN'].split(',')
     user_dn = '/' + '/'.join(reversed(user_dn))
 
