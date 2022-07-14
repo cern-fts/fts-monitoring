@@ -165,12 +165,13 @@ def get_linkinfo(http_request):
 
     # Check if USER_DN is authorized
     query = """
-    SELECT DISTINCT 1 AS dn
-    FROM t_authz_dn
-    WHERE dn = '%s'
-    """ % user_dn
+        SELECT DISTINCT 1 AS dn
+        FROM t_authz_dn
+        WHERE dn = '%s'
+        """ % user_dn
 
     cursor.execute(query)
-    result['user_dn_result'] = cursor.fetchall()[0][0]
+    dn_query_result = cursor.fetchall()
+    result['user_dn_result'] = 1 if len(dn_query_result) else 0
 
     return [result]
