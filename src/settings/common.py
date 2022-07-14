@@ -84,6 +84,9 @@ if not FTS3WEB_CONFIG.has_option('site', 'alias') or not FTS3WEB_CONFIG.get('sit
 
     FTS3WEB_CONFIG.set('site', 'alias', fts3cfg.get('fts3', 'Alias'))
 
+if not FTS3WEB_CONFIG.has_option('site', 'fts3_alias') or not FTS3WEB_CONFIG.get('site', 'fts3_alias'):
+    FTS3WEB_CONFIG.set('site', 'fts3_alias', FTS3WEB_CONFIG.get('site', 'alias'))
+
 ###
 if 'BASE_URL' in os.environ:
     BASE_URL = os.environ['BASE_URL']
