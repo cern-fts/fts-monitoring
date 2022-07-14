@@ -6,7 +6,7 @@ Summary:    FTS3 Web Application for monitoring
 Group:      Applications/Internet
 License:    ASL 2.0
 URL:        https://fts.web.cern.ch
-# wget https://gitlab.cern.ch/fts/fts-monitoring/repository/archive.tar.gz?ref=v3.11.0 -O fts-monitoring-3.11.0.tar.gz
+# wget https://gitlab.cern.ch/fts/fts-monitoring/repository/archive.tar.gz?ref=v3.12.0 -O fts-monitoring-3.12.0.tar.gz
 Source0:    %{name}-%{version}.tar.gz
 
 Requires:   mysqlclient
@@ -108,6 +108,10 @@ exit 0
 %files selinux
 
 %changelog
+* Fri Jul 15 2022 Joao Lopes <batistal@cern.ch> - 3.12.0-1
+- New upstream release
+- Migration to Python3 and newer Django version
+- New feature to display link and storage limits information
 * Wed Sep 22 2021 Joao Lopes <batistal@cern.ch> - 3.11.0-1
 - New upstream release
 * Mon Dec 07 2020 Mihai Patrascoiu <mipatras@cern.ch> - 3.10.0-1
