@@ -62,6 +62,7 @@ function OverviewCtrl($rootScope, $location, $scope, $http, overview, Overview)
     $scope.monit_url = SITE_MONIT;
     $scope.alias = SITE_ALIAS;
 	$scope.fts3_alias = FTS3_ALIAS;
+
 	// On page change, reload
 	$scope.pageChanged = function(newPage) {
 		$location.search('page', newPage);
@@ -82,7 +83,7 @@ function OverviewCtrl($rootScope, $location, $scope, $http, overview, Overview)
 	$scope.Openlink = function(source_se, dest_se) {
 		siteurl = window.location.href.slice(0, -2);
 
-		$http.get(siteurl+"linkinfo?source_se="+source_se+"&dest_se="+dest_se).
+		$http.get(siteurl + "linkinfo?source_se=" + source_se + "&dest_se=" + dest_se).
 			then(function(data){
 			linkinfodata = angular.fromJson(data).data;
 			$scope.link_source_act_trans = linkinfodata[0].source["active_transfers"];
@@ -101,17 +102,21 @@ function OverviewCtrl($rootScope, $location, $scope, $http, overview, Overview)
 			let user_dn_result = linkinfodata[0].user_dn_result;
 
 			// Show source and dest 
-				document.getElementById("source_pop").innerHTML = '<b>Source:</b><br>'+source_se;
-				document.getElementById("dest_pop").innerHTML = '<b>Destination:</b><br>'+dest_se;
+			document.getElementById("source_pop").innerHTML = '<b>Source:</b><br>' + source_se;
+			document.getElementById("dest_pop").innerHTML = '<b>Destination:</b><br>' + dest_se;
 
 			// If the user has rights, display config links for Storage and Link
 			if (user_dn_result === 1) {
 				document.getElementById("config_link").innerHTML =
 				'<HR width="70%"><center>  <button id="StorageConfig" type="button" class="btn btn-primary"> Storage Config </button> | <button id="LinkConfig"  type="button" class="btn btn-primary" > Link Config </button></center>';
 			}
-			
-			document.getElementById("StorageConfig").onclick = function() {OpenStorageConfig()};
-			document.getElementById("LinkConfig").onclick = function() {OpenLinkConfig()};
+
+			document.getElementById("StorageConfig").onclick = function () {
+				OpenStorageConfig()
+			};
+			document.getElementById("LinkConfig").onclick = function () {
+				OpenLinkConfig()
+			};
 
 			function OpenStorageConfig() {
 				window.open($scope.fts3_alias + "/config/se")
