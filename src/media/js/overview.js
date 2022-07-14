@@ -61,7 +61,7 @@ function OverviewCtrl($rootScope, $location, $scope, $http, overview, Overview)
 	$scope.overview = overview;
     $scope.monit_url = SITE_MONIT;
     $scope.alias = SITE_ALIAS;
-	$scope.fts3_alias = FTS3_ALIAS;
+	$scope.fts3_rest_endpnt = FTS3_REST_ENDPNT;
 
 	// On page change, reload
 	$scope.pageChanged = function(newPage) {
@@ -119,11 +119,11 @@ function OverviewCtrl($rootScope, $location, $scope, $http, overview, Overview)
 			};
 
 			function OpenStorageConfig() {
-				window.open($scope.fts3_alias + "/config/se")
+				window.open($scope.fts3_rest_endpnt + "/config/se")
 			}
 
 			function OpenLinkConfig() {
-				window.open($scope.fts3_alias + "/config/links")
+				window.open($scope.fts3_rest_endpnt + "/config/links")
 			}
 
 			// Prevent background scrolling when modal popup is open
