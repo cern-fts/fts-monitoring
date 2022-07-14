@@ -134,28 +134,20 @@ def get_linkinfo(http_request):
         cursor.execute(query)
         return cursor.fetchall()
 
-    link = {
-        "active_transfers": optimizer['active_transfers'],
-        "config_type": "specific_link"
-    }
+    link_config_arrangements = [
+        (source_se, dest_se, "specific_link"),
+        (source_se, "*", "specific_link"),
+        ("*", dest_se, "specific_link"),
+        ("*", "*", "generic")
+    ]
+    link = {"active_transfers": optimizer['active_transfers']}
 
-    # Check Link config from the source_se -> dest_se
-    query_results = query_link_info(source=source_se, destination=dest_se)
-    if len(query_results):
-        link["limits"] = query_results[0]
-    else:
-        # Check Link config from the source_se -> *
-        query_results = query_link_info(source=source_se, destination="*")
+    for source, destination, config_type in link_config_arrangements:
+        query_results = query_link_info(source=source, destination=destination)
         if len(query_results):
             link["limits"] = query_results[0]
-            query_results = query_link_info(source="*", destination=dest_se)
-            if len(query_results):
-                link["limits"] = query_results[0]
-                # Check Link config from the * -> *
-                query_results = query_link_info(source="*", destination="*")
-                if len(query_results):
-                    link["limits"] = query_results[0]
-                    link["config_type"] = "generic"
+            link["config_type"] = config_type
+            break
 
     result["link"] = link
 
