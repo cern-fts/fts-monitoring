@@ -21,6 +21,7 @@
 import os
 import re
 import sys
+import socket
 from configparser import RawConfigParser
 from io import StringIO
 
@@ -85,7 +86,7 @@ if not FTS3WEB_CONFIG.has_option('site', 'alias') or not FTS3WEB_CONFIG.get('sit
     FTS3WEB_CONFIG.set('site', 'alias', fts3cfg.get('fts3', 'Alias'))
 
 if not FTS3WEB_CONFIG.has_option('site', 'fts3_rest_endpoint') or not FTS3WEB_CONFIG.get('site', 'fts3_rest_endpoint'):
-    FTS3WEB_CONFIG.set('site', 'fts3_rest_endpoint', FTS3WEB_CONFIG.get('site', 'alias'))
+    FTS3WEB_CONFIG.set('site', 'fts3_rest_endpoint', 'https://' + socket.getfqdn() + ':8446')
 
 ###
 if 'BASE_URL' in os.environ:
