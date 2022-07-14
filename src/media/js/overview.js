@@ -81,9 +81,13 @@ function OverviewCtrl($rootScope, $location, $scope, $http, overview, Overview)
 
 	// Link info modal pop up
 	$scope.Openlink = function(source_se, dest_se) {
-		siteurl = window.location.href.slice(0, -2);
+		let siteurl = "https://" + window.location.host + window.location.pathname;
 
-		$http.get(siteurl + "linkinfo?source_se=" + source_se + "&dest_se=" + dest_se).
+		if (siteurl.endsWith("/")) {
+			siteurl = siteurl.slice(0, -1);
+		}
+
+		$http.get(siteurl + "/linkinfo?source_se=" + source_se + "&dest_se=" + dest_se).
 			then(function(data){
 			linkinfodata = angular.fromJson(data).data;
 			$scope.link_source_act_trans = linkinfodata[0].source["active_transfers"];
