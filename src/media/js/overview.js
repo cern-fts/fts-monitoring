@@ -98,14 +98,14 @@ function OverviewCtrl($rootScope, $location, $scope, $http, overview, Overview)
 			$scope.opt_act_trans = linkinfodata[0].optimizer["active_transfers"];
 			$scope.opt_decision = linkinfodata[0].optimizer["decision"];
 			$scope.opt_desc = linkinfodata[0].optimizer["description"];
-			user_dn_result = linkinfodata[0].user_dn_result;
-			
+			let user_dn_result = linkinfodata[0].user_dn_result;
+
 			// Show source and dest 
 				document.getElementById("source_pop").innerHTML = '<b>Source:</b><br>'+source_se;
 				document.getElementById("dest_pop").innerHTML = '<b>Destination:</b><br>'+dest_se;
 
 			// If the user has rights, display config links for Storage and Link
-			if (user_dn_result == 1) {
+			if (user_dn_result === 1) {
 				document.getElementById("config_link").innerHTML =
 				'<HR width="70%"><center>  <button id="StorageConfig" type="button" class="btn btn-primary"> Storage Config </button> | <button id="LinkConfig"  type="button" class="btn btn-primary" > Link Config </button></center>';
 			}
