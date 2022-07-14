@@ -35,6 +35,8 @@ SITE_ALIAS      = FTS3WEB_CONFIG.get('site', 'alias')
 SITE_LOGO       = _urlize(FTS3WEB_CONFIG.get('site', 'logo'))
 SITE_LOGO_SMALL = _urlize(FTS3WEB_CONFIG.get('site', 'logo_small'))
 
+FTS3_ALIAS = _urlize(FTS3WEB_CONFIG.get('site', 'fts3_alias'))
+
 ADMINS = (
     (FTS3WEB_CONFIG.get('site', 'admin_name'), FTS3WEB_CONFIG.get('site', 'admin_mail'))
 )

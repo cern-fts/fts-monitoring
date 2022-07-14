@@ -59,7 +59,10 @@
             <th style="width: 6%" class="numeric">
                 <span title="Throughput">Thr.</span>
             </th>
-            <th style="width: 1.5%"></th>
+            <th style="width: 1.5%" class="numeric">
+            </th>
+            <th style="width: 1.5%" class="numeric">
+            </th>
         </tr>
     </thead>
     <tbody data-ng-repeat="o in overview.overview.items" data-ng-class-odd="'odd'" class="overview" data-ng-class="pairState(o)">
@@ -134,6 +137,70 @@
                 <a href="#/optimizer/detailed?source={{o.source_se|escape}}&destination={{o.dest_se|escape}}&time_window={{globalFilter.time_window}}">
                     <i class="icon-signal"></i>
                 </a>
+            </td>
+            <td>
+                <i id="ClickModal" class="icon-eye-open" data-toggle="modal" data-target="#LinkInfoModal" data-backdrop="static" 
+                    ng-click="Openlink(o.source_se,o.dest_se)">
+                </i>
+                <div id="LinkInfoModal" class="modal fade" role="dialog" style="width: 800px" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            </div>
+                            <div class="modal-body">
+                                <div id="LinkInfo" style="background-color:aliceblue;padding:10px;border: 2px solid powderblue;">
+                                    <table style="margin-left:auto;margin-right:auto;width: 100%;">
+                                        <tbody>
+                                        <tr>
+                                            <th id="source_pop" style="border: 1px solid white;border-right-width: 0ch;text-align: center;width: 33%;"></th>
+                                            <th id="dest_pop" style="border: 1px solid white;border-left-width: 0ch;text-align: center;width: 33%;"></th>
+                                            <th style="border: 1px solid white;text-align: center;vertical-align:middle;width: 33%;"><b>Link</b></th>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align:middle;border: 2px solid powderblue;border-right-color: #ddd; background-color:#ddd;width: 33%;">
+                                            <b>Active transfers: </b>{{link_source_act_trans}}
+                                            <br>
+                                            <b>Outbound limit: </b>{{link_source_outbound_limit}}
+                                            <br>
+                                            <b>Config type: </b><font style="text-transform:capitalize;">{{link_source_conf_type}}</font>
+                                            </td>
+                                            <td style="vertical-align:middle;border: 2px solid powderblue;border-left-color: #ddd; background-color:#ddd;width: 33%;">
+                                            <b>Active transfers: </b>{{link_dest_act_trans}}
+                                            <br>
+                                            <b>Inbound limit: </b>{{link_dest_inbound_limit}}
+                                            <br>
+                                            <b>Config type: </b><font style="text-transform:capitalize;">{{link_dest_conf_type}}</font>
+                                            </td>
+                                            <td style="vertical-align:middle; background-color:#ddd;border: 2px solid powderblue;width: 33%;">
+                                            <b>Active transfers: </b>{{link_act_trans}}
+                                            <br>
+                                            <b>Min limit: </b>{{link_min_lim}}
+                                            <br>
+                                            <b>Max limit: </b>{{link_max_lim}}
+                                            <br>
+                                            <b>Config type: </b><font style="text-transform:capitalize;">{{link_conf_type}}</font>
+                                            </td>
+                                        </tr>   
+                                        </tbody>
+                                    </table> 
+                                    <b><center>Optimizer</center></b>
+                                        <div style="background-color:#ddd;border: 2px solid powderblue;">
+                                        <b>Active transfers: </b>{{opt_act_trans}}
+                                        <br>
+                                        <b>Decision: </b>{{opt_decision}}
+                                        <br>
+                                        <b >Description: </b> <font style="text-transform:capitalize;">{{opt_desc}}</font>
+                                     </div>
+                                        <div id="config_link"></div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button id="LinkInfoModal-Close" type="button" class="btn btn-primary"
+                                    data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </td>
         </tr>
         <tr>

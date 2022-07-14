@@ -56,11 +56,13 @@ function getLimitDescription(limit)
     return descr;
 }
 
-function OverviewCtrl($rootScope, $location, $scope, overview, Overview)
+function OverviewCtrl($rootScope, $location, $scope, $http, overview, Overview)
 {
 	$scope.overview = overview;
     $scope.monit_url = SITE_MONIT;
     $scope.alias = SITE_ALIAS;
+	$scope.fts3_alias = FTS3_ALIAS;
+
 	// On page change, reload
 	$scope.pageChanged = function(newPage) {
 		$location.search('page', newPage);
@@ -76,6 +78,66 @@ function OverviewCtrl($rootScope, $location, $scope, overview, Overview)
 	$scope.filterBy = function(filter) {
 		$location.search($.extend({}, $location.$$search, filter));
 	}
+
+	// Link info modal pop up
+	$scope.Openlink = function(source_se, dest_se) {
+		siteurl = window.location.href.slice(0, -2);
+
+		$http.get(siteurl + "linkinfo?source_se=" + source_se + "&dest_se=" + dest_se).
+			then(function(data){
+			linkinfodata = angular.fromJson(data).data;
+			$scope.link_source_act_trans = linkinfodata[0].source["active_transfers"];
+			$scope.link_source_outbound_limit = linkinfodata[0].source["outbound_limit"];
+			$scope.link_source_conf_type = linkinfodata[0].source["config_type"];
+			$scope.link_dest_act_trans = linkinfodata[0].destination["active_transfers"];
+			$scope.link_dest_inbound_limit = linkinfodata[0].destination["inbound_limit"];
+			$scope.link_dest_conf_type = linkinfodata[0].destination["config_type"];
+			$scope.link_act_trans = linkinfodata[0].link["active_transfers"];
+			$scope.link_min_lim = linkinfodata[0].link["limits"][0];
+			$scope.link_max_lim = linkinfodata[0].link["limits"][1];
+			$scope.link_conf_type = linkinfodata[0].link["config_type"];
+			$scope.opt_act_trans = linkinfodata[0].optimizer["active_transfers"];
+			$scope.opt_decision = linkinfodata[0].optimizer["decision"];
+			$scope.opt_desc = linkinfodata[0].optimizer["description"];
+			let user_dn_result = linkinfodata[0].user_dn_result;
+
+			// Show source and dest 
+			document.getElementById("source_pop").innerHTML = '<b>Source:</b><br>' + source_se;
+			document.getElementById("dest_pop").innerHTML = '<b>Destination:</b><br>' + dest_se;
+
+			// If the user has rights, display config links for Storage and Link
+			if (user_dn_result === 1) {
+				document.getElementById("config_link").innerHTML =
+				'<HR width="70%"><center>  <button id="StorageConfig" type="button" class="btn btn-primary"> Storage Config </button> | <button id="LinkConfig"  type="button" class="btn btn-primary" > Link Config </button></center>';
+			}
+
+			document.getElementById("StorageConfig").onclick = function () {
+				OpenStorageConfig()
+			};
+			document.getElementById("LinkConfig").onclick = function () {
+				OpenLinkConfig()
+			};
+
+			function OpenStorageConfig() {
+				window.open($scope.fts3_alias + "/config/se")
+			}
+
+			function OpenLinkConfig() {
+				window.open($scope.fts3_alias + "/config/links")
+			}
+
+			// Prevent background scrolling when modal popup is open
+			$('#LinkInfoModal').modal().on('shown', function(){
+				$('html, body').css({
+					overflow: 'hidden'
+				});
+			}).on('hidden', function(){
+				$('html, body').css({
+					overflow: 'auto'
+				});
+			})
+		})
+		};
 
 	// Set timer to trigger autorefresh
 	$scope.autoRefresh = setInterval(function() {

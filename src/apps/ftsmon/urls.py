@@ -32,6 +32,8 @@ urlpatterns = [
     url(r'^overview/activities/$', activities.get_overview, name='get_overview'),
     url(r'^overview/deletion$', deletion.get_deletion, name='get_deletion'),
     
+    url(r'^linkinfo/$', linkinfo.get_linkinfo, name='get_linkinfo'),
+
     url(r'^jobs/?$',                               jobs.get_job_list, name='get_job_list'),
     url(r'^jobs_del/?$',                               jobs_del.get_job_list, name='get_job_list'),
     url(r'^jobs/(?P<job_id>[a-fA-F0-9\-]+)$',       jobs.get_job_details, name='get_job_details'),
