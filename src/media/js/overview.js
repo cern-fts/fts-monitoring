@@ -114,14 +114,12 @@ function OverviewCtrl($rootScope, $location, $scope, $http, overview, Overview)
 			document.getElementById("LinkConfig").onclick = function() {OpenLinkConfig()};
 
 			function OpenStorageConfig() {
-				$scope.fts3_alias = FTS3_ALIAS;
-				window.open($scope.fts3_alias+"/config/se")
-				}
-			
+				window.open($scope.fts3_alias + "/config/se")
+			}
+
 			function OpenLinkConfig() {
-				$scope.fts3_alias = FTS3_ALIAS;
-				window.open($scope.fts3_alias+"/config/links")
-				}
+				window.open($scope.fts3_alias + "/config/links")
+			}
 
 			// Prevent background scrolling when modal popup is open
 			$('#LinkInfoModal').modal().on('shown', function(){
