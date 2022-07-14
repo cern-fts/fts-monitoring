@@ -56,7 +56,7 @@ def get_linkinfo(http_request):
     query = """
         SELECT outbound_max_active 
         FROM t_se 
-        WHERE storage = '%s'
+        WHERE storage = '%s' AND outbound_max_active > 0
         """ % source_se
     cursor.execute(query)
     source["outbound_limit"] = cursor.fetchall()
@@ -83,7 +83,7 @@ def get_linkinfo(http_request):
     query = """
         SELECT inbound_max_active 
         FROM t_se 
-        WHERE storage = '%s'
+        WHERE storage = '%s' AND inbound_max_active > 0
         """ % dest_se
     cursor.execute(query)
     destination["inbound_limit"] = cursor.fetchall()
