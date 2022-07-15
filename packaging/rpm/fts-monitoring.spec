@@ -7,22 +7,16 @@ Group:      Applications/Internet
 License:    ASL 2.0
 URL:        https://fts.web.cern.ch
 # wget https://gitlab.cern.ch/fts/fts-monitoring/repository/archive.tar.gz?ref=v3.11.0 -O fts-monitoring-3.11.0.tar.gz
-Source0: %{name}-%{version}.tar.gz
+Source0:    %{name}-%{version}.tar.gz
 
-BuildRequires:  python3-devel
-
-#Requires:  cx_Oracle
 Requires:   mysqlclient
-%if %{?fedora}%{!?fedora:0} >= 18 || %{?rhel}%{!?rhel:0} >= 7
-Requires: python36-django
-%else
-Requires: Django >= 1.3.7
-%endif
+Requires:   python36-django
 Requires:   httpd
 Requires:   mod_ssl
 Requires:   rh-python36-mod_wsgi
 Requires:   python3
 Requires:   python36-decorator
+BuildRequires:  python3-devel
 
 %description
 FTS v3 web application for monitoring,
@@ -63,19 +57,16 @@ if [ $1 -eq 0 ] ; then # Final removal
     fi
 fi
 
-
 %if %{?rhel}%{!?rhel:0} >= 7
 %package firewalld
-Summary: FTS3 Web Application Firewalld
-Group: Applications/Internet
-
-Requires:  firewalld-filesystem
+Summary:        FTS3 Web Application Firewalld
+Group:          Applications/Internet
+Requires:       firewalld-filesystem
 
 %description firewalld
 FTS3 Web Application firewalld.
 
 %endif
-
 
 %prep
 %setup -q
