@@ -59,8 +59,8 @@ function getLimitDescription(limit)
 function OverviewCtrl($rootScope, $location, $scope, $http, overview, Overview)
 {
 	$scope.overview = overview;
-    $scope.monit_url = SITE_MONIT;
-    $scope.alias = SITE_ALIAS;
+	$scope.monit_url = SITE_MONIT;
+	$scope.alias = SITE_ALIAS;
 	$scope.linkinfo = LINKINFO
 	$scope.fts3_rest_endpnt = FTS3_REST_ENDPNT;
 
