@@ -88,6 +88,9 @@ function OverviewCtrl($rootScope, $location, $scope, $http, overview, Overview)
 			siteurl = siteurl.slice(0, -1);
 		}
 
+		let modal = document.getElementById("LinkInfoModal");
+		modal.style.display = "block";
+
 		$http.get(siteurl + "/linkinfo?source_se=" + source_se + "&dest_se=" + dest_se).
 			then(function(data){
 			linkinfodata = angular.fromJson(data).data;
