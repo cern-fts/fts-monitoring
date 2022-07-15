@@ -85,8 +85,15 @@ if not FTS3WEB_CONFIG.has_option('site', 'alias') or not FTS3WEB_CONFIG.get('sit
 
     FTS3WEB_CONFIG.set('site', 'alias', fts3cfg.get('fts3', 'Alias'))
 
-if not FTS3WEB_CONFIG.has_option('site', 'fts3_rest_endpoint') or not FTS3WEB_CONFIG.get('site', 'fts3_rest_endpoint'):
-    FTS3WEB_CONFIG.set('site', 'fts3_rest_endpoint', 'https://' + socket.getfqdn() + ':8446')
+# Ensure /linkinfo section exists and is properly configured
+if not FTS3WEB_CONFIG.has_section('linkinfo'):
+    FTS3WEB_CONFIG.add_section('linkinfo')
+
+if not FTS3WEB_CONFIG.has_option('linkinfo', 'enabled'):
+    FTS3WEB_CONFIG.set('linkinfo', 'enabled', 'True')
+
+if not FTS3WEB_CONFIG.has_option('linkinfo', 'fts3_rest_endpoint') or not FTS3WEB_CONFIG.get('linkinfo', 'fts3_rest_endpoint'):
+    FTS3WEB_CONFIG.set('linkinfo', 'fts3_rest_endpoint', 'https://' + socket.getfqdn() + ':8446')
 
 ###
 if 'BASE_URL' in os.environ:
