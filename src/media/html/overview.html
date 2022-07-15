@@ -61,7 +61,7 @@
             </th>
             <th style="width: 1.5%" class="numeric">
             </th>
-            <th style="width: 1.5%" class="numeric">
+            <th data-ng-if="linkinfo" style="width: 1.5%" class="numeric">
             </th>
         </tr>
     </thead>
@@ -138,7 +138,7 @@
                     <i class="icon-signal"></i>
                 </a>
             </td>
-            <td>
+            <td data-ng-if="linkinfo">
                 <i id="ClickModal" class="icon-eye-open" data-toggle="modal" data-target="#LinkInfoModal" data-backdrop="static" 
                     ng-click="Openlink(o.source_se,o.dest_se)">
                 </i>
@@ -236,6 +236,7 @@
                 <span data-optional-number="{{overview.summary.current}}" data-suffix="MiB/s" data-decimals="2"></span>
             </td>
             <td>&nbsp;</td>
+            <td data-ng-if="linkinfo"> </td>
         </tr>
     </tfoot>
 </table>
