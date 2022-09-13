@@ -21,6 +21,14 @@
 from django.db import models
 
 
+class BooleanFromCharField(models.CharField):
+
+    def from_db_value(self, value, expression, connection, context):
+        if value == "on":
+            return True
+        return False
+
+
 class JobBase(models.Model):
     job_id          = models.CharField(max_length = 36, primary_key = True)
     job_state       = models.CharField(max_length = 32)
@@ -119,6 +127,7 @@ class FileBase(models.Model):
 
 class File(FileBase):
     job = models.ForeignKey('Job', db_column = 'job_id', related_name = '+', null = True)
+
     class Meta:
         db_table = 't_file'
 
@@ -167,6 +176,7 @@ class DmFile(models.Model):
     class Meta:
         db_table = 't_dm'
 
+
 class RetryError(models.Model):
     attempt  = models.IntegerField()
     datetime = models.DateTimeField()
@@ -183,7 +193,7 @@ class RetryError(models.Model):
             self.attempt == b.attempt
 
 
-class  ConfigAudit(models.Model):
+class ConfigAudit(models.Model):
     # This field is definitely NOT the primary key, but since we are not modifying
     # this from Django, we can live with this workaround until Django supports fully
     # composite primary keys
@@ -212,6 +222,7 @@ class LinkConfig(models.Model):
     optimizer_mode    = models.IntegerField()
     tcp_buffer_size   = models.IntegerField()
     nostreams         = models.IntegerField()
+    no_delegation     = BooleanFromCharField(max_length=3)
 
     def __eq__(self, b):
         return isinstance(b, self.__class__) and \
