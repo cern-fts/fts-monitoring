@@ -13,6 +13,7 @@
             <th>Debug level</th>
             <th>IPv6</th>
             <th>UDT</th>
+            <th>Eviction</th>
             <th>Active limit*</th>
             <th>Throughput limit*</th>
         </tr>
@@ -24,6 +25,7 @@
             <td>{{ s.debug_level }}</td>
             <td>{{ s.ipv6 }}</td>
             <td>{{ s.udt }}</td>
+            <td>{{ s.eviction }}</td>
             <td>{{ s.inbound_max_active }} / {{ s.outbound_max_active }}</td>
             <td>{{ s.inbound_max_throughput }} / {{ s.outbound_max_throughput }}</td>
         </tr>
@@ -32,6 +34,10 @@
 
 <p>
     <b>(*)</b> Inbound/Outbound
+</p>
+<p>
+    <b>Eviction</b> - at the end of a successful transfer, FTS will request the file to be evicted from the disk buffer.
+    This only applies to tape storage, specifically CTA.
 </p>
 
 <pagination rotate="false"
