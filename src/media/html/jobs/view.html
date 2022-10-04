@@ -40,8 +40,8 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Total size</th>
-            <th>Done</th>
+            <th title="Total number of files already transferred">Files transferred</th>
+            <th title="Sum of the bytes already transferred">Bytes transferred</th>
             <th>Submission time</th>
             <th>Start time</th>
             <th title="Since start time">Running time</th>
@@ -51,18 +51,13 @@
     </thead>
     <tbody>
         <tr>
-            <td>{{files.stats.total_size|filesize}}</td>
-            <td>{{files.stats.total_done|filesize}}</td>
+            <td>{{files.stats.files_transferred}} out of {{files.stats.total_files_to_transfer}}</span></td>
+            <td>{{files.stats.bytes_transferred|filesize}}</td>
             <td>{{displayTimeVariables(job.job.submit_time)}}</td>
             <td>{{displayTimeVariables(files.stats.first_start)}} (<span style="color:red">+{{files.stats.queued_first}}s</span>)
             <td><span data-optional-number="{{files.stats.time_transfering}}" data-decimals="0" data-suffix="s"></span></td>
             <td><span data-optional-number="{{files.stats.avg_throughput}}" data-decimals="2" data-suffix="MiB/s"></span></td>
             <td><span data-optional-number="{{files.stats.current_throughput}}" data-decimals="2" data-suffix="MiB/s"></span></td>
-        </tr>
-        <tr>
-            <td colspan="7" class="progress">
-                <progressbar max="files.stats.total_size" value="files.stats.total_done"></progressbar>
-            </td>
         </tr>
     </tbody>
 </table>
@@ -186,6 +181,12 @@
         <tr style="background: #CCC" data-ng-show="file.show">
             <td colspan="12">
                 <ul>
+                    <li>Transfer progress:
+                        <p class="progress">
+                            <progressbar max="file.filesize" value="file.transferred">{{getPercentageTransferred(file)}}
+                            </progressbar>
+                        </p>
+                    </li>
                     <li>Transfer host: {{file.transfer_host}}</li>
                     <li>Staging host: {{file.staging_host}}</li>
                     <li>PID: {{file.pid}}</li>

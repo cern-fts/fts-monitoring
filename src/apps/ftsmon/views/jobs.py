@@ -270,6 +270,7 @@ class LogLinker(object):
 @jsonify
 def get_job_transfers(http_request, job_id):
     files = File.objects.filter(job=job_id)
+    job_type = Job.objects.get(job_id=job_id).job_type
 
     if not files:
         files = DmFile.objects.filter(job=job_id)
@@ -312,14 +313,15 @@ def get_job_transfers(http_request, job_id):
 
     running_time = (running_time.seconds + running_time.days * 24 * 3600)
 
-    total_size = sum(map(lambda f: f.filesize if f.filesize else 0, files))
-    transferred = sum(map(lambda f: f.transferred if f.transferred else 0, files))
+    files_transferred = sum(map(lambda f: f.file_state == 'FINISHED', files))
+    bytes_transferred = sum(map(lambda f: f.transferred if f.transferred else 0, files))
     with_throughputs = list(filter(lambda f: f.throughput, files))
     actives_throughput = list(filter(lambda f: f.file_state == 'ACTIVE', with_throughputs))
 
     stats = {
-        'total_size': total_size,
-        'total_done': transferred,
+        'files_transferred': files_transferred,
+        'total_files_to_transfer' : len(files) if job_type != 'R' else 1,
+        'bytes_transferred': bytes_transferred,
         'first_start': first_start_time
     }
 

@@ -143,6 +143,14 @@ function JobViewCtrl($rootScope, $location, $scope, job, files, Job, Files) {
     	}
     }
 
+    // Calculate percentage of bytes transferred
+    $scope.getPercentageTransferred = function(file) {
+        if (file.transferred > 0 && file.filesize > 0) {
+            return (Math.round(file.transferred / file.filesize)*100).toString() + ' %';
+        }
+        return '';
+    }
+
     // On page change
     $scope.pageChanged = function(newPage) {
         $location.search('page', newPage);
