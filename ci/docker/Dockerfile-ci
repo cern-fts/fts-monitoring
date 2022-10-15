@@ -15,8 +15,8 @@ RUN yum localinstall /tmp/epel-release-7.noarch.rpm -y \
 # Build repo prerequisites
 RUN yum install -y createrepo
 
-# Add FTS-testing repo for Python3 dependencies
-RUN echo -e "[fts-testing-depend]\nname=FTS3 Testing Dependencies\nbaseurl=https://fts-repo.web.cern.ch/fts-repo/testing/el7/x86_64/\ngpgcheck=0\nenabled=1\npriority=2\nincludepkgs=mysqlclient" > /etc/yum.repos.d/fts-testing-depend.repo
+# Add FTS Dependencies repo (needed for Python3 packages)
+RUN echo -e "[fts-depend]\nname=FTS3 Dependencies\nbaseurl=https://fts-repo.web.cern.ch/fts-repo/fts-depend/el7/x86_64/\ngpgcheck=0\nenabled=1\npriority=2" > /etc/yum.repos.d/fts-depend.repo
 
 # Add FTS repo from build artifacts
 ADD cc7 /repo/fts
@@ -24,7 +24,7 @@ RUN createrepo /repo/fts
 RUN echo -e "[fts-ci]\nname=FTS CI\nbaseurl=file:///repo/fts\ngpgcheck=0\nenabled=1\npriority=2" > /etc/yum.repos.d/fts.repo
 
 # Add DMC repo
-ARG dmcrepo=https://dmc-repo.web.cern.ch/dmc-repo/dmc-ci-el7.repo
+ARG dmcrepo=https://dmc-repo.web.cern.ch/dmc-repo/dmc-devel-el7.repo
 ADD $dmcrepo /etc/yum.repos.d/dmc.repo
 RUN yum clean metadata
 
