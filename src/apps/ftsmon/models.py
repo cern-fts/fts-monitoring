@@ -97,6 +97,7 @@ class FileBase(models.Model):
     retry        = models.IntegerField()
     file_metadata     = models.CharField(max_length = 1024)
     staging_metadata = models.CharField(max_length = 1024)
+    archive_metadata = models.CharField(max_length = 1024)
     user_filesize     = models.FloatField()
     staging_start     = models.DateTimeField()
     staging_finished  = models.DateTimeField()

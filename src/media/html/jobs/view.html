@@ -219,6 +219,9 @@
                     <li data-ng-show="job.job.bring_online != -1">Staging metadata:
                         <pre>{{file.staging_metadata}}</pre>
                     </li>
+                    <li data-ng-show="job.job.archive_timeout != -1">Archive metadata:
+                        <pre>{{file.archive_metadata}}</pre>
+                    </li>
                     <li data-ng-show="file.retry">Retries:
                         <dl data-ng-repeat="retry in file.retries">
                             <dt>{{retry.datetime}}</dt>
