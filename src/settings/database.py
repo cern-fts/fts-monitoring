@@ -38,6 +38,9 @@ if DATABASES['default']['ENGINE'] == 'django.db.backends.oracle':
 if DATABASES['default']['ENGINE'] == 'django.db.backends.mysql':
     import MySQLdb.cursors
     DATABASES['default']['OPTIONS']['init_command'] = "SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED"
+    if FTS3WEB_CONFIG.has_option('database', 'max_execution_time'):
+        DATABASES['default']['OPTIONS']['init_command'] += "; SET SESSION MAX_EXECUTION_TIME =" + \
+                                                           FTS3WEB_CONFIG.get('database', 'max_execution_time')
     DATABASES['default']['OPTIONS']['cursorclass'] = MySQLdb.cursors.SSCursor
 
 DISABLE_TRANSACTION_MANAGEMENT = True
