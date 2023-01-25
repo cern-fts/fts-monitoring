@@ -1,12 +1,12 @@
 Name:       fts-monitoring
-Version:    3.12.0
+Version:    3.12.1
 Release:    1%{?dist}
 BuildArch:  noarch
 Summary:    FTS3 Web Application for monitoring
 Group:      Applications/Internet
 License:    ASL 2.0
 URL:        https://fts.web.cern.ch
-# wget https://gitlab.cern.ch/fts/fts-monitoring/repository/archive.tar.gz?ref=v3.12.0 -O fts-monitoring-3.12.0.tar.gz
+# wget https://gitlab.cern.ch/fts/fts-monitoring/repository/archive.tar.gz?ref=v3.12.1 -O fts-monitoring-3.12.1.tar.gz
 Source0:    %{name}-%{version}.tar.gz
 
 Requires:   mysqlclient
@@ -108,6 +108,9 @@ exit 0
 %files selinux
 
 %changelog
+* Wed Jan 25 2023 Joao Lopes <batistal@cern.ch> - 3.12.1-1
+- New upstream release
+- Add configurable timeout to stop long running database queries
 * Fri Jul 15 2022 Joao Lopes <batistal@cern.ch> - 3.12.0-1
 - New upstream release
 - Migration to Python3 and newer Django version
