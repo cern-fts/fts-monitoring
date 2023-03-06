@@ -41,6 +41,12 @@ FTS3_REST_ENDPNT = _urlize(FTS3WEB_CONFIG.get('linkinfo', 'fts3_rest_endpoint'))
 ADMINS = (
     (FTS3WEB_CONFIG.get('site', 'admin_name'), FTS3WEB_CONFIG.get('site', 'admin_mail'))
 )
+
+try:
+    SHOW_GFAL2_CONFIG = FTS3WEB_CONFIG.getboolean('site', 'show_gfal2_config')
+except:
+    SHOW_GFAL2_CONFIG = False
+
 try:
     if FTS3WEB_CONFIG.get('site', 'monit'):
         SITE_MONIT = FTS3WEB_CONFIG.get('site', 'monit')
@@ -48,14 +54,13 @@ try:
         SITE_MONIT = None
 except:
     SITE_MONIT = None
-MANAGERS = ADMINS
 
 if FTS3WEB_CONFIG.get('logs', 'port'):
-    LOG_BASE_URL =  "%s://%%(host)s:%d/%s" % (FTS3WEB_CONFIG.get('logs', 'scheme'),
+    LOG_BASE_URL = "%s://%%(host)s:%d/%s" % (FTS3WEB_CONFIG.get('logs', 'scheme'),
                                              FTS3WEB_CONFIG.getint('logs', 'port'),
                                              FTS3WEB_CONFIG.get('logs', 'base'))
 else:
-    LOG_BASE_URL =  "%s://%%(host)s:8449/%s" % (FTS3WEB_CONFIG.get('logs', 'scheme'),
+    LOG_BASE_URL = "%s://%%(host)s:8449/%s" % (FTS3WEB_CONFIG.get('logs', 'scheme'),
                                                FTS3WEB_CONFIG.get('logs', 'base'))
 
 
@@ -69,5 +74,5 @@ if os.path.exists('/etc/fts3/host_aliases'):
             original, alias = line.split()
             HOST_ALIASES[original] = alias
 
-ALLOWED_HOSTS=['*']
+ALLOWED_HOSTS = ['*']
 
