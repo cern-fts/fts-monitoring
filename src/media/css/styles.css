@@ -11,6 +11,11 @@ html {
     padding-left: 1em;
 }
 
+#ftsmon-version {
+    float: right;
+    font-size: 100%;
+}
+
 div[role="main"] {
     width: 90%;
     margin: auto;

@@ -25,6 +25,7 @@
                     <img class="" src="{{STATIC_URL}}img/loader.gif" data-ng-show="loading">
                     <span data-ng-show="!loading" data-ng-bind="lastRefresh" id="last-refresh-time"></span>
                 </span>
+                <span class="brand" id ="ftsmon-version">v{% getSetting "VERSION" %}</span>
                 <div class="navbar-inner">
                     <div class="container">
                        <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
