@@ -19,5 +19,13 @@
 
 from django.shortcuts import render
 
+from libs.jsonify import jsonify
+from settings.version import VERSION
+
 def index(http_request):
     return render(http_request, 'entry.html')
+
+@jsonify
+def version(http_request):
+    _version = [int(x) for x in VERSION.split(".")]
+    return {"major": _version[0], "minor": _version[1], "patch": _version[2]}

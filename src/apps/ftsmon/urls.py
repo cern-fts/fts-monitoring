@@ -27,6 +27,7 @@ from ftsmon.views import *
 
 urlpatterns = [
     url(r'^$', index.index, name='index'),
+    url(r'^version$', index.version, name='version'),
 
     url(r'^overview/$', overview.get_overview, name='get_overview'),
     url(r'^overview/activities/$', activities.get_overview, name='get_overview'),
