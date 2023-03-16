@@ -105,7 +105,7 @@ def get_overview(http_request):
         if total > 0:
             obj['rate'] = (finished * 100.0) / total
         else:
-            obj['rate'] = None
+            obj['rate'] = 0
         objs.append(obj)
 
     # Ordering
