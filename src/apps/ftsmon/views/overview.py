@@ -77,22 +77,6 @@ class OverviewExtended(object):
         else:
             return self.objects[indexes]
 
-class OverviewExtendedDel(object):
-    """
-    The return of overview for only deletion jobs
-    """
-    def __init__(self, not_before, objects, cursor):
-        self.objects = objects
-        self.not_before = not_before
-        self.cursor = cursor
-
-    def __len__(self):
-        return len(self.objects)
-     
-    def __getitem__(self, indexes):
-        if isinstance(indexes, slice):
-            return self.objects[indexes]
-
 @cache_page(60)
 @jsonify
 def get_overview(http_request):

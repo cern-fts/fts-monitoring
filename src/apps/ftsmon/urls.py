@@ -31,17 +31,12 @@ urlpatterns = [
 
     url(r'^overview/$', overview.get_overview, name='get_overview'),
     url(r'^overview/activities/$', activities.get_overview, name='get_overview'),
-    url(r'^overview/deletion$', deletion.get_deletion, name='get_deletion'),
-    
     url(r'^linkinfo/$', linkinfo.get_linkinfo, name='get_linkinfo'),
 
     url(r'^jobs/?$',                               jobs.get_job_list, name='get_job_list'),
-    url(r'^jobs_del/?$',                               jobs_del.get_job_list, name='get_job_list'),
     url(r'^jobs/(?P<job_id>[a-fA-F0-9\-]+)$',       jobs.get_job_details, name='get_job_details'),
-    url(r'^jobs_del/(?P<job_id>[a-fA-F0-9\-]+)$',       jobs_del.get_job_details, name='get_job_details'),
     url(r'^jobs/(?P<job_id>[a-fA-F0-9\-]+)/files$', jobs.get_job_transfers, name='get_job_transfers'),
-    url(r'^jobs_del/(?P<job_id>[a-fA-F0-9\-]+)/files$', jobs_del.get_job_transfers, name='get_job_transfers'),
- 
+
     url(r'^transfers$', jobs.get_transfer_list, name='get_transfer_list'),
 
     url(r'^config/audit$',    config.get_audit, name='get_audit'),
