@@ -11,20 +11,7 @@ angular.module('ftsmon.resources', ['ngResource'])
 			    isArray: false},
 	})
 })
-//__________________________________________________________
-.factory('Job_del', function($resource) {
-        return $resource('jobs_del/:jobId', {}, {
-                query: {method: 'GET',
-                            isArray: false},
-        })
-})
 
-.factory('Files_del', function($resource) {
-        return $resource('jobs_del/:jobId/files', {}, {
-                query: {method: 'GET',
-                            isArray: false},
-       })
-})
 //__________________________________________________________
 .factory('Transfers', function($resource) {
 	return $resource('transfers', {}, {
@@ -40,12 +27,6 @@ angular.module('ftsmon.resources', ['ngResource'])
 	return $resource('overview/activities', {}, {
 		query: {method: 'GET', isArray: false},
 	})
-})
-
-.factory('OverviewDeletion', function($resource) {
-        return $resource('overview/deletion', {}, {
-                query: {method: 'GET', isArray: false},
-        })
 })
 
 .factory('Optimizer', function($resource) {
