@@ -57,17 +57,6 @@ if [ $1 -eq 0 ] ; then # Final removal
     fi
 fi
 
-%if %{?rhel}%{!?rhel:0} >= 7
-%package firewalld
-Summary:        FTS3 Web Application Firewalld
-Group:          Applications/Internet
-Requires:       firewalld-filesystem
-
-%description firewalld
-FTS3 Web Application firewalld.
-
-%endif
-
 %prep
 %setup -q
 
@@ -79,10 +68,6 @@ mkdir -p %{buildroot}%{_sysconfdir}/httpd/conf.d/
 cp -r -p src/* %{buildroot}%{_datadir}/fts3web/
 cp -r -p conf/fts3web %{buildroot}%{_sysconfdir}
 install -m 644 conf/httpd.conf.d/ftsmon.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/
-%if %{?rhel}%{!?rhel:0} >=7
-mkdir -p %{buildroot}/%{_prefix}/lib/firewalld/services/
-install -m 644 conf/fts3firewalld/ftsmon.xml %{buildroot}/%{_prefix}/lib/firewalld/services/ftsmon.xml
-%endif
 
 # Create fts3 user and group
 %pre
@@ -99,11 +84,6 @@ exit 0
 %config(noreplace) %dir %{_sysconfdir}/fts3web/
 %config(noreplace) %attr(640, root, apache) %{_sysconfdir}/fts3web/fts3web.ini
 %doc LICENSE
-
-%if %{?rhel}%{!?rhel:0} >= 7
-%files firewalld
-%config(noreplace) %{_prefix}/lib/firewalld/services/ftsmon.xml
-%endif
 
 %files selinux
 
