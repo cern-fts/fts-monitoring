@@ -1,0 +1,7 @@
+/var/log/fts3web/fts3web.log  {
+    copytruncate
+    daily
+    rotate 15
+    compress
+    missingok
+}

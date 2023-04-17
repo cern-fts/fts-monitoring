@@ -21,5 +21,6 @@ from .cache import *
 from .common import *
 from .database import *
 from .format import *
+from .logging import *
 from .site import *
 from .version import *
