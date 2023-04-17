@@ -68,8 +68,10 @@ mkdir -p %{buildroot}%{_datadir}/fts3web/
 mkdir -p %{buildroot}%{_sysconfdir}/fts3web/
 mkdir -p %{buildroot}%{_sysconfdir}/httpd/conf.d/
 mkdir -p %{buildroot}%{_var}/log/fts3web
+mkdir -p %{buildroot}%{_sysconfdir}/logrotate.d/
 cp -r -p src/* %{buildroot}%{_datadir}/fts3web/
 cp -r -p conf/fts3web %{buildroot}%{_sysconfdir}
+cp conf/logrotate/fts3web.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/fts3web
 install -m 644 conf/httpd.conf.d/ftsmon.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/
 
 # Create fts3 user and group
@@ -86,6 +88,7 @@ exit 0
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/ftsmon.conf
 %config(noreplace) %dir %{_sysconfdir}/fts3web/
 %config(noreplace) %attr(640, root, apache) %{_sysconfdir}/fts3web/fts3web.ini
+%config(noreplace) %{_sysconfdir}/logrotate.d/fts3web
 %attr(0755,fts3,fts3) /var/log/fts3web
 %doc LICENSE
 
