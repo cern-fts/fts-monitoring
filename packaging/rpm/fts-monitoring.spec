@@ -40,7 +40,9 @@ so Apache can bind to it.
 %post selinux
 if [ $1 -gt 0 ] ; then # First install
     semanage port -a -t http_port_t -p tcp 8449
-    setsebool -P httpd_can_network_connect=1 
+    setsebool -P httpd_can_network_connect=1
+    semanage fcontext -a -t httpd_log_t "/var/log/fts3web(/.*)?"
+    restorecon -R /var/log/fts3web
     libnzz="/usr/lib64/oracle/11.2.0.3.0/client/lib64/libnnz11.so"
     if [ -f "$libnzz" ]; then
         execstack -c "$libnzz"
@@ -65,6 +67,7 @@ shopt -s extglob
 mkdir -p %{buildroot}%{_datadir}/fts3web/
 mkdir -p %{buildroot}%{_sysconfdir}/fts3web/
 mkdir -p %{buildroot}%{_sysconfdir}/httpd/conf.d/
+mkdir -p %{buildroot}%{_var}/log/fts3web
 cp -r -p src/* %{buildroot}%{_datadir}/fts3web/
 cp -r -p conf/fts3web %{buildroot}%{_sysconfdir}
 install -m 644 conf/httpd.conf.d/ftsmon.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/
@@ -83,6 +86,7 @@ exit 0
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/ftsmon.conf
 %config(noreplace) %dir %{_sysconfdir}/fts3web/
 %config(noreplace) %attr(640, root, apache) %{_sysconfdir}/fts3web/fts3web.ini
+%attr(0755,fts3,fts3) /var/log/fts3web
 %doc LICENSE
 
 %files selinux
