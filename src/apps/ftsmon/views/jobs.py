@@ -89,7 +89,7 @@ class JobListDecorator(object):
     def get_job(self, job_id):
         job = {'job_id': job_id}
         self.cursor.execute(
-            "SELECT submit_time, job_state, vo_name, source_se, dest_se, priority, space_token, job_finished "
+            "SELECT submit_time, job_state, vo_name, source_se, dest_se, job_type, priority, space_token, job_finished "
             "FROM t_job WHERE job_id = %s", [job_id])
         job_desc = self.cursor.fetchall()[0]
         job['submit_time'] = job_desc[0]
@@ -97,9 +97,10 @@ class JobListDecorator(object):
         job['vo_name'] = job_desc[2]
         job['source_se'] = job_desc[3]
         job['dest_se'] = job_desc[4]
-        job['priority'] = job_desc[5]
-        job['space_token'] = job_desc[6]
-        job['job_finished'] = job_desc[7]
+        job['job_type'] = job_desc[5]
+        job['priority'] = job_desc[6]
+        job['space_token'] = job_desc[7]
+        job['job_finished'] = job_desc[8]
         self.cursor.execute(
             """SELECT file_state, COUNT(file_id), SUM(log_file_debug), MAX(file_index)
                FROM t_file WHERE job_id = %s GROUP BY file_state ORDER BY NULL
