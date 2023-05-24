@@ -270,13 +270,16 @@ class LogLinker(object):
 
 @jsonify
 def get_job_transfers(http_request, job_id):
-    files = File.objects.filter(job=job_id)
-    job_type = Job.objects.get(job_id=job_id).job_type
+    try :
+        files = File.objects.filter(job=job_id)
+        job_type = Job.objects.get(job_id=job_id).job_type
 
-    if not files:
-        files = DmFile.objects.filter(job=job_id)
         if not files:
-            raise Http404
+            files = DmFile.objects.filter(job=job_id)
+            if not files:
+                raise Http404
+    except Job.DoesNotExist:
+        raise Http404
 
     # Ordering
     (order_by, order_desc) = get_order_by(http_request)
