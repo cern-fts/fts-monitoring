@@ -247,7 +247,8 @@ class RetriesFetcher(object):
             f.retries = map(lambda r: {
                 'reason': r.reason,
                 'datetime': r.datetime,
-                'attempt': r.attempt
+                'attempt': r.attempt,
+                'log_file': r.log_file if hasattr(r, 'log_file') else None
             }, retries.all())
             yield f
 
