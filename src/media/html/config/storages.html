@@ -16,6 +16,7 @@
             <th>Eviction</th>
             <th>Active limit*</th>
             <th>Throughput limit*</th>
+            <th>TPC support</th>
         </tr>
     </thead>
     <tbody>
@@ -28,6 +29,7 @@
             <td>{{ s.eviction }}</td>
             <td>{{ s.inbound_max_active }} / {{ s.outbound_max_active }}</td>
             <td>{{ s.inbound_max_throughput }} / {{ s.outbound_max_throughput }}</td>
+            <td>{{ s.tpc_support }}</td>
         </tr>
     </tbody>
 </table>
