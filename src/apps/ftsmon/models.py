@@ -247,6 +247,7 @@ class Storage(models.Model):
     outbound_max_active     = models.IntegerField()
     outbound_max_throughput = models.FloatField()
     eviction    = models.CharField(max_length=1)
+    tpc_support = models.CharField(max_length=10)
 
     class Meta:
         db_table = 't_se'
