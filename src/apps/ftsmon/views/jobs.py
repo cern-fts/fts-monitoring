@@ -248,7 +248,8 @@ class RetriesFetcher(object):
                 'reason': r.reason,
                 'datetime': r.datetime,
                 'attempt': r.attempt,
-                'log_file': r.log_file if hasattr(r, 'log_file') else None
+                'log_file': log_link(r.transfer_host, r.log_file) if (
+                        r.transfer_host and r.log_file) else None
             }, retries.all())
             yield f
 

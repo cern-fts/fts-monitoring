@@ -180,11 +180,11 @@ class DmFile(models.Model):
 
 
 class RetryError(models.Model):
-    attempt  = models.IntegerField()
-    datetime = models.DateTimeField()
-    reason   = models.CharField(max_length = 2048)
-    # Enable when schema change > 8.0.1 is deployed
-    # log_file = models.CharField(max_length = 2048)
+    attempt       = models.IntegerField()
+    datetime      = models.DateTimeField()
+    reason        = models.CharField(max_length=2048)
+    transfer_host = models.CharField(max_length=255)
+    log_file      = models.CharField(max_length=2048)
 
     file_id = models.ForeignKey('File', db_column = 'file_id', related_name = '+', primary_key = True)
 

@@ -227,7 +227,9 @@
                         <dl data-ng-repeat="retry in file.retries">
                             <dt>{{retry.datetime}}</dt>
                             <dd>{{retry.reason}}</dd>
-                            <dd data-ng-show="retry.log_file">{{retry.log_file}}</dd>
+                            <dd data-ng-show="retry.log_file">
+                                <a href="{{retry.log_file}}">{{retry.log_file}}</a>
+                            </dd>
                         </dl>
                     </li>
                 </ul>
