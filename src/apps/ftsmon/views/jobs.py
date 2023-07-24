@@ -247,7 +247,9 @@ class RetriesFetcher(object):
             f.retries = map(lambda r: {
                 'reason': r.reason,
                 'datetime': r.datetime,
-                'attempt': r.attempt
+                'attempt': r.attempt,
+                'log_file': log_link(r.transfer_host, r.log_file) if (
+                        r.transfer_host and r.log_file) else None
             }, retries.all())
             yield f
 
