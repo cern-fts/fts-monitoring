@@ -9,10 +9,6 @@ stages:
 
 .build-template: &build-template_definition
   stage: build
-  # Add the before script section, adapting the number of open files limit with the `ulimit -n` command.
-  # https://gitlab.docs.cern.ch/docs/Build%20your%20application/CI-CD/Runners/TroubleShooting/yum-install-hang/
-  before_script:
-    - ulimit -n 1048576
   script:
     - ci/fedora-packages.sh
     - ci/common-rpm-build.sh
@@ -42,10 +38,6 @@ cc7:
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
-  # Add the before script section, adapting the number of open files limit with the `ulimit -n` command.
-  # https://gitlab.docs.cern.ch/docs/Build%20your%20application/CI-CD/Runners/TroubleShooting/yum-install-hang/
-  before_script:
-     ulimit -n 1048576
   script:
     - if [[ -z "$CI_COMMIT_TAG" ]];
       then CACHE="true"; REGISTRY="latest";
