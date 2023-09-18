@@ -9,14 +9,19 @@ URL:        https://fts.web.cern.ch
 # wget https://gitlab.cern.ch/fts/fts-monitoring/repository/archive.tar.gz?ref=v3.12.2 -O fts-monitoring-3.12.2.tar.gz
 Source0:    %{name}-%{version}.tar.gz
 
-Requires:   mysqlclient
-Requires:   python36-django
 Requires:   httpd
 Requires:   mod_ssl
-Requires:   rh-python36-mod_wsgi
 Requires:   python3
-Requires:   python36-decorator
-BuildRequires:  python3-devel
+Requires:   python%{python3_pkgversion}-mysqlclient
+Requires:   python%{python3_pkgversion}-decorator
+Requires:   python%{python3_pkgversion}-django
+
+# WSGI package has a different name on RHEL7
+%if 0%{?rhel} == 7
+Requires:       rh-python36-mod_wsgi
+%else
+Requires:       python3-mod_wsgi
+%endif
 
 %description
 FTS v3 web application for monitoring,
