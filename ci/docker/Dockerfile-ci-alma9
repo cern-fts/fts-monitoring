@@ -1,0 +1,30 @@
+#
+# FTS-Monitoring Docker file for the CI environment
+#
+
+FROM almalinux:9
+LABEL maintainer="FTS Team, fts-support@cern.ch, CERN 2023"
+
+# Add EPEL repos
+RUN dnf install -y epel-release
+RUN dnf clean metadata
+
+# Build repo prerequisites
+RUN dnf install -y createrepo
+
+# Add FTS repo from build artifacts stored in the alma9 directory
+ADD alma9 /repo/fts
+RUN createrepo /repo/fts
+RUN echo -e "[fts-ci]\nname=FTS CI\nbaseurl=file:///repo/fts\ngpgcheck=0\nenabled=1\npriority=2" > /etc/yum.repos.d/fts.repo
+
+# Install FTS-Monitoring packages
+RUN dnf install -y fts-monitoring fts-monitoring-selinux gridsite --enablerepo=crb
+
+# Generate self signed host certificate
+RUN /usr/libexec/httpd-ssl-gencerts
+
+# Expose ports
+EXPOSE 8449
+
+# Entrypoint
+CMD ["/usr/sbin/httpd", "-DFOREGROUND"]
