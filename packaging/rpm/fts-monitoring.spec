@@ -37,6 +37,9 @@ service httpd condrestart
 Summary:        SELinux support for fts-monitoring
 Group:          Applications/Internet
 Requires:       fts-monitoring = %{version}-%{release}
+%if 0%{?rhel} == 9
+Requires:       policycoreutils-python-utils
+%endif
 
 %description selinux
 This package labels port 8449, used by fts-monitoring, as http_port_t,
