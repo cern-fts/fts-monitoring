@@ -17,13 +17,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-try:
-    from django.conf.urls.defaults import include, url
-except:
-    from django.conf.urls import include, url
+from django.urls import include, re_path
 from django.views.generic.base import RedirectView
 
 urlpatterns = [
-    url(r'^ftsmon/', include('ftsmon.urls')),
-    url(r'^$', RedirectView.as_view(url = 'ftsmon/'))
+    re_path(r'^ftsmon/', include('ftsmon.urls')),
+    re_path(r'^$', RedirectView.as_view(url = 'ftsmon/'))
 ]
