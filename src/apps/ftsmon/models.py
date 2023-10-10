@@ -128,7 +128,7 @@ class FileBase(models.Model):
 
 
 class File(FileBase):
-    job = models.ForeignKey('Job', db_column = 'job_id', related_name = '+', null = True)
+    job = models.ForeignKey('Job', db_column = 'job_id', related_name = '+', null = True, on_delete = models.DO_NOTHING)
 
     class Meta:
         db_table = 't_file'
@@ -136,7 +136,7 @@ class File(FileBase):
 
 class DmFile(models.Model):
     file_id       = models.IntegerField(primary_key=True)
-    job           = models.ForeignKey('Job', db_column = 'job_id', related_name = '+', null = True)
+    job           = models.ForeignKey('Job', db_column = 'job_id', related_name = '+', null = True, on_delete = models.DO_NOTHING)
     file_state    = models.CharField(max_length=32)
     transfer_host = models.CharField(max_length=150, db_column='dmHost')
     source_surl   = models.CharField(max_length=900)
@@ -186,7 +186,7 @@ class RetryError(models.Model):
     transfer_host = models.CharField(max_length=255)
     log_file      = models.CharField(max_length=2048)
 
-    file_id = models.ForeignKey('File', db_column = 'file_id', related_name = '+', primary_key = True)
+    file_id = models.ForeignKey('File', db_column = 'file_id', related_name = '+', primary_key = True, on_delete = models.DO_NOTHING)
 
     class Meta:
         db_table = 't_file_retry_errors'
