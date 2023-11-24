@@ -12,7 +12,11 @@ Source0:    %{name}-%{version}.tar.gz
 Requires:   httpd
 Requires:   mod_ssl
 Requires:   python3
+%if 0%{?rhel} == 7
+Requires:   mysqlclient
+%else
 Requires:   python%{python3_pkgversion}-mysqlclient
+%endif
 Requires:   python%{python3_pkgversion}-decorator
 Requires:   python%{python3_pkgversion}-django
 
