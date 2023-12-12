@@ -44,7 +44,7 @@ alma9:
       else CACHE="false"; REGISTRY="${CI_COMMIT_TAG}";
       fi
     - if [[ -z "$DMC_REPO" ]];
-      then DMC_REPO="https://dmc-repo.web.cern.ch/dmc-repo/dmc-devel-el7.repo";
+      then DMC_REPO="https://dmc-repo.web.cern.ch/dmc-repo/dmc-devel-el9.repo";
       fi
     - DESTINATION="gitlab-registry.cern.ch/fts/fts-monitoring:${REGISTRY}"
     - mkdir -p /kaniko/.docker
@@ -59,7 +59,7 @@ alma9:
 docker_build:
   <<: *kaniko_build-template
   needs:
-    - job: cc7
+    - job: alma9
   rules:
     - if: $CI_COMMIT_REF_NAME == "develop"
 
@@ -68,27 +68,9 @@ docker_tag:
   variables:
     DMC_REPO: https://dmc-repo.web.cern.ch/dmc-repo/dmc-rc-el7.repo
   needs:
-    - job: cc7
+    - job: alma9
   rules:
     - if: $CI_COMMIT_TAG != null
-
-docker_build_alma9:
-  stage: docker
-  image:
-    name: gcr.io/kaniko-project/executor:debug
-    entrypoint: [""]
-  script:
-    - CACHE="false"
-    - DESTINATION="gitlab-registry.cern.ch/fts/fts-monitoring:alma9-ci"
-    - mkdir -p /kaniko/.docker
-    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
-    - /kaniko/executor --dockerfile ci/docker/Dockerfile-ci-alma9 --context "${CI_PROJECT_DIR}" --cache=${CACHE} --destination ${DESTINATION}
-  needs:
-    - alma9
-  dependencies:
-    - alma9
-  rules:
-    - if: $CI_COMMIT_REF_NAME == "develop"
 
 #--------------------------
 # Publish templates
