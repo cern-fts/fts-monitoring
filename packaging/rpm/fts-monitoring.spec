@@ -10,7 +10,7 @@ URL:        https://fts.web.cern.ch
 Source0:    %{name}-%{version}.tar.gz
 
 Requires:   mysqlclient
-Requires:   python36-django
+Requires:   python36-django = 1.11.27
 Requires:   httpd
 Requires:   mod_ssl
 Requires:   rh-python36-mod_wsgi
