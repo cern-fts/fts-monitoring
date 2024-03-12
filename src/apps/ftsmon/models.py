@@ -23,7 +23,7 @@ from django.db import models
 
 class BooleanFromCharField(models.CharField):
 
-    def from_db_value(self, value, expression, connection, context):
+    def from_db_value(self, value, expression, connection, context=None):
         if value == "on":
             return True
         return False
