@@ -21,6 +21,7 @@ import json
 import os
 from django.db import connection
 from django.db.models import Count
+from django.http import Http404
 
 from ftsmon.models import ActivityShare, File, OperationLimit
 from ftsmon.models import ConfigAudit
@@ -116,7 +117,10 @@ def get_activities(http_request):
 
 @jsonify
 def get_actives_per_activity(http_request, vo):
-    active = File.objects.filter(vo_name = vo, finish_time__isnull=True)\
+    try:
+        active = File.objects.filter(vo_name = vo, finish_time__isnull=True)
+    except:
+        raise Http404
 
     if http_request.GET.get('source_se', None):
         active = active.filter(source_se = http_request.GET['source_se'])
@@ -135,7 +139,11 @@ def get_actives_per_activity(http_request, vo):
 
     # Find config
     share_config = dict()
-    share_db = ActivityShare.objects.get(vo = vo)
+    try:
+        share_db = ActivityShare.objects.get(vo = vo)
+    except:
+        raise Http404
+
     if share_db is not None:
         for entry in json.loads(share_db.activity_share):
             for share_name, share_value in iter(entry.items()):
