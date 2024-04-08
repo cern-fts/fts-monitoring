@@ -25,7 +25,7 @@ urlpatterns = [
     re_path(r'^$', index.index, name='index'),
     re_path(r'^version$', index.version, name='version'),
 
-    re_path(r'^overview$', overview.get_overview, name='get_overview'),
+    re_path(r'^overview/?$', overview.get_overview, name='get_overview'),
     re_path(r'^overview/activities$', activities.get_overview, name='get_overview'),
     re_path(r'^linkinfo$', linkinfo.get_linkinfo, name='get_linkinfo'),
 
