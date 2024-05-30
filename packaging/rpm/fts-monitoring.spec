@@ -6,7 +6,7 @@ Summary:    FTS3 Web Application for monitoring
 Group:      Applications/Internet
 License:    ASL 2.0
 URL:        https://fts.web.cern.ch
-# wget https://gitlab.cern.ch/fts/fts-monitoring/repository/archive.tar.gz?ref=v3.12.3 -O fts-monitoring-3.12.3.tar.gz
+# wget https://gitlab.cern.ch/fts/fts-monitoring/repository/archive.tar.gz?ref=v3.13.0 -O fts-monitoring-3.13.0.tar.gz
 Source0:    %{name}-%{version}.tar.gz
 
 Requires:   httpd
@@ -107,51 +107,73 @@ exit 0
 %files selinux
 
 %changelog
+* Thu May 30 2024 Mihai Patrascoiu <mihai.patrascoiu@cern.ch> - 3.13.0-1
+- Alma9 release
+
 * Tue Aug 08 2023 Joao Lopes <batistal@cern.ch> - 3.12.2-1
 - New upstream release
+
 * Wed Jan 25 2023 Joao Lopes <batistal@cern.ch> - 3.12.1-1
 - New upstream release
 - Add configurable timeout to stop long running database queries
+
 * Fri Jul 15 2022 Joao Lopes <batistal@cern.ch> - 3.12.0-1
 - New upstream release
 - Migration to Python3 and newer Django version
 - New feature to display link and storage limits information
+
 * Wed Sep 22 2021 Joao Lopes <batistal@cern.ch> - 3.11.0-1
 - New upstream release
+
 * Mon Dec 07 2020 Mihai Patrascoiu <mipatras@cern.ch> - 3.10.0-1
 - New upstream release
 - Support for Archive Monitoring
+
 * Tue Aug 27 2019 Andrea Manzi <amanzi@cern.ch> - 3.9.1-1
 - New upstream release
+
 * Wed May 8 2019 Andrea Manzi <amanzi@cern.ch> - 3.9.0-1
 - Align package version to fts minor release
+
 * Wed Feb 20 2019 Andrea Manzi <amanzi@cern.ch> - 3.8.3-1
 - Update for new upstream release
+
 * Mon Sep 24 2018 Andrea Manzi <amanzi@cern.ch> - 3.8.0-1
 - Update for new upstream release
+
 * Thu Jun 07 2018 Andrea Manzi <amanzi@cern.ch> - 3.7.10-1
 - Update for new upstream release
+
 * Mon Sep 07 2015 Alejandro Alarez Ayllon <aalvarez@cern.ch> - 3.3.0-1
 - Update for new upstream release
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2.32-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
 * Fri Mar 06 2015 Alejandro Alarez Ayllon <aalvarez@cern.ch> - 3.2.32-1
 - Update for new upstream release
+
 * Wed Nov 26 2014 Alejandro Alarez Ayllon <aalvarez@cern.ch> - 3.2.30-1
 - Update for new upstream release
+
 * Mon May 12 2014 Michal Simon <michal.simon@cern.ch> - 3.2.26.2-2
 - Update for new upstream release
+
 * Mon May 12 2014 Michal Simon <michal.simon@cern.ch> - 3.2.26-1
 - Update for new upstream release
+
 * Tue Oct 08 2013 Alejandro Alvarez <aalvarez@cern.ch> - 3.1.27-1
 - Added selinux rpm
+
 * Mon Sep 02 2013 Michal Simon <michal.simon@cern.ch> - 3.1.1-2
 - since it is a noarch package removing '%{?_isa}' sufix
+
 * Wed Aug 28 2013 Michal Simon <michal.simon@cern.ch> - 3.1.1-1
 - replacing '--no-preserve=ownership'
 - python macros have been removed
 - comments regarding svn have been removed
 - '%{_builddir}/%{name}-%{version}/' prefix is not used anymore
 - more detailed description
+
 * Tue Apr 30 2013 Michal Simon <michal.simon@cern.ch> - 3.1.0-1
 - First EPEL release
