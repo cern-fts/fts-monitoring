@@ -18,7 +18,7 @@ RUN createrepo /repo/fts
 RUN echo -e "[fts-ci]\nname=FTS CI\nbaseurl=file:///repo/fts\ngpgcheck=0\nenabled=1\npriority=2" > /etc/yum.repos.d/fts.repo
 
 # Install FTS-Monitoring packages
-RUN dnf install -y fts-monitoring fts-monitoring-selinux gridsite --enablerepo=crb
+RUN dnf install -y fts-monitoring fts-monitoring-selinux gridsite
 
 # Generate self signed host certificate
 RUN /usr/libexec/httpd-ssl-gencerts
