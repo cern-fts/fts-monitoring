@@ -19,8 +19,8 @@ else
   printf "Using environment set variable BRANCH=%s\n" "${BRANCH}"
 fi
 
-if [[ $BRANCH =~ ^(tags/)?(v)[.0-9]+(-[0-9]+)?$ ]]; then
-  RELEASE=
+if [[ $BRANCH =~ ^(tags/)?(v)[.0-9]+(-(rc)?([0-9]+))?(\^0)?$ ]]; then
+  RELEASE="${BASH_REMATCH[4]}${BASH_REMATCH[5]}"
 fi
 
 DIST=$(rpm --eval "%{dist}" | cut -d. -f2)
