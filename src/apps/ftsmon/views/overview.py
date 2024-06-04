@@ -27,6 +27,8 @@ from ftsmon.views.jobs import setup_filters
 from libs.jsonify import jsonify
 from libs.util import get_order_by, paged
 
+import settings
+
 
 def _seconds(td):
     return (td.microseconds + (td.seconds + td.days * 24 * 3600) * 10 ** 6) / 10 ** 6
@@ -107,13 +109,22 @@ def get_overview(http_request):
     
     if filters['only_summary']:
         # Non terminal
-        query = """
-        SELECT COUNT(file_state) as count, file_state,  vo_name
-        FROM t_file
-        WHERE file_state in ('SUBMITTED', 'ACTIVE', 'READY', 'STAGING', 'STARTED', 'ARCHIVING') %s
-        GROUP BY file_state, vo_name order by NULL
-        """ % pairs_filter
-        cursor.execute(query, se_params)
+        if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.mysql':
+            query = """
+            SELECT COUNT(file_state) as count, file_state,  vo_name
+            FROM t_file
+            WHERE file_state in ('SUBMITTED', 'ACTIVE', 'READY', 'STAGING', 'STARTED', 'ARCHIVING') %s
+            GROUP BY file_state, vo_name order by NULL
+            """ % pairs_filter
+            cursor.execute(query, se_params)
+        else:
+            query = """
+            SELECT COUNT(file_state) as count, file_state,  vo_name
+            FROM t_file
+            WHERE file_state in ('SUBMITTED', 'ACTIVE', 'READY', 'STAGING', 'STARTED', 'ARCHIVING') %s
+            GROUP BY file_state, vo_name
+            """ % pairs_filter
+            cursor.execute(query, se_params)
         for row in cursor.fetchall():
             key = row[2]
             triplet = triplets.get(key, dict())
@@ -122,13 +133,22 @@ def get_overview(http_request):
 
     
         # Terminal
-        query = """
-        SELECT COUNT(file_state) as count, file_state,  vo_name
-        FROM t_file
-        WHERE file_state in ('FINISHED', 'FAILED', 'CANCELED') %s
-        AND finish_time > %%s
-        GROUP BY file_state,  vo_name  order by NULL
-        """ % pairs_filter
+        if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.mysql':
+            query = """
+            SELECT COUNT(file_state) as count, file_state,  vo_name
+            FROM t_file
+            WHERE file_state in ('FINISHED', 'FAILED', 'CANCELED') %s
+            AND finish_time > %%s
+            GROUP BY file_state,  vo_name  order by NULL
+            """ % pairs_filter
+        else:
+            query = """
+            SELECT COUNT(file_state) as count, file_state,  vo_name
+            FROM t_file
+            WHERE file_state in ('FINISHED', 'FAILED', 'CANCELED') %s
+            AND finish_time > %%s
+            GROUP BY file_state,  vo_name
+            """ % pairs_filter
         cursor.execute(query, se_params + [not_before.strftime('%Y-%m-%d %H:%M:%S')])
         for row in cursor.fetchall():
            key = row[2]
@@ -137,12 +157,20 @@ def get_overview(http_request):
            triplets[key] = triplet
    
     else:
-        query = """
-        SELECT COUNT(file_state) as count, file_state, source_se, dest_se, vo_name
-        FROM t_file
-        WHERE file_state in ('SUBMITTED', 'ACTIVE', 'READY', 'STAGING', 'STARTED', 'ARCHIVING') %s
-        GROUP BY file_state, source_se, dest_se, vo_name order by NULL
-        """ % pairs_filter
+        if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.mysql':
+            query = """
+            SELECT COUNT(file_state) as count, file_state, source_se, dest_se, vo_name
+            FROM t_file
+            WHERE file_state in ('SUBMITTED', 'ACTIVE', 'READY', 'STAGING', 'STARTED', 'ARCHIVING') %s
+            GROUP BY file_state, source_se, dest_se, vo_name order by NULL
+            """ % pairs_filter
+        else:
+            query = """
+            SELECT COUNT(file_state) as count, file_state, source_se, dest_se, vo_name
+            FROM t_file
+            WHERE file_state in ('SUBMITTED', 'ACTIVE', 'READY', 'STAGING', 'STARTED', 'ARCHIVING') %s
+            GROUP BY file_state, source_se, dest_se, vo_name
+            """ % pairs_filter
         cursor.execute(query, se_params)
         for row in cursor.fetchall():
             triplet_key = (row[2], row[3], row[4])
@@ -150,13 +178,22 @@ def get_overview(http_request):
             triplet[row[1].lower()] = row[0]
             triplets[triplet_key] = triplet
       
-        query = """
-        SELECT COUNT(file_state) as count, file_state, source_se, dest_se, vo_name
-        FROM t_file
-        WHERE file_state in ('FINISHED', 'FAILED', 'CANCELED') %s
-        AND finish_time > %%s
-        GROUP BY file_state, source_se, dest_se, vo_name  order by NULL
-        """ % pairs_filter
+        if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.mysql':
+            query = """
+            SELECT COUNT(file_state) as count, file_state, source_se, dest_se, vo_name
+            FROM t_file
+            WHERE file_state in ('FINISHED', 'FAILED', 'CANCELED') %s
+            AND finish_time > %%s
+            GROUP BY file_state, source_se, dest_se, vo_name  order by NULL
+            """ % pairs_filter
+        else:
+            query = """
+            SELECT COUNT(file_state) as count, file_state, source_se, dest_se, vo_name
+            FROM t_file
+            WHERE file_state in ('FINISHED', 'FAILED', 'CANCELED') %s
+            AND finish_time > %%s
+            GROUP BY file_state, source_se, dest_se, vo_name
+            """ % pairs_filter
         cursor.execute(query, se_params + [not_before.strftime('%Y-%m-%d %H:%M:%S')])
         for row in cursor.fetchall():
             triplet_key = (row[2], row[3], row[4])

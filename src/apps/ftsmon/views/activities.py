@@ -26,6 +26,8 @@ from libs.jsonify import jsonify
 from ftsmon.views.overview import OverviewExtended
 from libs.util import get_order_by, paged
 
+import settings
+
 
 @cache_page(60)
 @jsonify
@@ -58,12 +60,20 @@ def get_overview(http_request):
     triplets = dict()
 
     # Non terminal
-    query = """
-    SELECT COUNT(file_state) as count, file_state, source_se, dest_se, vo_name, activity
-    FROM t_file
-    WHERE file_state in ('SUBMITTED', 'ACTIVE', 'STAGING', 'STARTED') %s
-    GROUP BY file_state, source_se, dest_se, vo_name, activity order by NULL
-    """ % pairs_filter
+    if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.mysql':
+        query = """
+        SELECT COUNT(file_state) as count, file_state, source_se, dest_se, vo_name, activity
+        FROM t_file
+        WHERE file_state in ('SUBMITTED', 'ACTIVE', 'STAGING', 'STARTED') %s
+        GROUP BY file_state, source_se, dest_se, vo_name, activity order by NULL
+        """ % pairs_filter
+    else:
+        query = """
+        SELECT COUNT(file_state) as count, file_state, source_se, dest_se, vo_name, activity
+        FROM t_file
+        WHERE file_state in ('SUBMITTED', 'ACTIVE', 'STAGING', 'STARTED') %s
+        GROUP BY file_state, source_se, dest_se, vo_name, activity
+        """ % pairs_filter
     cursor.execute(query, se_params)
     for row in cursor.fetchall():
         triplet_key = (row[2], row[3], row[4], row[5])
@@ -74,13 +84,22 @@ def get_overview(http_request):
         triplets[triplet_key] = triplet
 
     # Terminal
-    query = """
-    SELECT COUNT(file_state) as count, file_state, source_se, dest_se, vo_name, activity
-    FROM t_file
-    WHERE file_state in ('FINISHED', 'FAILED', 'CANCELED') %s
-        AND finish_time > %%s
-    GROUP BY file_state, source_se, dest_se, vo_name, activity  order by NULL
-    """ % pairs_filter
+    if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.mysql':
+        query = """
+        SELECT COUNT(file_state) as count, file_state, source_se, dest_se, vo_name, activity
+        FROM t_file
+        WHERE file_state in ('FINISHED', 'FAILED', 'CANCELED') %s
+            AND finish_time > %%s
+        GROUP BY file_state, source_se, dest_se, vo_name, activity  order by NULL
+        """ % pairs_filter
+    else:
+        query = """
+        SELECT COUNT(file_state) as count, file_state, source_se, dest_se, vo_name, activity
+        FROM t_file
+        WHERE file_state in ('FINISHED', 'FAILED', 'CANCELED') %s
+            AND finish_time > %%s
+        GROUP BY file_state, source_se, dest_se, vo_name, activity
+        """ % pairs_filter
     cursor.execute(query, se_params + [not_before.strftime('%Y-%m-%d %H:%M:%S')])
     for row in cursor.fetchall():
         triplet_key = (row[2], row[3], row[4],row[5])

@@ -28,6 +28,8 @@ from libs.util import get_order_by, ordered_field, paged, log_link
 from libs.diagnosis import JobDiagnosis
 from libs.jsonify import jsonify, jsonify_paged
 
+import settings
+
 
 def setup_filters(http_request):
     # Default values
@@ -101,11 +103,18 @@ class JobListDecorator(object):
         job['priority'] = job_desc[6]
         job['space_token'] = job_desc[7]
         job['job_finished'] = job_desc[8]
-        self.cursor.execute(
-            """SELECT file_state, COUNT(file_id), SUM(log_file_debug), MAX(file_index)
-               FROM t_file WHERE job_id = %s GROUP BY file_state ORDER BY NULL
-            """,
-            [job_id])
+        if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.mysql':
+            self.cursor.execute(
+                """SELECT file_state, COUNT(file_id), SUM(log_file_debug), MAX(file_index)
+                   FROM t_file WHERE job_id = %s GROUP BY file_state ORDER BY NULL
+                """,
+                [job_id])
+        else:
+            self.cursor.execute(
+                """SELECT file_state, COUNT(file_id), SUM(log_file_debug), MAX(file_index)
+                   FROM t_file WHERE job_id = %s GROUP BY file_state
+                """,
+                [job_id])
         result = self.cursor.fetchall()
         count = dict()
         with_debug = 0
