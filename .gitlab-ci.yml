@@ -39,10 +39,7 @@ alma9:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
   script:
-    - if [[ -z "$CI_COMMIT_TAG" ]];
-      then CACHE="true"; REGISTRY="latest";
-      else CACHE="false"; REGISTRY="${CI_COMMIT_TAG}";
-      fi
+    - if [[ -z "$CI_COMMIT_TAG" ]]; then CACHE="true" ; else CACHE="false"; fi
     - DESTINATION="gitlab-registry.cern.ch/fts/fts-monitoring:${REGISTRY}"
     - mkdir -p /kaniko/.docker
     - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
@@ -53,8 +50,10 @@ alma9:
 # Docker build jobs
 #--------------------------
 
-docker_build:
+docker_latest:
   <<: *kaniko_build-template
+  variables:
+    DESTINATION: gitlab-registry.cern.ch/fts/fts-monitoring:latest
   needs:
     - job: alma9
   rules:
@@ -62,6 +61,8 @@ docker_build:
 
 docker_tag:
   <<: *kaniko_build-template
+  variables:
+    DESTINATION: gitlab-registry.cern.ch/fts/fts-monitoring:${CI_COMMIT_TAG}
   needs:
     - job: alma9
   rules:
