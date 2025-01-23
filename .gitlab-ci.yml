@@ -92,10 +92,10 @@ docker_tag:
 rpms:
   <<: *publish-template_definition
   rules:
-    - if: '$CI_COMMIT_REF_NAME == "develop" || $CI_COMMIT_TAG!= null'
-
-testing-rpms:
-  <<: *publish-template_definition
-  rules:
+    - if: '$CI_PROJECT_NAMESPACE != "fts-monitoring"'
+      when: never
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: never
+    - if: '$CI_COMMIT_REF_NAME == "develop" || $CI_COMMIT_TAG != null'
     - if: '$CI_COMMIT_REF_NAME != "develop" && $CI_COMMIT_TAG == null'
       when: manual
