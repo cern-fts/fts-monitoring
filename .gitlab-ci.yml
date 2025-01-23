@@ -92,7 +92,7 @@ docker_tag:
 rpms:
   <<: *publish-template_definition
   rules:
-    - if: '$CI_PROJECT_NAMESPACE != "fts-monitoring"'
+    - if: '$CI_PROJECT_NAMESPACE != "fts"'
       when: never
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       when: never
