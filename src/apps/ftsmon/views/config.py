@@ -27,7 +27,7 @@ from ftsmon.models import ActivityShare, File, OperationLimit
 from ftsmon.models import ConfigAudit
 from ftsmon.models import LinkConfig, ShareConfig, Storage
 from libs.jsonify import jsonify, jsonify_paged
-
+from settings.common import FTS3WEB_CONFIG
 
 @jsonify_paged
 def get_audit(http_request):
@@ -167,6 +167,9 @@ def get_actives_per_activity(http_request, vo):
 
 @jsonify
 def get_gfal2_config(http_request):
+    if not FTS3WEB_CONFIG.getboolean('site', 'show_gfal2_config'):
+        return dict()
+
     try:
         config_files = os.listdir('/etc/gfal2.d')
     except:

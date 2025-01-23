@@ -142,6 +142,8 @@ ConfigStoragesCtrl.resolve = {
 /// Gfal2 configuration
 function Gfal2Ctrl($location, $scope, gfal2) {
     $scope.gfal2 = gfal2;
+    console.log(SHOW_GFAL2_CONFIG)
+    $scope.show_gfal2_config = SHOW_GFAL2_CONFIG.toLowerCase() === "true";
 }
 
 Gfal2Ctrl.resolve = {
