@@ -1,35 +1,26 @@
-FTS Web Monitoring
-==================
+FTS3 Web Monitoring
+===================
 
-The FTS3 Web Monitoring allows peeking at the internal FTS3 state: active transfers, success rate, optimizer decisions...
+The FTS3 Web Monitoring allows seeing the FTS3 state: active transfers, success rate, optimizer decisions...
 
-It is *not* a tool for historical data, data aggregation, etc... For this sort of uses, better use the [FTS Dashboard](https://monit-grafana.cern.ch/dashboard/db/fts-transfers-30-days?orgId=20). 
+**Note**: It is not a tool for historical data, data aggregation and various visualisations. 
+For FTS3 instances within the WLCG, we recommend using the [FTS3 Dashboards (CERN Central Monitoring)][1] 
 
-## Firewalld: How to set up a firewall using firewalld on centos7
+### Setting up firewalld
 
-Firewalld is installed by default on some Linux distributions, including many images of CentOS 7. 
+The `firewalld` service is available by default on many Linux distributions, including Alma9. 
 
-In order to add the firewalld support for FTS Web Monitoring you need to install the `fts-monitoring-firewalld` package.
-
-After the installation  you can enable the firewalld service and reboot your server. Keep in mind that enabling firewalld will cause the service to start up at boot. It is best practice to create your firewall rules and take the opportunity to test them before configuring this behavior in order to avoid potential issues.
+To have FTS3 Web Monitoring work with `firewalld`, you will need to allow port 8449 (default).
 ```bash
-sudo systemctl enable firewalld
-sudo reboot
-```
-When the server restarts, your firewall should be brought up, your network interfaces should be put into the zones you configured (or fall back to the configured default zone), and any rules associated with the zone(s) will be applied to the associated interfaces.
-
-We can verify that the service is running and reachable by typing:
-```bash
-sudo firewall-cmd --state
+firewall-cmd --permanent --zone=public --add-port=8449/tcp
 ```
 
-If the output is "running", it indicates that our firewall is up and running with the default configuration.
+### SELinux
 
-When running FTS Web Monitoring, we can allow this traffic for interfaces in our "public" zone for this session by typing:
+Some distributions come with SELinux as well. For FTS3 Web Monitoring to work
+with SELinux, we provide the `fts-montioring-selinux` package:
 ```bash
-sudo firewall-cmd --zone=public --add-service=ftsmon
+dnf install fts-monitoring-selinux
 ```
-You can leave out the --zone= if you wish to modify the default zone. We can verify the operation was successful by using the --list-all or --list-services operations:
-```bash
-sudo firewall-cmd --zone=public --list-services
-```
+
+[1]: https://monit-grafana.cern.ch/d/veRQSWBGz/fts-servers-dashboard
