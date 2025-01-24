@@ -12,20 +12,10 @@ Source0:    %{name}-%{version}.tar.gz
 Requires:   httpd
 Requires:   mod_ssl
 Requires:   python3
-%if 0%{?rhel} == 7
-Requires:   mysqlclient
-%else
 Requires:   python%{python3_pkgversion}-mysqlclient
-%endif
 Requires:   python%{python3_pkgversion}-decorator
 Requires:   python%{python3_pkgversion}-django
-
-# WSGI package has a different name on RHEL7
-%if 0%{?rhel} == 7
-Requires:       rh-python36-mod_wsgi
-%else
-Requires:       python3-mod_wsgi
-%endif
+Requires:   python%{python3_pkgversion}-mod_wsgi
 
 %description
 FTS v3 web application for monitoring,
@@ -41,9 +31,7 @@ service httpd condrestart
 Summary:        SELinux support for fts-monitoring
 Group:          Applications/Internet
 Requires:       fts-monitoring = %{version}-%{release}
-%if 0%{?rhel} == 9
 Requires:       policycoreutils-python-utils
-%endif
 
 %description selinux
 This package labels port 8449, used by fts-monitoring, as http_port_t,
