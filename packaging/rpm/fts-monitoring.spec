@@ -62,6 +62,15 @@ fi
 %prep
 %setup -q
 
+%build
+# Make sure the specfile version matches "src/settings/version.py"
+ftsmon_settings_ver=`grep "^VERSION" src/settings/version.py | grep -o [0-9.]*`
+ftsmon_specfile_ver=`expr "%{version}" : '\([0-9]*\\.[0-9]*\\.[0-9]*\)'`
+if [ "$ftsmon_settings_ver" != "$ftsmon_specfile_ver" ]; then
+    echo "The src/settings/version.py does not match the specfile version! ($ftsmon_settings_ver != $ftsmon_specfile_ver)"
+    exit 1
+fi
+
 %install
 shopt -s extglob
 mkdir -p %{buildroot}%{_datadir}/fts3web/
