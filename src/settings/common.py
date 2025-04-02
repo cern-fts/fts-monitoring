@@ -88,6 +88,9 @@ if not FTS3WEB_CONFIG.has_option('site', 'alias') or not FTS3WEB_CONFIG.get('sit
 if not FTS3WEB_CONFIG.has_option('site', 'show_gfal2_config'):
     FTS3WEB_CONFIG.set('site', 'show_gfal2_config', 'False')
 
+if not FTS3WEB_CONFIG.has_option('site', 'show_config_audit'):
+    FTS3WEB_CONFIG.set('site', 'show_config_audit', 'False')
+
 # Ensure /linkinfo section exists and is properly configured
 if not FTS3WEB_CONFIG.has_section('linkinfo'):
     FTS3WEB_CONFIG.add_section('linkinfo')

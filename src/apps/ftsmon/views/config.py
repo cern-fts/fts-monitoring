@@ -31,6 +31,9 @@ from settings.common import FTS3WEB_CONFIG
 
 @jsonify_paged
 def get_audit(http_request):
+    if not FTS3WEB_CONFIG.getboolean('site', 'show_config_audit'):
+        return []
+
     ca = ConfigAudit.objects
 
     if http_request.GET.get('action', None):

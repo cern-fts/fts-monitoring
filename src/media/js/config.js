@@ -2,6 +2,7 @@
 function ConfigAuditCtrl($rootScope, $location, $scope, config, ConfigAudit)
 {
     $scope.config = config;
+    $scope.show_config_audit = SHOW_CONFIG_AUDIT.toLowerCase() === "true";
 
     // Filter
     $scope.filter = {
@@ -142,7 +143,6 @@ ConfigStoragesCtrl.resolve = {
 /// Gfal2 configuration
 function Gfal2Ctrl($location, $scope, gfal2) {
     $scope.gfal2 = gfal2;
-    console.log(SHOW_GFAL2_CONFIG)
     $scope.show_gfal2_config = SHOW_GFAL2_CONFIG.toLowerCase() === "true";
 }
 

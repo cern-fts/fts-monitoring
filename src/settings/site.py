@@ -48,6 +48,11 @@ except:
     SHOW_GFAL2_CONFIG = False
 
 try:
+    SHOW_CONFIG_AUDIT = FTS3WEB_CONFIG.getboolean('site', 'show_config_audit')
+except:
+    SHOW_CONFIG_AUDIT = False
+
+try:
     if FTS3WEB_CONFIG.get('site', 'monit'):
         SITE_MONIT = FTS3WEB_CONFIG.get('site', 'monit')
     else:
