@@ -1,12 +1,12 @@
 Name:       fts-monitoring
-Version:    3.13.1
+Version:    3.13.2
 Release:    1%{?dist}
 BuildArch:  noarch
 Summary:    FTS3 Web Application for monitoring
 Group:      Applications/Internet
 License:    ASL 2.0
 URL:        https://fts.web.cern.ch/
-# wget https://gitlab.cern.ch/fts/fts-monitoring/repository/archive.tar.gz?ref=v3.13.1 -O fts-monitoring-3.13.1.tar.gz
+# wget https://gitlab.cern.ch/fts/fts-monitoring/repository/archive.tar.gz?ref=v3.13.2 -O fts-monitoring-3.13.2.tar.gz
 Source0:    %{name}-%{version}.tar.gz
 
 Requires:   httpd
@@ -104,6 +104,10 @@ exit 0
 %files selinux
 
 %changelog
+* Wed Apr 02 2025 Mihai Patrascoiu <mihai.patrascoiu@cern.ch> - 3.13.2-1
+- New upstream release
+- Configurable display of the "/config/audit" endpoint
+
 * Fri Jan 24 2025 Mihai Patrascoiu <mihai.patrascoiu@cern.ch> - 3.13.1-1
 - New upstream release
 - Configurable display of the "/config/gfal2" endpoint
