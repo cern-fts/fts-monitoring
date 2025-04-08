@@ -107,6 +107,8 @@ class FileBase(models.Model):
     log_debug       = models.IntegerField(db_column = 'log_file_debug')
     activity        = models.CharField(max_length = 255)
     selection_strategy = models.CharField(max_length = 255)
+    src_token_id = models.CharField(max_length = 16)
+    dst_token_id = models.CharField(max_length = 16)
 
     def get_start_time(self):
         """
@@ -194,6 +196,14 @@ class RetryError(models.Model):
         return isinstance(b, self.__class__) and \
             self.file_id == b.file_id and \
             self.attempt == b.attempt
+
+
+class Token(models.Model):
+    token_id = models.CharField(max_length = 16, primary_key = True)
+    unmanaged = models.BooleanField()
+
+    class Meta:
+        db_table = 't_token'
 
 
 class ConfigAudit(models.Model):

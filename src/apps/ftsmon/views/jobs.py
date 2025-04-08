@@ -23,7 +23,7 @@ from django.http import Http404
 from datetime import datetime, timedelta
 
 from libs.util import ACTIVE_STATES, ON_HOLD_STATES
-from ftsmon.models import Job, File, RetryError, DmFile
+from ftsmon.models import Job, File, RetryError, DmFile, Token
 from libs.util import get_order_by, ordered_field, paged, log_link
 from libs.diagnosis import JobDiagnosis
 from libs.jsonify import jsonify, jsonify_paged
@@ -239,6 +239,35 @@ def get_job_details(http_request, job_id):
     return {'job': job, 'states': state_count}
 
 
+class TokenFetcher(object):
+    """
+    Fetches token (un)managed status on demand, if necessary
+    """
+
+    def __init__(self, files):
+        self.files = files
+
+    def __len__(self):
+        return len(self.files)
+
+    def __getitem__(self, i):
+        for f in self.files[i]:
+            src_token = Token.objects.filter(token_id=f.src_token_id)
+            dst_token = Token.objects.filter(token_id=f.dst_token_id)
+            f.src_token = dict()
+            f.dst_token = dict()
+            if len(src_token) > 0:
+                f.src_token = {
+                    'token_id': src_token[0].token_id,
+                    'unmanaged': src_token[0].unmanaged
+                }
+            if len(dst_token) > 0:
+                f.dst_token = {
+                    'token_id': dst_token[0].token_id,
+                    'unmanaged': dst_token[0].unmanaged
+                }
+            yield f
+
 class RetriesFetcher(object):
     """
     Fetches, on demand and if necessary, the retry error messages
@@ -369,7 +398,7 @@ def get_job_transfers(http_request, job_id):
             pass
 
     return {
-        'files': paged(RetriesFetcher(LogLinker(files)), http_request),
+        'files': paged(TokenFetcher(RetriesFetcher(LogLinker(files))), http_request),
         'stats': stats
     }
 

@@ -198,6 +198,20 @@
                     <li>Checksum: {{file.checksum}}</li>
                     <li>User specified size: {{file.user_filesize}}</li>
                     <li>Configuration: {{file.symbolicname}}</li>
+                    <li data-ng-show="file.src_token.token_id">
+                        Source token: {{file.src_token.token_id}}
+                        <span data-ng-switch="file.src_token.unmanaged">
+                            <span data-ng-switch-when="false">(managed)</span>
+                            <span data-ng-switch-when="true">(unmanaged)</span>
+                        </span>
+                    </li>
+                    <li data-ng-show="file.dst_token.token_id">
+                        Destination token: {{file.dst_token.token_id}}
+                        <span data-ng-switch="file.dst_token.unmanaged">
+                            <span data-ng-switch-when="false">(managed)</span>
+                            <span data-ng-switch-when="true">(unmanaged)</span>
+                        </span>
+                    </li>
                     <li>Parameters: {{file.internal_file_params}}</li>
                     <li>Finished time: {{file.finish_time}}</li>
                     <li>Error reason: {{file.reason}}</li>
