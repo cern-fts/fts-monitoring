@@ -52,7 +52,6 @@ class JobBase(models.Model):
     checksum_method = models.CharField(max_length = 1)
     bring_online    = models.IntegerField()
     archive_timeout = models.IntegerField()
-    target_qos      = models.CharField(max_length = 255)
     job_metadata    = models.CharField(max_length = 1024)
     retry           = models.IntegerField()
     retry_delay     = models.IntegerField()
