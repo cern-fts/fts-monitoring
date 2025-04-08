@@ -1,5 +1,5 @@
 Name:       fts-monitoring
-Version:    3.13.2
+Version:    3.14.0
 Release:    1%{?dist}
 BuildArch:  noarch
 Summary:    FTS3 Web Application for monitoring
