@@ -17,9 +17,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import types
 from datetime import datetime, timedelta
-from django.db import connection
+from django.db import connection, connections, transaction
 from django.views.decorators.cache import cache_page
 
 from ftsmon.models import OptimizerEvolution
@@ -28,10 +27,101 @@ from libs.jsonify import jsonify
 from libs.util import get_order_by, paged
 
 import settings
+import threading
+import time
+import socket
+import logging
 
+log = logging.getLogger(__name__)
 
 def _seconds(td):
     return (td.microseconds + (td.seconds + td.days * 24 * 3600) * 10 ** 6) / 10 ** 6
+
+def update_overview_cache(cursor_write_cache, cursor_read, now):
+    query_read = """
+    SELECT COUNT(file_state) AS count, file_state, source_se, dest_se, vo_name
+    FROM t_file
+    WHERE file_state IN ('SUBMITTED', 'ACTIVE', 'READY', 'STAGING', 'STARTED', 'ARCHIVING')
+    GROUP BY file_state, source_se, dest_se, vo_name
+    ORDER BY NULL
+    """
+
+    query_write = """
+    INSERT INTO t_webmon_overview_cache(count, file_state, source_se, dest_se, vo_name, timestamp)
+    VALUES(%s, %s, %s, %s, %s, %s)
+    ON DUPLICATE KEY UPDATE
+        count = %s,
+        file_state = %s,
+        source_se = %s,
+        dest_se = %s,
+        vo_name = %s,
+        timestamp = %s
+    """
+
+    query_delete = """
+    DELETE FROM t_webmon_overview_cache WHERE timestamp != %s
+    """
+
+    cursor_read.execute(query_read)
+    for row in cursor_read.fetchall():
+        cursor_write_cache.execute(query_write,
+            [
+                row[0], row[1], row[2], row[3], row[4], now.strftime('%Y-%m-%d %H:%M:%S'),
+                row[0], row[1], row[2], row[3], row[4], now.strftime('%Y-%m-%d %H:%M:%S')
+            ]
+        )
+    cursor_write_cache.execute(query_delete, [now.strftime('%Y-%m-%d %H:%M:%S')])
+
+def refresh_overview_cache():
+    with connections["overview_write_cache"].cursor() as cursor_write_cache:
+        # Ensure synchronization row always exists
+        cursor_write_cache.execute("""
+            INSERT INTO t_webmon_overview_cache_control(id)
+            VALUES (1)
+            ON DUPLICATE KEY UPDATE id = id
+        """)
+
+    try:
+        with transaction.atomic(using="overview_write_cache"):
+            with (
+                connections["overview_write_cache"].cursor() as cursor_write_cache,
+                connection.cursor() as cursor_read
+            ):
+                # Synchronize different nodes using "SELECT FOR UPDATE"
+                cursor_write_cache.execute("""
+                    SELECT * 
+                    FROM t_webmon_overview_cache_control
+                    WHERE id = 1
+                    FOR UPDATE SKIP LOCKED
+                """)
+                row = cursor_write_cache.fetchone()
+                # We've acquired the lock
+                if row:
+                    log.info("OverviewCacheRefresh:: Acquired the lock!")
+                    now = datetime.now()
+                    start = time.perf_counter()
+                    update_overview_cache(cursor_write_cache, cursor_read, now)
+                    elapsed = round(time.perf_counter() - start, 2)
+
+                    cursor_write_cache.execute("""
+                        UPDATE t_webmon_overview_cache_control
+                        SET 
+                            update_duration = %s,
+                            updated_at = %s,
+                            update_host = %s
+                        WHERE id = 1
+                    """, [elapsed,
+                          now.strftime('%Y-%m-%d %H:%M:%S'),
+                          socket.getfqdn()])
+                    log.info(f"OverviewCacheRefresh:: updated overview cache "
+                             f"at=\"{now.strftime('%Y-%m-%d %H:%M:%S')}\" "
+                             f"stale_at=\"{(now + timedelta(seconds=settings.OVERVIEW_PAGE_CACHE_LIFETIME)).strftime('%Y-%m-%d %H:%M:%S')}\" "
+                             f"elapsed={elapsed}s"
+                    )
+                else:
+                    log.info("OverviewCacheRefresh:: Update already in progress (skip-locked)")
+    except Exception as ex:
+        log.exception(f"OverviewCacheRefresh:: Encountered exception: {ex}")
 
 
 class OverviewExtended(object):
@@ -79,7 +169,7 @@ class OverviewExtended(object):
         else:
             return self.objects[indexes]
 
-@cache_page(60)
+# @cache_page(60)
 @jsonify
 def get_overview(http_request):
     filters = setup_filters(http_request)
@@ -105,8 +195,11 @@ def get_overview(http_request):
 
     # Result
     triplets = dict()
+    using_cache = False
+    cache_stale = False
+    cache_updated_at = None
+    cache_update_duration = None
 
-    
     if filters['only_summary']:
         # Non terminal
         if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.mysql':
@@ -131,7 +224,6 @@ def get_overview(http_request):
             triplet[row[1].lower()] = row[0]
             triplets[key] = triplet
 
-    
         # Terminal
         if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.mysql':
             query = """
@@ -155,15 +247,21 @@ def get_overview(http_request):
            triplet = triplets.get(key, dict())
            triplet[row[1].lower()] = row[0]
            triplets[key] = triplet
-   
     else:
         if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.mysql':
-            query = """
-            SELECT COUNT(file_state) as count, file_state, source_se, dest_se, vo_name
-            FROM t_file
-            WHERE file_state in ('SUBMITTED', 'ACTIVE', 'READY', 'STAGING', 'STARTED', 'ARCHIVING') %s
-            GROUP BY file_state, source_se, dest_se, vo_name order by NULL
-            """ % pairs_filter
+            if settings.OVERVIEW_PAGE_CACHE:
+                query = """
+                SELECT count, file_state, source_se, dest_se, vo_name
+                FROM t_webmon_overview_cache
+                """
+                using_cache = True
+            else:
+                query = """
+                SELECT COUNT(file_state) as count, file_state, source_se, dest_se, vo_name
+                FROM t_file
+                WHERE file_state in ('SUBMITTED', 'ACTIVE', 'READY', 'STAGING', 'STARTED', 'ARCHIVING') %s
+                GROUP BY file_state, source_se, dest_se, vo_name order by NULL
+                """ % pairs_filter
         else:
             query = """
             SELECT COUNT(file_state) as count, file_state, source_se, dest_se, vo_name
@@ -177,7 +275,20 @@ def get_overview(http_request):
             triplet = triplets.get(triplet_key, dict())
             triplet[row[1].lower()] = row[0]
             triplets[triplet_key] = triplet
-      
+
+        if settings.OVERVIEW_PAGE_CACHE:
+            query = """SELECT updated_at, update_duration FROM t_webmon_overview_cache_control WHERE id = 1"""
+            cursor.execute(query)
+            row = cursor.fetchone()
+            cache_updated_at = row[0] if row else None
+            cache_update_duration = row[1] if row else None
+            if (
+                    cache_updated_at is None or
+                    cache_updated_at + timedelta(seconds=settings.OVERVIEW_PAGE_CACHE_LIFETIME) <= datetime.now()
+            ):
+                threading.Thread(target=refresh_overview_cache, daemon=True).start()
+                cache_stale = True
+
         if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.mysql':
             query = """
             SELECT COUNT(file_state) as count, file_state, source_se, dest_se, vo_name
@@ -198,9 +309,7 @@ def get_overview(http_request):
         for row in cursor.fetchall():
             triplet_key = (row[2], row[3], row[4])
             triplet = triplets.get(triplet_key, dict())
-
             triplet[row[1].lower()] = row[0]
-
             triplets[triplet_key] = triplet
     
     # Transform into a list
@@ -261,16 +370,23 @@ def get_overview(http_request):
     if summary['finished'] > 0 or summary['failed'] > 0:
         summary['rate'] = (float(summary['finished']) / (summary['finished'] + summary['failed'])) * 100
 
-    # Return
-    if filters['only_summary']:
-        return {
-            'summary': summary
+    # Generate results response
+    response = {
+        'summary': summary
+    }
+
+    if not filters['only_summary']:
+        response['overview'] = paged(
+            OverviewExtended(not_before, sorted(objs, key=sorting_method, reverse=order_desc), cursor=cursor),
+            http_request
+        )
+
+    if settings.OVERVIEW_PAGE_CACHE:
+        response['overview_cache'] = {
+            'using_cache': using_cache,
+            'cache_stale': cache_stale,
+            'cache_updated_at': cache_updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+            'cache_update_duration': cache_update_duration,
         }
-    else:
-        return {
-            'overview': paged(
-                OverviewExtended(not_before, sorted(objs, key=sorting_method, reverse=order_desc), cursor=cursor),
-                http_request
-            ),
-            'summary': summary
-        }
+
+    return response

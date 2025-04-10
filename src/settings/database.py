@@ -44,3 +44,13 @@ if DATABASES['default']['ENGINE'] == 'django.db.backends.mysql':
     DATABASES['default']['OPTIONS']['cursorclass'] = MySQLdb.cursors.SSCursor
 
 DISABLE_TRANSACTION_MANAGEMENT = True
+
+if FTS3WEB_CONFIG.getboolean('site', 'overview_page_cache'):
+    DATABASES['overview_write_cache'] = {
+        'ENGINE':   'django.db.backends.mysql',
+        'USER':     FTS3WEB_CONFIG.get('overview_write_cache_database', 'user'),
+        'PASSWORD': FTS3WEB_CONFIG.get('overview_write_cache_database', 'password'),
+        'NAME':     FTS3WEB_CONFIG.get('overview_write_cache_database', 'name'),
+        'HOST':     FTS3WEB_CONFIG.get('overview_write_cache_database', 'host'),
+        'PORT':     FTS3WEB_CONFIG.get('overview_write_cache_database', 'port'),
+    }

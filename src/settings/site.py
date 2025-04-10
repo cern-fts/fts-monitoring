@@ -53,6 +53,16 @@ except:
     SHOW_CONFIG_AUDIT = False
 
 try:
+    OVERVIEW_PAGE_CACHE = FTS3WEB_CONFIG.getboolean('site', 'overview_page_cache')
+    try:
+        OVERVIEW_PAGE_CACHE_LIFETIME = FTS3WEB_CONFIG.getint('site', 'overview_page_cache_lifetime')
+    except:
+        OVERVIEW_PAGE_CACHE_LIFETIME = 60
+except:
+    OVERVIEW_PAGE_CACHE = False
+    OVERVIEW_PAGE_CACHE_LIFETIME = 60
+
+try:
     if FTS3WEB_CONFIG.get('site', 'monit'):
         SITE_MONIT = FTS3WEB_CONFIG.get('site', 'monit')
     else:

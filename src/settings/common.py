@@ -91,7 +91,7 @@ if not FTS3WEB_CONFIG.has_option('site', 'show_gfal2_config'):
 if not FTS3WEB_CONFIG.has_option('site', 'show_config_audit'):
     FTS3WEB_CONFIG.set('site', 'show_config_audit', 'False')
 
-# Ensure /linkinfo section exists and is properly configured
+# Ensure "linkinfo" section exists and is properly configured
 if not FTS3WEB_CONFIG.has_section('linkinfo'):
     FTS3WEB_CONFIG.add_section('linkinfo')
 
@@ -100,6 +100,21 @@ if not FTS3WEB_CONFIG.has_option('linkinfo', 'enabled'):
 
 if not FTS3WEB_CONFIG.has_option('linkinfo', 'fts3_rest_endpoint') or not FTS3WEB_CONFIG.get('linkinfo', 'fts3_rest_endpoint'):
     FTS3WEB_CONFIG.set('linkinfo', 'fts3_rest_endpoint', 'https://' + socket.getfqdn() + ':8446')
+
+# Ensure the "overview_write_cache_database" section exists and is properly configured
+if FTS3WEB_CONFIG.has_option('site', 'overview_page_cache'):
+    if not FTS3WEB_CONFIG.has_section('overview_write_cache_database'):
+        raise Exception('"[overview_write_cache_database]" section not present, but "overview_page_cache = True')
+    if (
+            not FTS3WEB_CONFIG.has_option('overview_write_cache_database', 'name') or not FTS3WEB_CONFIG.get('overview_write_cache_database', 'name') or
+            not FTS3WEB_CONFIG.has_option('overview_write_cache_database', 'user') or not FTS3WEB_CONFIG.get('overview_write_cache_database', 'user') or
+            not FTS3WEB_CONFIG.has_option('overview_write_cache_database', 'password') or not FTS3WEB_CONFIG.get('overview_write_cache_database', 'password') or
+            not FTS3WEB_CONFIG.has_option('overview_write_cache_database', 'host') or not FTS3WEB_CONFIG.get('overview_write_cache_database', 'host') or
+            not FTS3WEB_CONFIG.has_option('overview_write_cache_database', 'port') or not FTS3WEB_CONFIG.get('overview_write_cache_database', 'port')
+    ):
+        raise Exception(f'Please make sure the "[overview_write_cache_database]" section has the following fields: '
+                        f'name, user, password, host, port')
+
 
 ###
 if 'BASE_URL' in os.environ:
