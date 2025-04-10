@@ -102,7 +102,7 @@ if not FTS3WEB_CONFIG.has_option('linkinfo', 'fts3_rest_endpoint') or not FTS3WE
     FTS3WEB_CONFIG.set('linkinfo', 'fts3_rest_endpoint', 'https://' + socket.getfqdn() + ':8446')
 
 # Ensure the "overview_write_cache_database" section exists and is properly configured
-if FTS3WEB_CONFIG.has_option('site', 'overview_page_cache'):
+if FTS3WEB_CONFIG.has_option('site', 'overview_page_cache') and FTS3WEB_CONFIG.getboolean('site', 'overview_page_cache'):
     if not FTS3WEB_CONFIG.has_section('overview_write_cache_database'):
         raise Exception('"[overview_write_cache_database]" section not present, but "overview_page_cache = True')
     if (

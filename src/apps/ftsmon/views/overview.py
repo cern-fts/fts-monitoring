@@ -169,7 +169,6 @@ class OverviewExtended(object):
         else:
             return self.objects[indexes]
 
-# @cache_page(60)
 @jsonify
 def get_overview(http_request):
     filters = setup_filters(http_request)
@@ -253,7 +252,8 @@ def get_overview(http_request):
                 query = """
                 SELECT count, file_state, source_se, dest_se, vo_name
                 FROM t_webmon_overview_cache
-                """
+                WHERE file_state IS NOT NULL %s
+                """ % pairs_filter
                 using_cache = True
             else:
                 query = """
@@ -385,7 +385,8 @@ def get_overview(http_request):
         response['overview_cache'] = {
             'using_cache': using_cache,
             'cache_stale': cache_stale,
-            'cache_updated_at': cache_updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+            'cache_updated_at': cache_updated_at.strftime(
+                '%Y-%m-%d %H:%M:%S') if cache_updated_at else None,
             'cache_update_duration': cache_update_duration,
         }
 
