@@ -287,6 +287,38 @@ td.ON_HOLD, .ON_HOLD {
 	border-left: solid 12px #f89406;
 }
 
+/* Overview cache */
+.overview-control-bar .pagination {
+    float: left;
+}
+
+.overview-cache-refresh {
+    float: right;
+    background: #edf1f3;
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    border-radius: 5px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.overview-cache-refresh-cancel {
+    float: right;
+    cursor: pointer;
+    color: #888;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.overview-cache-spin {
+    display: inline-block;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0%   { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 /* Optimizer decisions */
 .optimizer-steady {
     border-left: solid 12px #3a87ad;

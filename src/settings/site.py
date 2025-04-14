@@ -58,9 +58,16 @@ try:
         OVERVIEW_PAGE_CACHE_LIFETIME = FTS3WEB_CONFIG.getint('site', 'overview_page_cache_lifetime')
     except:
         OVERVIEW_PAGE_CACHE_LIFETIME = 60
+    try:
+        OVERVIEW_PAGE_CACHE_AUTOREFRESH = FTS3WEB_CONFIG.getboolean('site', 'overview_page_cache_autorefresh')
+    except:
+        OVERVIEW_PAGE_CACHE_AUTOREFRESH = True
 except:
     OVERVIEW_PAGE_CACHE = False
     OVERVIEW_PAGE_CACHE_LIFETIME = 60
+
+if not OVERVIEW_PAGE_CACHE:
+    OVERVIEW_PAGE_CACHE_AUTOREFRESH = False
 
 try:
     if FTS3WEB_CONFIG.get('site', 'monit'):

@@ -30,17 +30,6 @@ function pairState(pair)
 	return klasses;
 }
 
-function mergeAttrs(a, b)
-{
-	for (var attr in b) {
-		if (typeof(b[attr]) == 'string')
-			a[attr] = b[attr];
-		else
-			a[attr] = '';
-	}
-	return a;
-}
-
 function getLimitDescription(limit)
 {
     if (!limit)
@@ -56,13 +45,45 @@ function getLimitDescription(limit)
     return descr;
 }
 
-function OverviewCtrl($rootScope, $location, $scope, $http, overview, Overview)
+function OverviewCtrl($rootScope, $location, $scope, $http, $timeout, overview, Overview)
 {
 	$scope.overview = overview;
 	$scope.monit_url = SITE_MONIT;
 	$scope.alias = SITE_ALIAS;
 	$scope.linkinfo = LINKINFO
 	$scope.fts3_rest_endpnt = FTS3_REST_ENDPNT;
+	$scope.overview_cache_autorefresh = OVERVIEW_PAGE_CACHE_AUTOREFRESH.toLowerCase() === "true";
+
+	$scope.overview_cache_refresh = false;
+	$scope.overview_cache_refresh_countdown = 0;
+	let countdownTimer = null;
+
+	/* Overview Cache Management */
+	if ($scope.overview_cache_autorefresh && $scope.overview.overview_cache.cache_stale) {
+		var seconds = $scope.overview.overview_cache.cache_update_duration;
+		$scope.overview_cache_refresh = true;
+		$scope.overview_cache_refresh_countdown = 5 * (Math.floor(seconds / 5) + 1);
+
+		function countdown() {
+			if ($scope.overview_cache_refresh_countdown > 0) {
+				$scope.overview_cache_refresh_countdown--;
+				countdownTimer = $timeout(countdown, 1000);
+			} else {
+				location.reload();
+			}
+		}
+
+		countdown();
+	}
+
+	$scope.cancelOverviewAutoRefresh = function() {
+		if (countdownTimer) {
+			$timeout.cancel(countdownTimer);
+		}
+		$scope.overview_cache_refresh = false;
+	}
+
+	/* End of Overview Cache Management */
 
 	// On page change, reload
 	$scope.pageChanged = function(newPage) {

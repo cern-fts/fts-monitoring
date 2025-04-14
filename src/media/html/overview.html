@@ -8,10 +8,19 @@
     <span data-ng-show="globalFilter.time_window > 1">hours</span>
 </h3>
 
-<pagination rotate="false"
-    page="overview.overview.page" total-items="overview.overview.count" items-per-page="overview.overview.pageSize"
-    max-size="15" class="pagination" boundary-links="true"
-    on-select-page="pageChanged(page)"></pagination>
+<div class="overview-control-bar">
+    <pagination rotate="false"
+        page="overview.overview.page" total-items="overview.overview.count" items-per-page="overview.overview.pageSize"
+        max-size="15" class="pagination" boundary-links="true"
+        on-select-page="pageChanged(page)"></pagination>
+    <div data-ng-if="overview_cache_refresh" class="overview-cache-refresh">
+        <span>
+            <i class="icon-refresh overview-cache-spin"></i>
+            Displaying cached data. Auto-reloading in {{overview_cache_refresh_countdown}} seconds...
+        </span>
+        <span data-ng-click="cancelOverviewAutoRefresh()" title="Cancel auto-reload" class="overview-cache-refresh-cancel">×</span>
+    </div>
+</div>
 
 <table class="table table-small">
     <thead>
