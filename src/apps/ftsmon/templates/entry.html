@@ -10,8 +10,8 @@
         </title>
         <link rel="shortcut icon" href="{% getSetting 'SITE_LOGO_SMALL' %}" />
 
-        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
-        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
+        <link href="{{STATIC_URL}}deps/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+        <link href="{{STATIC_URL}}deps/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
         <link href="{{STATIC_URL}}css/overrides.css" rel="stylesheet">
         <link href="{{STATIC_URL}}css/styles.css" rel="stylesheet">
 
@@ -109,13 +109,12 @@
 
         <!--  Scripts -->
 
-        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.js"></script>
-        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
-        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-resource.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.8.0/ui-bootstrap-tpls.min.js"></script>
-
-        <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
-        <script src="//netdna.bootstrapcdn.com/bootstrap/2.3.2/js/bootstrap.min.js"></script>
+        <script src="{{STATIC_URL}}deps/angularjs/1.2.25/angular.js"></script>
+        <script src="{{STATIC_URL}}deps/angularjs/1.2.25/angular-route.js"></script>
+        <script src="{{STATIC_URL}}deps/angularjs/1.2.25/angular-resource.js"></script>
+        <script src="{{STATIC_URL}}deps/angular-ui-bootstrap/0.8.0/ui-bootstrap-tpls.min.js"></script>
+        <script src="{{STATIC_URL}}deps/jquery-1.10.2.min.js"></script>
+        <script src="{{STATIC_URL}}deps/bootstrap/2.3.2/js/bootstrap.min.js"></script>
 
         <script>var STATIC_ROOT="{{STATIC_URL}}";</script>
         <script>var SITE_MONIT="{% getSetting 'SITE_MONIT' %}";</script>
@@ -125,6 +124,7 @@
         <script>var SHOW_GFAL2_CONFIG="{% getSetting 'SHOW_GFAL2_CONFIG' %}";</script>
         <script>var SHOW_CONFIG_AUDIT="{% getSetting 'SHOW_CONFIG_AUDIT' %}";</script>
         <script>var OVERVIEW_PAGE_CACHE_AUTOREFRESH="{% getSetting 'OVERVIEW_PAGE_CACHE_AUTOREFRESH' %}"</script>
+
         <script src="{{STATIC_URL}}js/resources.js"></script>
         <script src="{{STATIC_URL}}js/jobs.js"></script>
         <script src="{{STATIC_URL}}js/transfers.js"></script>
@@ -135,9 +135,7 @@
         <script src="{{STATIC_URL}}js/config.js"></script>
         <script src="{{STATIC_URL}}js/statistics.js"></script>
         <script src="{{STATIC_URL}}js/global_filter.js"></script>
-
         <script src="{{STATIC_URL}}js/chart.js"></script>
-
         <script src="{{STATIC_URL}}js/ftsmon.js"></script>
     </body>
 </html>
