@@ -83,6 +83,12 @@ function OverviewCtrl($rootScope, $location, $scope, $http, $timeout, overview, 
 		$scope.overview_cache_refresh = false;
 	}
 
+	$scope.$on('$destroy', function() {
+		if (countdownTimer) {
+			$timeout.cancel(countdownTimer);
+		}
+	});
+
 	/* End of Overview Cache Management */
 
 	// On page change, reload
