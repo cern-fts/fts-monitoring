@@ -9,26 +9,20 @@
     <thead>
         <tr>
             <th>Storage</th>
-            <th>Site</th>
             <th>Debug level</th>
-            <th>IPv6</th>
-            <th>UDT</th>
-            <th>Skip Eviction</th>
             <th>Active limit*</th>
             <th>Throughput limit*</th>
+            <th>Skip Eviction</th>
             <th>TPC support</th>
         </tr>
     </thead>
     <tbody>
         <tr data-ng-repeat="s in storages.items" data-ng-class-odd="'odd'">
             <td>{{ s.storage }}</td>
-            <td>{{ s.site }}</td>
             <td>{{ s.debug_level }}</td>
-            <td>{{ s.ipv6 }}</td>
-            <td>{{ s.udt }}</td>
-            <td>{{ s.skip_eviction }}</td>
             <td>{{ s.inbound_max_active }} / {{ s.outbound_max_active }}</td>
             <td>{{ s.inbound_max_throughput }} / {{ s.outbound_max_throughput }}</td>
+            <td>{{ s.skip_eviction }}</td>
             <td>{{ s.tpc_support }}</td>
         </tr>
     </tbody>
