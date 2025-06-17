@@ -21,11 +21,15 @@ from ftsmon.views.jobs import setup_filters
 from libs.jsonify import jsonify
 from django.http import Http404
 from django.db import connection
+from settings.common import FTS3WEB_CONFIG
 import os
 
 
 @jsonify
 def get_linkinfo(http_request):
+    if not FTS3WEB_CONFIG.getboolean('linkinfo', 'enabled'):
+        return []
+
     source_se = str(http_request.GET.get('source_se', None))
     dest_se = str(http_request.GET.get('dest_se', None))
    
@@ -56,9 +60,9 @@ def get_linkinfo(http_request):
     query = """
         SELECT outbound_max_active 
         FROM t_se 
-        WHERE storage = '%s' AND outbound_max_active > 0
-        """ % source_se
-    cursor.execute(query)
+        WHERE storage = %(source_se)s AND outbound_max_active > 0
+        """
+    cursor.execute(query, {"source_se": source_se})
     source["outbound_limit"] = cursor.fetchall()
     
     # If the limit is not set conf_type = generic
@@ -73,9 +77,9 @@ def get_linkinfo(http_request):
     query = """
         SELECT count(*) 
         FROM t_file 
-        WHERE file_state in ("READY", "ACTIVE") AND source_se = '%s'
-        """ % source_se
-    cursor.execute(query)
+        WHERE file_state in ("READY", "ACTIVE") AND source_se = %(source_se)s
+        """
+    cursor.execute(query, {"source_se": source_se})
     source["active_transfers"] = cursor.fetchall()[0][0]
     result["source"] = source
 
@@ -83,9 +87,9 @@ def get_linkinfo(http_request):
     query = """
         SELECT inbound_max_active 
         FROM t_se 
-        WHERE storage = '%s' AND inbound_max_active > 0
-        """ % dest_se
-    cursor.execute(query)
+        WHERE storage = %(dest_se)s AND inbound_max_active > 0
+        """
+    cursor.execute(query, {"dest_se": dest_se})
     destination["inbound_limit"] = cursor.fetchall()
 
     # If the limit is not set conf_type = generic
@@ -100,9 +104,9 @@ def get_linkinfo(http_request):
     query = """
         SELECT count(*) 
         FROM t_file 
-        WHERE file_state in ("READY", "ACTIVE") AND dest_se = '%s'
-        """ % dest_se
-    cursor.execute(query)
+        WHERE file_state in ("READY", "ACTIVE") AND dest_se = %(dest_se)s
+        """
+    cursor.execute(query, {"dest_se": dest_se})
     destination['active_transfers'] = cursor.fetchall()[0][0]
     result["destination"] = destination
 
@@ -113,25 +117,25 @@ def get_linkinfo(http_request):
     query = """
         SELECT active, actual_active, rationale
         FROM t_optimizer_evolution
-        WHERE dest_se = '%s' AND source_se = '%s'
+        WHERE source_se = %(source_se)s AND dest_se = %(dest_se)s
         ORDER BY datetime DESC
         LIMIT 1
-        """ % (dest_se, source_se)
+        """
 
-    cursor.execute(query)
+    cursor.execute(query, {"source_se": source_se, "dest_se": dest_se})
     optimizer_output = cursor.fetchall()[0]
     optimizer['decision'] = optimizer_output[0]
     optimizer['active_transfers'] = optimizer_output[1]
     optimizer['description'] = optimizer_output[2]
     result["optimizer"] = optimizer
 
-    def query_link_info(source='*', destination='*'):
+    def query_link_info(source, destination):
         query = """
             SELECT min_active, max_active
             FROM t_link_config
-            WHERE source_se = '%s' AND dest_se = '%s'
-            """ % (source, destination)
-        cursor.execute(query)
+            WHERE source_se = %(source_se)s AND dest_se = %(dest_se)s
+            """
+        cursor.execute(query, {"source_se": source, "dest_se": destination})
         return cursor.fetchall()
 
     link_config_arrangements = [
@@ -159,10 +163,10 @@ def get_linkinfo(http_request):
     query = """
         SELECT DISTINCT 1 AS dn
         FROM t_authz_dn
-        WHERE dn = '%s'
-        """ % user_dn
+        WHERE dn = %(user_dn)s
+        """
 
-    cursor.execute(query)
+    cursor.execute(query, {"user_dn": user_dn})
     dn_query_result = cursor.fetchall()
     result['user_dn_result'] = 1 if len(dn_query_result) else 0
 
