@@ -1,12 +1,12 @@
 Name:       fts-monitoring
-Version:    3.14.0
+Version:    3.14.1
 Release:    1%{?dist}
 BuildArch:  noarch
 Summary:    FTS3 Web Application for monitoring
 Group:      Applications/Internet
 License:    ASL 2.0
 URL:        https://fts.web.cern.ch/
-# wget https://gitlab.cern.ch/fts/fts-monitoring/repository/archive.tar.gz?ref=v3.14.0 -O fts-monitoring-3.14.0.tar.gz
+# wget https://gitlab.cern.ch/fts/fts-monitoring/repository/archive.tar.gz?ref=v3.14.1 -O fts-monitoring-3.14.1.tar.gz
 Source0:    %{name}-%{version}.tar.gz
 
 Requires:   httpd
@@ -104,6 +104,10 @@ exit 0
 %files selinux
 
 %changelog
+* Tue Jun 17 2025 Mihai Patrascoiu <mihai.patrascoiu@cern.ch> - 3.14.1-1
+- New upstream release
+- Address exploit in "/linkinfo" endpoint
+
 * Wed Apr 30 2025 Mihai Patrascoiu <mihai.patrascoiu@cern.ch> - 3.14.0-1
 - FTS v3.14 Token Release
 
