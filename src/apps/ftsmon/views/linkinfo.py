@@ -21,11 +21,15 @@ from ftsmon.views.jobs import setup_filters
 from libs.jsonify import jsonify
 from django.http import Http404
 from django.db import connection
+from settings.common import FTS3WEB_CONFIG
 import os
 
 
 @jsonify
 def get_linkinfo(http_request):
+    if not FTS3WEB_CONFIG.getboolean('linkinfo', 'enabled'):
+        return []
+
     source_se = str(http_request.GET.get('source_se', None))
     dest_se = str(http_request.GET.get('dest_se', None))
    
