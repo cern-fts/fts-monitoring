@@ -17,4 +17,4 @@
 # The FTS Web Monitoring version:
 # - Displayed in the header
 # - Returned in the "/version" endpoint
-VERSION = "3.14.1"
+VERSION = "3.14.2"
